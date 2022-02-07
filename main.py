@@ -44,7 +44,9 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
-        terrain.tickUpdate()
+        terrain.tick_update()
+        for pig in elements["pigs"]:
+            pig.tick_update()
 
 
 def logic_loop():
