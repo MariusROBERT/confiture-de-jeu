@@ -1,4 +1,6 @@
 import pygame
+import random
+import numphy as np
 
 class patate():
     def __init__(self, screen):
@@ -11,4 +13,5 @@ class patate():
 
 def spawn_patate(screen):
     patate = patate(screen)
+    
     return patate
