@@ -31,12 +31,13 @@ class Potatoe:
 	def get_pos_patate(self):
 		return self.__pos_patate
 
-<<<<<<< HEAD:personnages/Patate.py
-	def get_y(self):
-		return self.y
-
-
-=======
 	def get_pos_pousse(self):
 		return self.__pos_pousse
->>>>>>> 1d94552b641953f9c0364ab33ae3bfff73727773:personnages/Potatoe.py
+
+	def display(self,screen):
+		self.update()
+		screen.blit(self.image_pousse, self.__pos_pousse)
+
+	def display_patate(self,screen):
+		self.update()
+		screen.blit(self.image_patate, self.__pos_patate)

@@ -4,6 +4,7 @@ import pygame
 import sys
 from personnages.pig import Pig
 from personnages.Player import Player
+from personnages.Potatoe import Potatoe
 
 pygame.init()
 
