@@ -1,9 +1,13 @@
+from constantes import HEIGHT, SIZE, WIDTH, TOURS
+from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
 import sys
+from personnages.pig import Pig
 from personnages.Player import Player
-from pig import Pig
 
-from constantes import FPS, HEIGHT, SIZE, WIDTH
+<< << << < HEAD
+== == == =
+>>>>>> > 254837d1cf2e10b4c3cf2bb708358244f3883382
 
 
 pygame.init()
@@ -51,7 +55,7 @@ while 1:
     for event in pygame.event.get():
         event_loop(event)
     logic_loop()
-    draw_loop()
+    display_loop()
 
     clock.tick(FPS)
     pygame.display.flip()

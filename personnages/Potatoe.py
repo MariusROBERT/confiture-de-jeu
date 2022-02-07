@@ -4,7 +4,7 @@ from random import randrange
 from constantes import TOURS, NB_ELEM_X, NB_ELEM_Y, CASE_SIZE, SIZE
 
 
-class Patate():
+class Potatoe:
 	def __init__(self):
 		self.image_patate = pygame.image.load("../images/patate.png")
 		self.image_pousse = pygame.image.load("../images/pousse_patate.png")
@@ -23,13 +23,13 @@ class Patate():
 		y_patate = randrange(y_pousse - 1, y_pousse + 2)
 		self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
-		while self.__pos_patate not in TOURS and self.__pose_patate[1] < SIZE[1] and self.__pose_patate[2] < SIZE[2]:
+		while self.__pos_patate not in TOURS and self.__pos_patate[1] < SIZE[1] and self.__pos_patate[2] < SIZE[2]:
 			x_patate = randrange(x_pousse - 1, x_pousse + 2)
 			y_patate = randrange(y_pousse - 1, y_pousse + 2)
 			self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
-	def get_x(self):
-		return self.x
+	def get_pos_patate(self):
+		return self.__pos_patate
 
-	def get_y(self):
-		return self.y
+	def get_pos_pousse(self):
+		return self.__pos_pousse
