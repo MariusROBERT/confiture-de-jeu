@@ -4,7 +4,6 @@ import pygame
 import sys
 from personnages.pig import Pig
 from personnages.player import Player
-from personnages.potatoe import Potatoe
 from personnages.terrain import Terrain
 
 pygame.init()
@@ -15,7 +14,7 @@ clock = pygame.time.Clock()
 
 
 player = Player()
-patate=Potatoe()
+# patate=Potatoe()
 terrain = Terrain()
 
 elements = {
@@ -23,7 +22,7 @@ elements = {
     "player": [player],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [],
-    "potatoes": [patate],
+
     "frites": [],
 
 }
