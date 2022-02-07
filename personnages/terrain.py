@@ -6,8 +6,10 @@ from constantes import SIZE, CASE_SIZE
 class Terrain:
     def __init__(self) -> None:
         self.base_terrain = pygame.image.load("images/grass.png").convert()
+        self.potatoes = []
 
     def update(self, elements) -> None:
+
         pass
 
     def display(self, screen: pygame.Surface) -> None:

@@ -16,13 +16,16 @@ clock = pygame.time.Clock()
 
 
 player = Player()
+# patate=Potatoe()
+terrain = Terrain()
+
 elements = {
     "terrain": [terrain],
     "player": [player],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [Zombie() for i in range(10)],
-    "potatoes": [],
     "frites": [],
+
 }
 
 
