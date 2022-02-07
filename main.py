@@ -3,11 +3,13 @@ import pygame
 import sys
 from pig import Pig
 
+from constantes import HEIGHT, SIZE, WIDTH
+
+
 pygame.init()
 
-size = width, height = 320, 240
 
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(SIZE)
 
 
 def event_loop(event: pygame.event.Event):
