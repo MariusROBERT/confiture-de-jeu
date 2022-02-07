@@ -1,15 +1,32 @@
 from operator import ne
 import pygame
 from pygame.locals import *
+from .autre_element.health_bar import HealthBar
+"""
+               ,-,------,
+              _ \(\(_,--'
+         <`--'\>/(/(__
+         /. .  `'` '  \
+        (`')  ,        @
+         `-._,        /
+            )-)_/--( >  Piggie the pig
+           ''''  ''''
+"""
 
 class Pig:
     def __init__(self, x : int, y : int, size = (80, 80)):
         self.coords = (x,y)
         self.image = pygame.image.load("images/pig.png")
         self.image = pygame.transform.scale(self.image, (65, 65))
-        self.health = 50
+        
         self.nb_frames = 240
+        self.size = size
         self.__animation_frame = 1
+        
+        self.health_bar = HealthBar((self.coords[0], self.coords[1] - 30), value=50)
+        self.health = 50
+        self.__hitbox = pygame.Rect(self.coords, self.size)
+        
     @property
     def health(self) -> int:
         return self.__health
@@ -17,7 +34,7 @@ class Pig:
     @health.setter
     def health(self, value : int) -> None:
         self.__health = value
-
+        self.health_bar.health = value
     @property
     def aura_frame(self) -> int:
         pass
@@ -33,13 +50,15 @@ class Pig:
     
     
     def display(self, surface : pygame.Surface) -> None:
-        
-        #display aura
-        aura_image = pygame.image.load("images/pig_aura/frame1.png")
-        surface.blit(aura_image, self.coords)
-        
+        self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
         self.next_frame()
     
+        
+    
     def update(self, elements : dict) -> None:
-        pass
+        self.health_bar.update()
+    
+    @property
+    def hitbox(self) -> pygame.Rect:
+        return self.__hitbox
