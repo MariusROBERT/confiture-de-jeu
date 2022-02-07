@@ -7,9 +7,9 @@ from lib.lib import load_image
 class Player:
     def __init__(self):
         self.inventory = []
-        self.sprite = load_image("./images/player.png", (40, 40))
+        self.sprite = load_image("./images/player/walk/walk1.png", (80, 80))
         self.potatoe_mini = load_image(
-            "./images/potatoemini.png", (15, 15))
+            "./images/player/potatoemini.png", (15, 15))
         self.size = self.sprite.get_size()
         self.coords = (20, 20)
         self.speed = 350 / FPS
@@ -103,7 +103,32 @@ class Player:
 
     def display(self, screen) -> None:
         # self.update()
-        screen.blit(self.sprite, self.coords)
+
+        angle = 0
+        dir_sorted = sorted(self.direction)
+        if len(dir_sorted) > 0:
+            if ["left", "up"] == dir_sorted:
+                angle = 180 + 90/2
+            elif ["right", "up"] == dir_sorted:
+                angle = 135
+            elif ["down", "left"] == dir_sorted:
+                angle = 315
+            elif ["down", "right"] == dir_sorted:
+                angle = 45
+            elif ["up"] == dir_sorted:
+                angle = 180
+            elif ["down"] == dir_sorted:
+                angle = 0
+            elif ["left"] == dir_sorted:
+                angle = 270
+            elif ["right"] == dir_sorted:
+                angle = 90
+
+        # angle = 180 + 90
+
+        rotated = pygame.transform.rotate(self.sprite, angle)
+        screen.blit(rotated, self.coords)
+
         for i in range(len(self.inventory)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i*15, self.coords[1] - 15))
