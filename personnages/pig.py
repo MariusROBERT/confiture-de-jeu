@@ -2,8 +2,7 @@ from operator import ne
 import pygame
 from pygame.locals import *
 
-
-    """
+"""
                ,-,------,
               _ \(\(_,--'
          <`--'\>/(/(__
@@ -12,7 +11,7 @@ from pygame.locals import *
          `-._,        /
             )-)_/--( >  Piggie the pig
            ''''  ''''
-    """
+"""
 
 class Pig:
     def __init__(self, x : int, y : int, size = (80, 80)):
@@ -22,7 +21,7 @@ class Pig:
         self.health = 50
         self.nb_frames = 240
         self.__animation_frame = 1
-        
+        self.__hitbox = pygame.Rect(self.coords, self.size)
     @property
     def health(self) -> int:
         return self.__health
@@ -56,4 +55,4 @@ class Pig:
     
     @property
     def hitbox(self) -> pygame.Rect:
-        return pygame.Rect(self.coords, self.size)
+        return self.__hitbox
