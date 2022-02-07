@@ -1,10 +1,11 @@
+import string
 from random import randrange
 
-from constantes import WIDTH, HEIGHT
+from constantes import WIDTH, HEIGHT, CASE_SIZE
 
 
 class Zombie:
-	def __init__(self, speed: int = 1, name="Zombie", damage: int = 10, hp: int = 100):
+	def __init__(self, speed: int = 1, name: string = "Zombie", damage: int = 10, hp: int = 100):
 		self.__name = name
 		self.__hp = hp
 		self.__damage = damage
@@ -14,66 +15,68 @@ class Zombie:
 
 		side = randrange(0, 3)
 		if side == 0:
-			self.__x = randrange(0, WIDTH)
-			self.__y = 0
+			self.__pos = (randrange(0, WIDTH), 0)
 		elif side == 1:
-			self.__x = WIDTH - 1
-			self.__y = randrange(0, HEIGHT)
+			self.__pos = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
 		elif side == 2:
-			self.__x = randrange(0, WIDTH)
-			self.__y = HEIGHT - 1
+			self.__pos = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
 		elif side == 3:
-			self.__x = 0
-			self.__y = randrange(0, HEIGHT)
+			self.__pos = (0, randrange(0, HEIGHT))
 		else:
 			raise Exception("Error in Zombie.__init__() : side = " + str(side))
 
-	# Getters
-	def get_damage(self):
+	@property
+	def damage(self) -> int:
 		return self.__damage
 
-	def get_speed(self):
-		return self.__speed
-
-	# def get_name(self):
-	# 	return self.__name
-
-	def get_hp(self):
-		return self.__hp
-
-	def get_image(self):
-		return self.__image
-
-	def get_x(self):
-		return self.__x
-
-	def get_y(self):
-		return self.__y
-
-	def is_alive(self):
-		return self.__alive
-
-	# Setters
-	def set_damage(self, damage):
+	@damage.setter
+	def damage(self, damage) -> None:
 		self.__damage = damage
 
-	def set_speed(self, speed):
+	@property
+	def speed(self) -> int:
+		return self.__speed
+
+	@speed.setter
+	def speed(self, speed) -> None:
 		self.__speed = speed
 
-	def set_name(self, name):
-		self.__name = name
+	@property
+	def hp(self) -> int:
+		return self.__hp
 
-	def take_damage(self, damage):
-		if self.__hp - damage <= 0:
-			self.__hp = 0
+	@hp.setter
+	def hp(self, hp) -> None:
+		self.__hp = hp
+
+	@property
+	def image(self) -> str:
+		return self.__image
+
+	@image.setter
+	def image(self, image) -> None:
+		self.__image = image
+
+	@property
+	def pos(self) -> tuple[int, int]:
+		return self.__pos
+
+	@pos.setter
+	def pos(self, pos: tuple[int, int]) -> None:
+		self.__pos = pos
+
+	@property
+	def alive(self) -> bool:
+		return self.__alive
+
+	@alive.setter
+	def alive(self, alive: bool) -> None:
+		self.__alive = alive
+
+	def is_attacked(self, damage: int) -> None:
+		self.__hp -= damage
+		if self.__hp <= 0:
 			self.__alive = False
-		else:
-			self.__hp -= damage
 
-	def move_x(self, x):
-		# Move in x depending on the speed
-		self.__x += x * self.get_speed()
-
-	def move_y(self, y):
-		# Move in y depending on the speed
-		self.__y += y * self.get_speed()
+	def attack(self, target) -> None:
+		target.is_attacked(self.__damage)
