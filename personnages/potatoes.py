@@ -1,5 +1,6 @@
 import pygame
-from random import *
+import random 
+from random import randrange
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 
 
