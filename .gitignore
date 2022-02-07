@@ -1,3 +1,4 @@
 env/
 *.pyc
-personnages/__pycache__/Player.cpython-39.pyc
+**/__pycache__/
+.idea

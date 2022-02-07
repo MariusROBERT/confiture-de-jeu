@@ -1,6 +1,6 @@
 import pygame
 
-from constantes import WIDTH, HEIGHT
+from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT
 
 
 class Player ():
@@ -9,7 +9,7 @@ class Player ():
         self.sprite = pygame.image.load("./images/zombie.png")
         self.size = self.sprite.get_size()
         self.coords = (20, 20)
-        self.speed = 6
+        self.speed = 150/FPS
         self.direction = []
 
     def move(self, event: pygame.event.Event):
@@ -39,7 +39,7 @@ class Player ():
             if event.key == pygame.K_d and "right" in self.direction:
                 self.direction.remove("right")
 
-    def update(self):
+    def update(self, elements):
         for direction in self.direction:
             if direction == "up":
                 self.coords = (self.coords[0], self.coords[1] - self.speed)
