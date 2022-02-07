@@ -14,11 +14,12 @@ clock = pygame.time.Clock()
 
 
 player = Player()
+patate=Potatoe()
 elements = {
     "player": [player],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [],
-    "potatoes": [],
+    "potatoes": [patate],
     "frites": [],
 }
 

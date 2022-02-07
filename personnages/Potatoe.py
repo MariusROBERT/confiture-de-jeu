@@ -35,9 +35,10 @@ class Potatoe:
 		return self.__pos_pousse
 
 	def display(self,screen):
-		self.update()
 		screen.blit(self.image_pousse, self.__pos_pousse)
 
 	def display_patate(self,screen):
-		self.update()
 		screen.blit(self.image_patate, self.__pos_patate)
+	
+	def update(self, elements):
+		pass
