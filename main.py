@@ -24,7 +24,7 @@ elements = {
 
 
 def clear_screen(screen: pygame.Surface):
-    screen.fill((0, 0, 0))
+    screen.fill((70, 166, 0))
 
 
 def event_loop(event: pygame.event.Event):
