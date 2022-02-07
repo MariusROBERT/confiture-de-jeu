@@ -12,7 +12,7 @@ class Player:
             "./images/potatoemini.png", (15, 15))
         self.size = self.sprite.get_size()
         self.coords = (20, 20)
-        self.speed = 300 / FPS
+        self.speed = 350 / FPS
         self.direction = []
         self.__alive = True
 
