@@ -3,7 +3,7 @@ import sys
 from personnages.Player import Player
 from pig import Pig
 
-from constantes import HEIGHT, SIZE, WIDTH
+from constantes import FPS, HEIGHT, SIZE, WIDTH
 
 
 pygame.init()
@@ -12,10 +12,15 @@ pygame.init()
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
 
-elements = []
-player = Player()
 
-elements.append(player)
+player = Player()
+elements = {
+    "player": [player],
+    "pigs": [Pig() for i in range(4)],
+    "zombies": [],
+    "potatoes": [],
+    "frites": [],
+}
 
 
 def clear_screen(screen: pygame.Surface):
@@ -30,14 +35,15 @@ def event_loop(event: pygame.event.Event):
 
 
 def logic_loop():
-    if len(elements) == 0:
-        for i in range(4):
-            elements.append(Pig())
+    for key in elements.keys():
+        for element in elements[key]:
+            element.update(elements)
 
 
 def draw_loop():
-    for element in elements:
-        element.display(screen)
+    for key in elements.keys():
+        for element in elements[key]:
+            element.update()
 
 
 while 1:
@@ -47,5 +53,5 @@ while 1:
     logic_loop()
     draw_loop()
 
-    clock.tick(60)
+    clock.tick(FPS)
     pygame.display.flip()
