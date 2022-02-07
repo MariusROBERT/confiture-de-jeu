@@ -7,7 +7,7 @@ from lib.lib import load_image
 class Player:
     def __init__(self):
         self.inventory = []
-        self.sprite = pygame.image.load("./images/player.png")
+        self.sprite = load_image("./images/player.png", (40, 40))
         self.potatoe_mini = load_image(
             "./images/potatoemini.png", (15, 15))
         self.size = self.sprite.get_size()
@@ -23,6 +23,10 @@ class Player:
     @property
     def hitbox(self) -> pygame.Rect:
         return pygame.Rect(self.coords, self.size)
+
+    @property
+    def center_coords(self) -> tuple:
+        return (self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
@@ -52,16 +56,18 @@ class Player:
 
             if event.key == pygame.K_SPACE:
                 # Si il est a proximitée d'un pig
+                feeded = False
                 if self.hitbox.collidelist([element.hitbox_feed for element in elements["pigs"]]) != -1:
                     if len(self.inventory) > 0:
                         for pig in elements["pigs"]:
                             if pig.hitbox_feed.colliderect(self.hitbox):
                                 pig.feed()
                                 self.inventory.pop()
+                                feeded = True
                                 break
 
                 # si il est dans la hitbox d'une potatoe
-                elif self.hitbox.collidelist(elements["terrain"][0].potatoes_hitbox) != -1 and len(self.inventory) < 5:
+                if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5 and not feeded:
                     self.inventory.append("potatoe")
 
     def update(self, elements: dict) -> None:
