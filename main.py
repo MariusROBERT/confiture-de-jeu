@@ -1,7 +1,7 @@
 from multiprocessing import Event
 import pygame
 import sys
-
+from pig import Pig
 
 pygame.init()
 
@@ -14,9 +14,13 @@ def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
         sys.exit()
 
+def update_loop():
+    test_pig = Pig()
+    test_pig.draw(screen)
 
 while 1:
+    
     for event in pygame.event.get():
         event_loop(event)
-
-    # pygame.display.flip()
+    update_loop()
+    pygame.display.update()
