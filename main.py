@@ -4,7 +4,6 @@ import pygame
 import sys
 from personnages.pig import Pig
 from personnages.player import Player
-from personnages.potatoe import Potatoe
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 
