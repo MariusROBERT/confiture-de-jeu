@@ -1,11 +1,12 @@
-from turtle import update
 import pygame
+
+from constantes import WIDTH, HEIGHT
 
 
 class Player ():
     def __init__(self):
         self.inventory = []
-        self.sprite = pygame.image.load("./images/zombie.jpg")
+        self.sprite = pygame.image.load("./images/zombie.png")
         self.coords = (20, 20)
         self.speed = 2
         self.direction = []
@@ -46,6 +47,15 @@ class Player ():
                 self.coords = (self.coords[0] - self.speed, self.coords[1])
             if direction == "right":
                 self.coords = (self.coords[0] + self.speed, self.coords[1])
+
+        if self.coords[0] < 0:
+            self.coords = (0, self.coords[1])
+        if self.coords[0] > WIDTH:
+            self.coords = (WIDTH, self.coords[1])
+        if self.coords[1] < 0:
+            self.coords = (self.coords[0], 0)
+        if self.coords[1] > HEIGHT:
+            self.coords = (self.coords[0], HEIGHT)
 
     def display(self, screen):
         self.update()
