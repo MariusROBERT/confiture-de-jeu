@@ -71,7 +71,7 @@ class Pig:
         self.health += 20
 
     def tick_update(self):
-        self.health -= 2
+        self.health -= 1
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
@@ -82,7 +82,6 @@ class Pig:
         self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
 
-        pygame.draw.rect(surface, (255, 0, 0), self.hitbox_feed, 1)
         self.next_frame()
 
     def get_fries(self):
