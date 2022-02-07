@@ -6,8 +6,8 @@ from constantes import TOURS, NB_ELEM_X, NB_ELEM_Y, CASE_SIZE, SIZE
 
 class Patate():
 	def __init__(self):
-		self.image_patate = pygame.image.load("../images/patate.png")
-		self.image_pousse = pygame.image.load("../images/pousse_patate.png")
+		self.image_patate = pygame.image.load("./images/patate.png")
+		self.image_pousse = pygame.image.load("./images/pousse_patate.png")
 		self.size = CASE_SIZE
 
 		x_pousse = random.randint(0, NB_ELEM_X)
@@ -33,3 +33,5 @@ class Patate():
 
 	def get_y(self):
 		return self.y
+
+
