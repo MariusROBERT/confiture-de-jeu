@@ -1,6 +1,6 @@
 from random import randrange
 
-from constantes import NB_ELEM_X
+from constantes import WIDTH, HEIGHT
 
 
 class Zombie:
@@ -10,21 +10,21 @@ class Zombie:
 		self.__damage = damage
 		self.__speed = speed
 		self.__alive = True
-		self.__image = "images/zombie.jpg"
+		self.__image = "images/zombie.png"
 
 		side = randrange(0, 3)
 		if side == 0:
-			self.__x = randrange(0, NB_ELEM_X)
+			self.__x = randrange(0, WIDTH)
 			self.__y = 0
 		elif side == 1:
-			self.__x = NB_ELEM_X - 1
-			self.__y = randrange(0, NB_ELEM_X)
+			self.__x = WIDTH - 1
+			self.__y = randrange(0, HEIGHT)
 		elif side == 2:
-			self.__x = randrange(0, NB_ELEM_X)
-			self.__y = NB_ELEM_X - 1
+			self.__x = randrange(0, WIDTH)
+			self.__y = HEIGHT - 1
 		elif side == 3:
 			self.__x = 0
-			self.__y = randrange(0, NB_ELEM_X)
+			self.__y = randrange(0, HEIGHT)
 		else:
 			raise Exception("Error in Zombie.__init__() : side = " + str(side))
 
@@ -71,8 +71,9 @@ class Zombie:
 			self.__hp -= damage
 
 	def move_x(self, x):
+		# Move in x depending on the speed
 		self.__x += x * self.get_speed()
 
 	def move_y(self, y):
-		# Move in y
+		# Move in y depending on the speed
 		self.__y += y * self.get_speed()
