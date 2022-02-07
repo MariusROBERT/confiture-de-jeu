@@ -42,3 +42,6 @@ class Potatoes:
 
     def get_pos_pousse(self):
         return self.__pos_pousse
+
+    def get_pos_patate(self):
+        return self.__pos_patate

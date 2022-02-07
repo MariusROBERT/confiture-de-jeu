@@ -42,7 +42,7 @@ def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
         sys.exit()
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
-        player.move(event)
+        player.move(event, elements)
 
     # Every seconds
     if event.type == TICKEVENT:
