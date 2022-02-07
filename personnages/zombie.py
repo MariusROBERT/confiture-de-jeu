@@ -1,5 +1,6 @@
 import string
 from random import randrange
+import pygame
 
 from constantes import WIDTH, HEIGHT, CASE_SIZE
 
@@ -11,17 +12,17 @@ class Zombie:
 		self.__damage = damage
 		self.__speed = speed
 		self.__alive = True
-		self.__image = "images/zombie.png"
+		self.__sprite = pygame.image.load("./images/zombie.png")
 
 		side = randrange(0, 3)
 		if side == 0:
-			self.__pos = (randrange(0, WIDTH), 0)
+			self.__coords = (randrange(0, WIDTH), 0)
 		elif side == 1:
-			self.__pos = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
+			self.__coords = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
 		elif side == 2:
-			self.__pos = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
+			self.__coords = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
 		elif side == 3:
-			self.__pos = (0, randrange(0, HEIGHT))
+			self.__coords = (0, randrange(0, HEIGHT))
 		else:
 			raise Exception("Error in Zombie.__init__() : side = " + str(side))
 
@@ -55,20 +56,20 @@ class Zombie:
 			self.__alive = False
 
 	@property
-	def image(self) -> str:
-		return self.__image
+	def sprite(self) -> pygame.Surface:
+		return self.__sprite
 
-	@image.setter
-	def image(self, image) -> None:
-		self.__image = image
+	@sprite.setter
+	def sprite(self, sprite) -> None:
+		self.__sprite = sprite
 
 	@property
-	def pos(self) -> tuple[int, int]:
-		return self.__pos
+	def coords(self) -> tuple[int, int]:
+		return self.__coords
 
-	@pos.setter
-	def pos(self, pos: tuple[int, int]) -> None:
-		self.__pos = pos
+	@coords.setter
+	def coords(self, coords: tuple[int, int]) -> None:
+		self.__coords = coords
 
 	@property
 	def alive(self) -> bool:
@@ -79,3 +80,6 @@ class Zombie:
 
 	def attack(self, target) -> None:
 		target.is_attacked(self.__damage)
+
+	def display(self, screen: pygame.Surface) -> None:
+		screen.blit(self.sprite, self.__coords)

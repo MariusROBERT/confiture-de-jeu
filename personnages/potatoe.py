@@ -6,38 +6,49 @@ from constantes import TOURS, NB_ELEM_X, NB_ELEM_Y, CASE_SIZE, SIZE
 
 class Potatoe:
 	def __init__(self):
-		self.image_patate = pygame.image.load("./images/patate.png")
-		self.image_pousse = pygame.image.load("./images/pousse_patate.png")
-		self.size = CASE_SIZE
+		self.__sprite_potatoe = pygame.image.load("./images/patate.png")
+		self.__sprite_pousse = pygame.image.load("./images/pousse_patate.png")
+		self.__size = CASE_SIZE
 
 		x_pousse = random.randint(0, NB_ELEM_X)
 		y_pousse = random.randint(0, NB_ELEM_Y)
-		self.__pos_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
+		self.__coords_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
 
-		while self.__pos_pousse not in TOURS:
+		while self.__coords_pousse not in TOURS:
 			x_pousse = random.randint(0, NB_ELEM_X)
 			y_pousse = random.randint(0, NB_ELEM_Y)
-			self.__pos_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
+			self.__coords_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
 
 		x_patate = randrange(x_pousse - 1, x_pousse + 2)
 		y_patate = randrange(y_pousse - 1, y_pousse + 2)
-		self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
+		self.__coords_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
-		while self.__pos_patate not in TOURS and self.__pos_patate[1] < SIZE[1] and self.__pos_patate[2] < SIZE[2]:
+		while self.__coords_patate not in TOURS and self.__coords_patate[1] < SIZE[1] and self.__coords_patate[2] < \
+				SIZE[2]:
 			x_patate = randrange(x_pousse - 1, x_pousse + 2)
 			y_patate = randrange(y_pousse - 1, y_pousse + 2)
-			self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
+			self.__coords_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
-	def get_pos_patate(self):
-		return self.__pos_patate
+	@property
+	def coords_patate(self) -> tuple[int, int]:
+		return self.__coords_patate
 
-	def get_pos_pousse(self):
-		return self.__pos_pousse
+	@coords_patate.setter
+	def coords_patate(self, coords_patate: tuple[int, int]) -> None:
+		self.__coords_patate = coords_patate
 
-	def display(self,screen):
-		self.update()
-		screen.blit(self.image_pousse, self.__pos_pousse)
+	@property
+	def coords_pousse(self) -> tuple[int, int]:
+		return self.__coords_pousse
 
-	def display_patate(self,screen):
-		self.update()
-		screen.blit(self.image_patate, self.__pos_patate)
+	@coords_pousse.setter
+	def coords_pousse(self, coords_pousse: tuple[int, int]) -> None:
+		self.__coords_pousse = coords_pousse
+
+	def display(self, screen) -> None:
+		# self.update()
+		screen.blit(self.__sprite_pousse, self.__coords_pousse)
+
+	def display_patate(self, screen) -> None:
+		# self.update()
+		screen.blit(self.__sprite_potatoe, self.__coords_patate)
