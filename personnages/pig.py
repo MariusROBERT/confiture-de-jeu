@@ -1,6 +1,9 @@
 from operator import ne
 import pygame
 from pygame.locals import *
+from constantes import CASE_SIZE
+
+from lib.lib import load_image
 from .autre_element.health_bar import HealthBar
 """
                ,-,------,
@@ -17,14 +20,15 @@ from .autre_element.health_bar import HealthBar
 class Pig:
     def __init__(self, x: int, y: int, size=(80, 80)):
         self.coords = (x, y)
-        self.image = pygame.image.load("images/pig.png")
-        self.image = pygame.transform.scale(self.image, (65, 65))
+
+        self.image = load_image("images/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
 
         self.nb_frames = 240
         self.size = size
         self.__animation_frame = 1
-        
-        self.health_bar = HealthBar((self.coords[0], self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203,219,11))
+
+        self.health_bar = HealthBar(
+            (self.coords[0]+11, self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203, 219, 11))
         self.health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
 
@@ -74,5 +78,6 @@ class Pig:
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
+
         pygame.draw.rect(surface, (255, 0, 0), self.hitbox_feed, 1)
         self.next_frame()

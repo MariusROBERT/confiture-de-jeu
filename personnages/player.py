@@ -67,7 +67,7 @@ class Player:
                                 break
 
                 # si il est dans la hitbox d'une potatoe
-                if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5 and not feeded:
+                if not feeded and elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                     self.inventory.append("potatoe")
 
     def update(self, elements: dict) -> None:

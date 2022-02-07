@@ -27,11 +27,21 @@ class Terrain:
             if potato.alive is False:
                 self.potatoes.remove(potato)
 
+        for trou in self.trous:
+            trou["old"] += 1
+            if trou["old"] > 8:
+                self.trous.remove(trou)
+                pass
+
     @property
     def potatoes_hitbox(self) -> list:
         pos_patates = [x.get_pos_patate() for x in self.potatoes]
 
     def harvrest(self, coords: tuple) -> bool:
+        coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
+                      coords[1] // CASE_SIZE * CASE_SIZE)
+        self.trous.append(
+            {"coords": coordsbase, "old": 0})
         for patate in self.potatoes:
             pos_patate = patate.get_pos_patate()
             if pos_patate[0] > coords[0] - CASE_SIZE and pos_patate[0] < coords[0] + CASE_SIZE:
@@ -39,8 +49,8 @@ class Terrain:
                     self.potatoes.remove(patate)
                     return True
 
-        self.trous.append(
-            (coords[0] // CASE_SIZE * CASE_SIZE, coords[1] // CASE_SIZE * CASE_SIZE))
+        
+
         return False
 
     def update(self, elements) -> None:
@@ -50,7 +60,7 @@ class Terrain:
         for i in range(0, SIZE[0], CASE_SIZE):
             for j in range(0, SIZE[1], CASE_SIZE):
 
-                if (i, j) in self.trous:
+                if (i, j) in [x["coords"] for x in self.trous]:
                     screen.blit(self.trous_image, (i, j))
                 else:
                     screen.blit(self.base_terrain, (i, j))
