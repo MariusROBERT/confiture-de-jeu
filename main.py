@@ -1,9 +1,9 @@
 import pygame
 import sys
+from personnages.pig import Pig
 from personnages.Player import Player
-from pig import Pig
 
-from constantes import HEIGHT, SIZE, WIDTH
+from constantes import HEIGHT, SIZE, WIDTH, TOURS
 
 
 pygame.init()
@@ -32,20 +32,19 @@ def event_loop(event: pygame.event.Event):
 def logic_loop():
     if len(elements) == 0:
         for i in range(4):
-            elements.append(Pig())
+            elements.append(Pig(TOURS[i][0], TOURS[i][1]))
+            
 
-
-def draw_loop():
+def display_loop():
     for element in elements:
         element.display(screen)
-
 
 while 1:
     clear_screen(screen)
     for event in pygame.event.get():
         event_loop(event)
     logic_loop()
-    draw_loop()
+    display_loop()
 
     clock.tick(60)
     pygame.display.flip()
