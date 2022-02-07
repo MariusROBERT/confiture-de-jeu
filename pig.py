@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Pig:
-    def __init__(self, name : str = "porcinet", hp : int =100):
+    def __init__(self, name : str = "Porcinet", hp : int =100):
         self.name = name
         self.hp = hp
     
