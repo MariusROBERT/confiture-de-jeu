@@ -47,7 +47,12 @@ class Zombie:
 
 	@hp.setter
 	def hp(self, hp) -> None:
-		self.__hp = hp
+		if hp <= 0:
+			self.__hp = 0
+		else:
+			self.__hp = hp
+		if self.__hp <= 0:
+			self.__alive = False
 
 	@property
 	def image(self) -> str:
@@ -69,14 +74,8 @@ class Zombie:
 	def alive(self) -> bool:
 		return self.__alive
 
-	@alive.setter
-	def alive(self, alive: bool) -> None:
-		self.__alive = alive
-
 	def is_attacked(self, damage: int) -> None:
-		self.__hp -= damage
-		if self.__hp <= 0:
-			self.__alive = False
+		self.hp -= damage
 
 	def attack(self, target) -> None:
 		target.is_attacked(self.__damage)
