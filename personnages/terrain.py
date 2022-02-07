@@ -1,5 +1,7 @@
+import random
 import pygame
 
+from personnages.potatoes import Potatoes
 from constantes import SIZE, CASE_SIZE
 
 
@@ -8,8 +10,12 @@ class Terrain:
         self.base_terrain = pygame.image.load("images/grass.png").convert()
         self.potatoes = []
 
-    def update(self, elements) -> None:
+    def tickUpdate(self) -> None:
+        chance = 6
+        if random.randint(0, chance) == 0:
+            self.potatoes.append(Potatoes())
 
+    def update(self, elements) -> None:
         pass
 
     def display(self, screen: pygame.Surface) -> None:
