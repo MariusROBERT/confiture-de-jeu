@@ -4,8 +4,8 @@ import pygame
 import sys
 from personnages.pig import Pig
 from personnages.player import Player
-from personnages.potatoe import Potatoe
-from personnages.autre_element.fries import Fries
+from personnages.zombie import Zombie
+from personnages.terrain import Terrain
 
 pygame.init()
 
@@ -15,13 +15,21 @@ clock = pygame.time.Clock()
 
 
 player = Player()
+# patate=Potatoe()
+terrain = Terrain()
+
 elements = {
+    "terrain": [terrain],
     "player": [player],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
-    "zombies": [],
-    "potatoes": [],
-    "frites": [Fries((30, 30), (0.5,0.2)))],
+    "zombies": [Zombie() for i in range(10)],
+    "frites": [],
+
 }
+
+
+TICKEVENT = pygame.USEREVENT + 1
+pygame.time.set_timer(TICKEVENT, 1000)
 
 
 def clear_screen(screen: pygame.Surface):
@@ -33,6 +41,12 @@ def event_loop(event: pygame.event.Event):
         sys.exit()
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event)
+
+    # Every seconds
+    if event.type == TICKEVENT:
+        terrain.tick_update()
+        for pig in elements["pigs"]:
+            pig.tick_update()
 
 
 def logic_loop():
