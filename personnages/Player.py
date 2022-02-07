@@ -7,11 +7,13 @@ class Player ():
     def __init__(self):
         self.inventory = []
         self.sprite = pygame.image.load("./images/zombie.png")
+        self.size = self.sprite.get_size()
         self.coords = (20, 20)
-        self.speed = 2
+        self.speed = 6
         self.direction = []
 
     def move(self, event: pygame.event.Event):
+
         if event.type == pygame.KEYDOWN:
             if len(self.direction) >= 2:
                 return
@@ -48,14 +50,15 @@ class Player ():
             if direction == "right":
                 self.coords = (self.coords[0] + self.speed, self.coords[1])
 
-        if self.coords[0] < 0:
-            self.coords = (0, self.coords[1])
-        if self.coords[0] > WIDTH:
-            self.coords = (WIDTH, self.coords[1])
-        if self.coords[1] < 0:
-            self.coords = (self.coords[0], 0)
-        if self.coords[1] > HEIGHT:
-            self.coords = (self.coords[0], HEIGHT)
+        bordure = 5
+        if self.coords[0] < bordure:
+            self.coords = (bordure, self.coords[1])
+        if self.coords[0] > WIDTH-bordure - self.size[0]:
+            self.coords = (WIDTH-bordure - self.size[0], self.coords[1])
+        if self.coords[1] < bordure:
+            self.coords = (self.coords[0], bordure)
+        if self.coords[1] > HEIGHT-bordure - self.size[1]:
+            self.coords = (self.coords[0], HEIGHT-bordure - self.size[1])
 
     def display(self, screen):
         self.update()
