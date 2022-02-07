@@ -4,7 +4,7 @@ from random import randrange
 from constantes import TOURS, NB_ELEM_X, NB_ELEM_Y, CASE_SIZE, SIZE
 
 
-class Patate:
+class Potatoe:
 	def __init__(self):
 		self.image_patate = pygame.image.load("../images/patate.png")
 		self.image_pousse = pygame.image.load("../images/pousse_patate.png")
