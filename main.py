@@ -2,7 +2,7 @@ from multiprocessing import Event
 import pygame
 import sys
 
-from constantes import SIZE
+from constantes import HEIGHT, SIZE, WIDTH
 
 
 pygame.init()
