@@ -23,7 +23,7 @@ class Patate():
 		y_patate = randrange(y_pousse - 1, y_pousse + 2)
 		self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
-		while self.__pos_patate not in TOURS and self.__pose_patate[1] < SIZE[1] and self.__pose_patate[2] < SIZE[2]:
+		while self.__pos_patate not in TOURS and self.__pos_patate[1] < SIZE[1] and self.__pos_patate[2] < SIZE[2]:
 			x_patate = randrange(x_pousse - 1, x_pousse + 2)
 			y_patate = randrange(y_pousse - 1, y_pousse + 2)
 			self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
