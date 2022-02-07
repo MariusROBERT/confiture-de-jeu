@@ -5,11 +5,6 @@ import sys
 from personnages.pig import Pig
 from personnages.Player import Player
 
-<< << << < HEAD
-== == == =
->>>>>> > 254837d1cf2e10b4c3cf2bb708358244f3883382
-
-
 pygame.init()
 
 
@@ -44,7 +39,7 @@ def logic_loop():
             element.update(elements)
 
 
-def draw_loop():
+def display_loop():
     for key in elements.keys():
         for element in elements[key]:
             element.update()
