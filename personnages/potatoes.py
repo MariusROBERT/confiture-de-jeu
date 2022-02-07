@@ -31,11 +31,11 @@ class Potatoes:
         self.image_pousse = pygame.image.load("./images/pousse_patate.png")
         self.size = CASE_SIZE
         self.age = 0
-        self.lifespan = 10
+        self.lifespan = 26
 
     @property
     def alive(self):
-        return not random.randint(0, self.lifespan-3) + self.age >= self.lifespan
+        return not random.randint(0, self.lifespan-7) + self.age >= self.lifespan
 
     def tick_update(self):
         self.age += 1
