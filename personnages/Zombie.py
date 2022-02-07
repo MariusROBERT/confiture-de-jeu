@@ -1,13 +1,32 @@
+from random import randrange
+
+from constantes import WIDTH, HEIGHT
+
+
 class Zombie:
-	def __init__(self, x, y, speed=1, name="Zombie", damage=10, hp=100):
+	def __init__(self, speed: int = 1, name="Zombie", damage: int = 10, hp: int = 100):
 		self.__name = name
 		self.__hp = hp
 		self.__damage = damage
 		self.__speed = speed
 		self.__alive = True
-		self.__x = x
-		self.__y = y
-		self.__image = "images/zombie.jpg"
+		self.__image = "images/zombie.png"
+
+		side = randrange(0, 3)
+		if side == 0:
+			self.__x = randrange(0, WIDTH)
+			self.__y = 0
+		elif side == 1:
+			self.__x = WIDTH - 1
+			self.__y = randrange(0, HEIGHT)
+		elif side == 2:
+			self.__x = randrange(0, WIDTH)
+			self.__y = HEIGHT - 1
+		elif side == 3:
+			self.__x = 0
+			self.__y = randrange(0, HEIGHT)
+		else:
+			raise Exception("Error in Zombie.__init__() : side = " + str(side))
 
 	# Getters
 	def get_damage(self):
@@ -16,14 +35,23 @@ class Zombie:
 	def get_speed(self):
 		return self.__speed
 
-	def get_name(self):
-		return self.__name
+	# def get_name(self):
+	# 	return self.__name
 
 	def get_hp(self):
 		return self.__hp
 
 	def get_image(self):
 		return self.__image
+
+	def get_x(self):
+		return self.__x
+
+	def get_y(self):
+		return self.__y
+
+	def is_alive(self):
+		return self.__alive
 
 	# Setters
 	def set_damage(self, damage):
@@ -35,7 +63,17 @@ class Zombie:
 	def set_name(self, name):
 		self.__name = name
 
-	def set_hp(self, hp):
-		self.__hp = hp
-		if self.__hp <= 0:
+	def take_damage(self, damage):
+		if self.__hp - damage <= 0:
+			self.__hp = 0
 			self.__alive = False
+		else:
+			self.__hp -= damage
+
+	def move_x(self, x):
+		# Move in x depending on the speed
+		self.__x += x * self.get_speed()
+
+	def move_y(self, y):
+		# Move in y depending on the speed
+		self.__y += y * self.get_speed()

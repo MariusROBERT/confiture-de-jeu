@@ -1,7 +1,7 @@
-from multiprocessing import Event
 import pygame
 import sys
 from personnages.pig import Pig
+from personnages.Player import Player
 
 from constantes import HEIGHT, SIZE, WIDTH, TOURS
 
@@ -10,14 +10,24 @@ pygame.init()
 
 
 screen = pygame.display.set_mode(SIZE)
+clock = pygame.time.Clock()
+
 elements = []
+player = Player()
+
+elements.append(player)
+
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((0, 0, 0))
 
+
 def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
         sys.exit()
+    if event.type in (pygame.KEYDOWN, pygame.KEYUP):
+        player.move(event)
+
 
 def logic_loop():
     if len(elements) == 0:
@@ -28,8 +38,6 @@ def logic_loop():
 def display_loop():
     for element in elements:
         element.display(screen)
-    
-    
 
 while 1:
     clear_screen(screen)
@@ -37,4 +45,6 @@ while 1:
         event_loop(event)
     logic_loop()
     display_loop()
-    pygame.display.update()
+
+    clock.tick(60)
+    pygame.display.flip()
