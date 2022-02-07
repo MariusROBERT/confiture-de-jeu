@@ -20,18 +20,7 @@ class Pig:
 
     @property
     def aura_frame(self) -> int:
-        if self.__animation_frame < 40:
-            return 1
-        elif self.__animation_frame < 80:
-            return 2
-        elif self.__animation_frame < 120:
-            return 3
-        elif self.__animation_frame < 160:
-            return 2
-        elif self.__animation_frame < 200:
-            return 1
-        else:
-            return 1
+        pass
     
     def next_frame(self) -> None:
         self.__animation_frame += 1
@@ -46,8 +35,11 @@ class Pig:
     def display(self, surface : pygame.Surface) -> None:
         
         #display aura
-        aura_image = pygame.image.load("images/pig_aura/frame" + str(self.aura_frame) + ".png")
+        aura_image = pygame.image.load("images/pig_aura/frame1.png")
         surface.blit(aura_image, self.coords)
         
         surface.blit(self.image, self.coords)
         self.next_frame()
+    
+    def update(self, elements : dict) -> None:
+        pass
