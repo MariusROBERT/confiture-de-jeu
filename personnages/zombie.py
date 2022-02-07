@@ -14,7 +14,7 @@ class Zombie:
 		self.__alive = True
 		self.__sprite = pygame.image.load("./images/zombie.png")
 
-		side = randrange(0, 3)
+		side = randrange(4)
 		if side == 0:
 			self.__coords = (randrange(0, WIDTH), 0)
 		elif side == 1:
@@ -83,3 +83,6 @@ class Zombie:
 
 	def display(self, screen: pygame.Surface) -> None:
 		screen.blit(self.sprite, self.__coords)
+
+	def update(self, elements : dict) -> None:
+		pass
