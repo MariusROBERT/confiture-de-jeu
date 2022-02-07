@@ -23,7 +23,7 @@ class Pig:
         self.size = size
         self.__animation_frame = 1
         
-        self.health_bar = HealthBar((self.coords[0], self.coords[1] - 30), value=50)
+        self.health_bar = HealthBar((self.coords[0], self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203,219,11))
         self.health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
         

@@ -5,6 +5,7 @@ import sys
 from personnages.pig import Pig
 from personnages.player import Player
 from personnages.potatoe import Potatoe
+from personnages.autre_element.fries import Fries
 
 pygame.init()
 
@@ -19,7 +20,7 @@ elements = {
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [],
     "potatoes": [],
-    "frites": [],
+    "frites": [Fries((30, 30), (0.5,0.2)))],
 }
 
 
