@@ -1,10 +1,11 @@
 from operator import ne
 import pygame
 from pygame.locals import *
-from constantes import CASE_SIZE
-
-from lib.lib import load_image
+from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
+from constantes import CASE_SIZE, FRIES_SPEED
 from .autre_element.health_bar import HealthBar
+from lib.lib import *
+from .autre_element.fries import Fries
 """
                ,-,------,
               _ \(\(_,--'
@@ -74,9 +75,20 @@ class Pig:
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
+        self.target=elements["zombies"][0]
+        
 
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
 
         self.next_frame()
+
+    def get_fries(self):
+        if self.target and self.target.alive:
+            vector_from_target = self.target.coords[0] - self.coords[0], self.target.coords[1] - self.coords[1]
+            angle = get_angle_between_vectors(
+                self.target.latest_vector, vector_from_target)
+            
+            #print(vector_from_speed_angle(FRIES_SPEED, angle))
+            return (Fries(self.coords, vector_from_speed_angle(FRIES_SPEED, angle)))
