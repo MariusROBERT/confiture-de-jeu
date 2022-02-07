@@ -29,13 +29,21 @@ class Pig:
         self.health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
 
+        feed_space = 20
+        self.__hitbox_feed = pygame.Rect(
+            (self.coords[0] - feed_space, self.coords[1]-feed_space), (self.size[0]+feed_space*2, self.size[1] + feed_space*2))
+
     @property
     def health(self) -> int:
         return self.__health
 
     @health.setter
     def health(self, value: int) -> None:
+        min_value = -10
         self.__health = value
+        if (self.__health <= min_value):
+            self.__health = min_value
+
         self.health_bar.health = value
 
     @property
@@ -46,6 +54,10 @@ class Pig:
     def hitbox(self) -> pygame.Rect:
         return self.__hitbox
 
+    @property
+    def hitbox_feed(self) -> pygame.Rect:
+        return self.__hitbox_feed
+
     def next_frame(self) -> None:
         self.__animation_frame += 1
         if self.__animation_frame > self.nb_frames:
@@ -55,7 +67,7 @@ class Pig:
         self.health += 20
 
     def tick_update(self):
-        self.health -= 1
+        self.health -= 2
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
@@ -63,4 +75,5 @@ class Pig:
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
+        pygame.draw.rect(surface, (255, 0, 0), self.hitbox_feed, 1)
         self.next_frame()

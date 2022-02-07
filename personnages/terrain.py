@@ -23,6 +23,11 @@ class Terrain:
             if potato.alive is False:
                 self.potatoes.remove(potato)
 
+    @property
+    def potatoes_hitbox(self) -> list:
+        pos_patates = [x.get_pos_patate() for x in self.potatoes]
+        return [pygame.Rect(x[0], x[1], 20, 20) for x in pos_patates]
+
     def update(self, elements) -> None:
         pass
 
@@ -33,3 +38,8 @@ class Terrain:
 
                 if (i, j) in [x.get_pos_pousse() for x in self.potatoes]:
                     screen.blit(self.pousse, (i, j))
+
+                if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
+                    potatosize = 20
+                    rect = pygame.Rect(i, j, 20, 20)
+                    pygame.draw.rect(screen, (255, 0, 0), rect, 1)
