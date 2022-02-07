@@ -28,6 +28,10 @@ elements = {
 }
 
 
+TICKEVENT = pygame.USEREVENT + 1
+pygame.time.set_timer(TICKEVENT, 1000)
+
+
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
@@ -38,12 +42,9 @@ def event_loop(event: pygame.event.Event):
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event)
 
-    # Execute every seconds :
-    if pygame.time.get_ticks() % 1000 == 0:
-        # Add a new potato :
-        # elements["potatoes"].append(Potatoe())
-        # print("coucou")
-        pass
+    # Every seconds
+    if event.type == TICKEVENT:
+        terrain.tickUpdate()
 
 
 def logic_loop():
