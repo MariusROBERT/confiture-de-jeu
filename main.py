@@ -22,7 +22,7 @@ elements = {
     "terrain": [terrain],
     "player": [player],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
-    "zombies": [Zombie() for i in range(10)],
+    "zombies": [Zombie(coords=(0,0)) for i in range(1)],
     "frites": [],
 
 }
@@ -31,6 +31,8 @@ elements = {
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
 
+TICKEVENT500 = pygame.USEREVENT + 2
+pygame.time.set_timer(TICKEVENT500, 400 )
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
@@ -47,13 +49,15 @@ def event_loop(event: pygame.event.Event):
         terrain.tick_update()
         for pig in elements["pigs"]:
             pig.tick_update()
-
-
+            elements["frites"].append(pig.get_fries())
+    if event.type == TICKEVENT500:
+        for pig in elements["pigs"]:
+            elements["frites"].append(pig.get_fries())
 def logic_loop():
     for key in elements.keys():
         for element in elements[key]:
             element.update(elements)
-
+        
 
 def display_loop():
     for key in elements.keys():

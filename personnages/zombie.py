@@ -6,26 +6,27 @@ from constantes import WIDTH, HEIGHT, CASE_SIZE
 
 
 class Zombie:
-	def __init__(self, speed: int = 1, name: string = "Zombie", damage: int = 10, hp: int = 100):
+	def __init__(self, speed: int = 1, name: string = "Zombie", damage: int = 10, hp: int = 100, coords: tuple = None):
 		self.__name = name
 		self.__hp = hp
 		self.__damage = damage
 		self.__speed = speed
 		self.__alive = True
 		self.__sprite = pygame.image.load("./images/zombie.png")
-
-		side = randrange(4)
-		if side == 0:
-			self.__coords = (randrange(0, WIDTH), 0)
-		elif side == 1:
-			self.__coords = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
-		elif side == 2:
-			self.__coords = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
-		elif side == 3:
-			self.__coords = (0, randrange(0, HEIGHT))
+		if coords is None:
+			side = randrange(4)
+			if side == 0:
+				self.__coords = (randrange(0, WIDTH), 0)
+			elif side == 1:
+				self.__coords = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
+			elif side == 2:
+				self.__coords = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
+			elif side == 3:
+				self.__coords = (0, randrange(0, HEIGHT))
+			else:
+				raise Exception("Error in Zombie.__init__() : side = " + str(side))
 		else:
-			raise Exception("Error in Zombie.__init__() : side = " + str(side))
-
+			self.coords = coords
 	@property
 	def damage(self) -> int:
 		return self.__damage
@@ -54,6 +55,10 @@ class Zombie:
 			self.__hp = hp
 		if self.__hp <= 0:
 			self.__alive = False
+
+	@property
+	def latest_vector(self) -> tuple[int]:
+		return (1,1) # Place holder
 
 	@property
 	def sprite(self) -> pygame.Surface:
@@ -85,4 +90,4 @@ class Zombie:
 		screen.blit(self.sprite, self.__coords)
 
 	def update(self, elements : dict) -> None:
-		pass
+		self.coords = self.coords[0] + 1, self.coords[1] + 1

@@ -1,7 +1,11 @@
 from operator import ne
 import pygame
 from pygame.locals import *
+from lib.lib import get_angle_between_vectors, vector_from_speed_angle
 from .autre_element.health_bar import HealthBar
+from constantes import FRIES_SPEED
+from lib.lib import *
+from .autre_element.fries import Fries
 """
                ,-,------,
               _ \(\(_,--'
@@ -19,7 +23,7 @@ class Pig:
         self.coords = (x, y)
         self.image = pygame.image.load("images/pig.png")
         self.image = pygame.transform.scale(self.image, (65, 65))
-
+        self.target = None
         self.nb_frames = 240
         self.size = size
         self.__animation_frame = 1
@@ -58,8 +62,19 @@ class Pig:
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
+        self.target=elements["zombies"][0]
+        
 
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
         surface.blit(self.image, self.coords)
         self.next_frame()
+
+    def get_fries(self):
+        if self.target and self.target.alive:
+            vector_from_target = self.target.coords[0] - self.coords[0], self.target.coords[1] - self.coords[1]
+            angle = get_angle_between_vectors(
+                self.target.latest_vector, vector_from_target)
+            
+            #print(vector_from_speed_angle(FRIES_SPEED, angle))
+            return (Fries(self.coords, vector_from_speed_angle(FRIES_SPEED, angle)))
