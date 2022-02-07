@@ -86,7 +86,7 @@ class Pig:
         self.next_frame()
 
     def get_fries(self):
-        if self.target and self.target.alive:
+        if self.target and self.target.alive and self.health > 0:
             vector_from_target = self.target.coords[0] - self.coords[0], self.target.coords[1] - self.coords[1]
             angle = get_angle_between_vectors(
                 self.target.latest_vector, vector_from_target)

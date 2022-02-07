@@ -1,3 +1,4 @@
+from tkinter import N
 from constantes import HEIGHT, SIZE, WIDTH, TOURS
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
@@ -49,10 +50,12 @@ def event_loop(event: pygame.event.Event):
         terrain.tick_update()
         for pig in elements["pigs"]:
             pig.tick_update()
-            elements["frites"].append(pig.get_fries())
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
-            elements["frites"].append(pig.get_fries())
+            new_fries = pig.get_fries()
+            if new_fries is not None:
+                elements["frites"].append(new_fries)
+                
 def logic_loop():
     for key in elements.keys():
         for element in elements[key]:
