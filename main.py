@@ -3,8 +3,8 @@ from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
 import sys
 from personnages.pig import Pig
-from personnages.Player import Player
-from personnages.Potatoe import Potatoe
+from personnages.player import Player
+from personnages.potatoe import Potatoe
 
 pygame.init()
 
