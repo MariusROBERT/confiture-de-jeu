@@ -20,6 +20,7 @@ class Pig:
         self.image = pygame.transform.scale(self.image, (65, 65))
         self.health = 50
         self.nb_frames = 240
+        self.size = size
         self.__animation_frame = 1
         self.__hitbox = pygame.Rect(self.coords, self.size)
     @property
