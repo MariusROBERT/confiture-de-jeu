@@ -61,5 +61,5 @@ class Player ():
             self.coords = (self.coords[0], HEIGHT-bordure - self.size[1])
 
     def display(self, screen):
-        self.update()
+        # self.update()
         screen.blit(self.sprite, self.coords)

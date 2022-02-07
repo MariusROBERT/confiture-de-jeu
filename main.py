@@ -15,7 +15,7 @@ clock = pygame.time.Clock()
 player = Player()
 elements = {
     "player": [player],
-    "pigs": [Pig() for i in range(4)],
+    "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [],
     "potatoes": [],
     "frites": [],
@@ -42,7 +42,7 @@ def logic_loop():
 def display_loop():
     for key in elements.keys():
         for element in elements[key]:
-            element.update()
+            element.display(screen)
 
 
 while 1:
