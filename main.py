@@ -10,19 +10,31 @@ pygame.init()
 
 
 screen = pygame.display.set_mode(SIZE)
+elements = []
 
+def clear_screen(screen: pygame.Surface):
+    screen.fill((0, 0, 0))
 
 def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
         sys.exit()
 
-def update_loop():
-    test_pig = Pig()
-    test_pig.draw(screen)
+def logic_loop():
+    if len(elements) == 0:
+        for i in range(4):
+            elements.append(Pig())
+            
+
+def draw_loop():
+    for element in elements:
+        element.draw(screen)
+    
+    
 
 while 1:
-    
+    clear_screen(screen)
     for event in pygame.event.get():
         event_loop(event)
-    update_loop()
+    logic_loop()
+    draw_loop()
     pygame.display.update()
