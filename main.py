@@ -7,7 +7,7 @@ from personnages.pig import Pig
 from personnages.player import Player
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
-
+from personnages.autre_element.fries import Fries
 pygame.init()
 
 
