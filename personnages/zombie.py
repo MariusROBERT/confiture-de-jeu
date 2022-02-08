@@ -6,6 +6,7 @@ from lib.lib import load_image
 from .autre_element.health_bar import HealthBar
 from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 from lib.animated import Animated
+from lib.zombie import randomCoords
 
 
 from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
