@@ -1,21 +1,19 @@
 import string
-from random import randrange
 import pygame
-from math import sqrt
-from lib.lib import load_image
+from lib.lib import get_angle_between_vectors
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
-from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
+from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 from lib.animated import Animated
-from lib.zombie import randomCoords
-
 
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
 from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
 
+
 class Zombie(Animated):
     def __init__(self, speed: int = ZOMBIE_SPEED, name: string = "Zombie",
-                 damage: int = ZOMBIE_DAMAGE, hp: int = ZOMBIE_HEALTH, coords: tuple = None, size: tuple = (CASE_SIZE, CASE_SIZE)):
+                 damage: int = ZOMBIE_DAMAGE, hp: int = ZOMBIE_HEALTH, coords: tuple = None,
+                 size: tuple = (CASE_SIZE, CASE_SIZE)):
         self.health_bar_size = (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
         new_health_bar = HealthBar(
             (-1000, -1000),
@@ -32,8 +30,11 @@ class Zombie(Animated):
         self.__health = hp
         self.damage = damage
         self.speed = speed
-        self.__alive = True
+        self.alive = True
         self.size = size
+        self.dead = False
+        self._time_since_dead = 0
+        self.angle = 0
 
         self.current_animation = "walk"
 
@@ -52,10 +53,21 @@ class Zombie(Animated):
     def health(self, hp) -> None:
         if hp <= 0:
             self.__health = 0
-            self.__alive = False
+            self.dead = True
+            self.current_animation = "dead"
         else:
             self.__health = hp
         self.__health_bar.health = self.__health
+
+    @property
+    def time_since_dead(self) -> int:
+        return self._time_since_dead
+
+    @time_since_dead.setter
+    def time_since_dead(self, value: int) -> None:
+        self._time_since_dead = value
+        if (self._time_since_dead) > DEAD_BODY_LIFESPAN:
+            self.alive = False
 
     @property
     def latest_vector(self) -> tuple[int, int]:
@@ -75,16 +87,16 @@ class Zombie(Animated):
         self.__health_bar.move_to(health_bar_coords)
 
     @property
-    def alive(self) -> bool:
-        return self.__alive
-
-    @property
     def hitbox_degats(self) -> pygame.Rect:
         return pygame.Rect(self.coords, self.size)
 
     @property
     def hitbox_collision(self) -> pygame.Rect:
-        return pygame.Rect((self.coords[0]+COLLIDBOX_SIZE, self.coords[1]+COLLIDBOX_SIZE), (self.size[0]-2*COLLIDBOX_SIZE, self.size[1]-2*COLLIDBOX_SIZE))
+        if not self.dead:
+            return pygame.Rect((self.coords[0] + COLLIDBOX_SIZE, self.coords[1] + COLLIDBOX_SIZE),
+                               (self.size[0] - 2 * COLLIDBOX_SIZE, self.size[1] - 2 * COLLIDBOX_SIZE))
+        else:
+            return pygame.Rect((0, 0), (0, 0))
 
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
@@ -93,16 +105,34 @@ class Zombie(Animated):
         target.is_attacked(self.__damage)
 
     def tick_update(self, elements: tuple) -> None:
+        if self.dead:
+            self.time_since_dead += 1
+
+    def tick_update_100(self, elements: tuple) -> None:
         self.current_frame += 1
 
     def display(self, screen: pygame.Surface) -> None:
-        screen.blit(self.sprite, self.__coords)
-        self.__health_bar.display(screen)
+        # ( A optimiser !!! ) (( si besoin mdr ))
+        if self.dead:
+            image = self.sprite
+            transparence = 255 - (self.time_since_dead *
+                                  255 // DEAD_BODY_LIFESPAN)
+            image.fill((255, 255, 255, transparence),
+                       special_flags=pygame.BLEND_RGBA_MULT)
+            screen.blit(image, self.__coords)
+        else:
+            screen.blit(self.sprite, self.__coords)
+
+        if not self.dead:
+            self.__health_bar.display(screen)
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_degats, 1)
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_collision, 1)
 
     def update(self, elements: dict) -> None:
+        if self.dead:
+            return
+
         olds = self.coords
         # Dirrection du player
         direction = get_direction(
@@ -116,12 +146,19 @@ class Zombie(Animated):
                     self.is_attacked(self.damage)
                     elements["fries"].remove(i)
 
+        # Direction du zombie
+        olds = self.coords
+        direction = get_direction(
+            self.coords, get_target(self.coords, elements["player"][0].coords))
+        produit = abs(direction[0]) + abs(direction[1])
+        self.angle = get_angle_between_vectors(direction, (1, 0))
+
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
         else:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
-            self.speed, self.coords[1] + direction[1] * self.speed
+                      self.speed, self.coords[1] + direction[1] * self.speed
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]

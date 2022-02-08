@@ -3,6 +3,7 @@ FPS = 60
 SHOW_HITBOX = False
 PROB_ZOMBIE_SPAWN = 0.08
 
+
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
 AGE_MAX_TROU = 16
@@ -11,16 +12,20 @@ BORDER_SIZE = 5
 
 # Potatoes
 CHANCE_POTATO = 1
-PROBA_PATATE= 2
+PROBA_PATATE = 2
 
 # Pigs
 NB_ELEM_X = WIDTH // CASE_SIZE
 NB_ELEM_Y = HEIGHT // CASE_SIZE
 
-POS_TOUR_1=(round(((NB_ELEM_X//2)-(NB_ELEM_X//6))*CASE_SIZE), round(((NB_ELEM_Y//2)-(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_2=(round(((NB_ELEM_X//2)+(NB_ELEM_X//6))*CASE_SIZE), round(((NB_ELEM_Y//2)-(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_3=(round(((NB_ELEM_X//2)-(NB_ELEM_X//6))*CASE_SIZE), round(((NB_ELEM_Y//2)+(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_4=(round(((NB_ELEM_X//2)+(NB_ELEM_X//6))*CASE_SIZE), round(((NB_ELEM_Y//2)+(NB_ELEM_Y//4))*CASE_SIZE))
+POS_TOUR_1 = (round(((NB_ELEM_X // 2) - (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) - (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_2 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) - (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_3 = (round(((NB_ELEM_X // 2) - (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) + (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_4 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) + (NB_ELEM_Y // 4)) * CASE_SIZE))
 
 TOURS = [POS_TOUR_1, POS_TOUR_2, POS_TOUR_3, POS_TOUR_4]
 
@@ -38,6 +43,8 @@ DEFAULT_HEALTH_BAR_PADDING = 2
 
 SIZE_ZOMBIE = CASE_SIZE
 COLLIDBOX_SIZE = 8
+DEAD_BODY_LIFESPAN = 10
+
 ZOMBIE_SPEED = 1
 ZOMBIE_DAMAGE = 10
 ZOMBIE_HEALTH = 100
