@@ -84,30 +84,37 @@ class Zombie:
     def alive(self) -> bool:
         return self.__alive
 
-	@property
-	def health(self) -> int:
-		return self.hp
+        @property
+        def health(self) -> int:
+            return self.hp
 
-	@health.setter
-	def health(self, health) -> None:
-		self.hp = health
+        @health.setter
+        def health(self, health) -> None:
+            self.hp = health
 
-	def is_attacked(self, damage: int) -> None:
-		self.hp -= damage
-	def attack(self, target) -> None:
-		target.is_attacked(self.__damage)
+        def is_attacked(self, damage: int) -> None:
+            self.hp -= damage
+
+        def attack(self, target) -> None:
+            target.is_attacked(self.__damage)
 
     def display(self, screen: pygame.Surface) -> None:
         screen.blit(self.sprite, self.__coords)
 
     def update(self, elements: dict) -> None:
         direction = self.get_direction(self.get_target(elements["player"][0].coords))
-        if direction[0] > 0: direction = (1, direction[1])
-        elif direction[0] < 0: direction = (-1, direction[1])
-        else: direction = (0, direction[1])
-        if direction[1] > 0: direction = (direction[0], 1)
-        elif direction[1] < 0: direction = (direction[0], -1)
-        else: direction = (direction[0], 0)
+        if direction[0] > 0:
+            direction = (1, direction[1])
+        elif direction[0] < 0:
+            direction = (-1, direction[1])
+        else:
+            direction = (0, direction[1])
+        if direction[1] > 0:
+            direction = (direction[0], 1)
+        elif direction[1] < 0:
+            direction = (direction[0], -1)
+        else:
+            direction = (direction[0], 0)
         # TODO: slow down on diaagonals and would be better to move in more than 8 directions
         self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
 
