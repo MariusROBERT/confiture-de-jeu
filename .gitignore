@@ -6,3 +6,4 @@ env/
 personnages/__pycache__/Player.cpython-39.pyc
 personnages/__pycache__/Player.cpython-39.pyc
 *.aseprite
+test.py
