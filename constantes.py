@@ -19,15 +19,14 @@ NB_ELEM_Y = HEIGHT // CASE_SIZE
 
 print(NB_ELEM_X, NB_ELEM_Y)
 
-
-POS_TOUR_1 = (round(((NB_ELEM_X//2)-(NB_ELEM_X//6))*CASE_SIZE),
-              round(((NB_ELEM_Y//2)-(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_2 = (round(((NB_ELEM_X//2)+(NB_ELEM_X//6))*CASE_SIZE),
-              round(((NB_ELEM_Y//2)-(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_3 = (round(((NB_ELEM_X//2)-(NB_ELEM_X//6))*CASE_SIZE),
-              round(((NB_ELEM_Y//2)+(NB_ELEM_Y//4))*CASE_SIZE))
-POS_TOUR_4 = (round(((NB_ELEM_X//2)+(NB_ELEM_X//6))*CASE_SIZE),
-              round(((NB_ELEM_Y//2)+(NB_ELEM_Y//4))*CASE_SIZE))
+POS_TOUR_1 = (round(((NB_ELEM_X // 2) - (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) - (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_2 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) - (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_3 = (round(((NB_ELEM_X // 2) - (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) + (NB_ELEM_Y // 4)) * CASE_SIZE))
+POS_TOUR_4 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
+              round(((NB_ELEM_Y // 2) + (NB_ELEM_Y // 4)) * CASE_SIZE))
 
 # POS_TOUR_1=(9*CASE_SIZE,4*CASE_SIZE)
 # POS_TOUR_2=(16*CASE_SIZE,4*CASE_SIZE)
