@@ -121,7 +121,12 @@ class Zombie(Animated):
                        special_flags=pygame.BLEND_RGBA_MULT)
             screen.blit(image, self.__coords)
         else:
-            screen.blit(self.sprite, self.__coords)
+
+            angle = self.angle + 180 + 90
+            rotated_image = pygame.transform.rotate(self.sprite, angle)
+            new_rect = rotated_image.get_rect(
+                center=self.sprite.get_rect(topleft=self.coords).center)
+            screen.blit(rotated_image, new_rect)
 
         if not self.dead:
             self.__health_bar.display(screen)
@@ -158,7 +163,7 @@ class Zombie(Animated):
         else:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
-                      self.speed, self.coords[1] + direction[1] * self.speed
+            self.speed, self.coords[1] + direction[1] * self.speed
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
