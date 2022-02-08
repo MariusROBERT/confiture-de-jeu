@@ -3,6 +3,7 @@ from random import randrange
 import pygame
 from math import sqrt
 from lib.lib import load_image
+from lib.zombie import randomCoords
 from .autre_element.health_bar import HealthBar
 from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 from lib.animated import Animated
@@ -13,14 +14,14 @@ from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, 
 
 class Zombie(Animated):
     def __init__(self, speed: int = 1, name: string = "Zombie",
-                 damage: int = 10, hp: int = 100, coords: tuple = None, size : tuple = (CASE_SIZE, CASE_SIZE)):
-        self.health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
+                 damage: int = 10, hp: int = 100, coords: tuple = None, size: tuple = (CASE_SIZE, CASE_SIZE)):
+        self.health_bar_size = (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
         new_health_bar = HealthBar(
-            (-1000,-1000), 
-            size=self.health_bar_size, 
-            max=hp, 
-            value=hp, 
-            color=(255,30,255), 
+            (-1000, -1000),
+            size=self.health_bar_size,
+            max=hp,
+            value=hp,
+            color=(255, 30, 255),
             auto_hide=True)
         self.__health_bar = new_health_bar
 
@@ -28,48 +29,19 @@ class Zombie(Animated):
 
         self.__name = name
         self.__health = hp
-        self.__damage = damage
-        self.__speed = speed
+        self.damage = damage
+        self.speed = speed
         self.__alive = True
-        self.__size = size
+        self.size = size
 
         self.current_animation = "walk"
 
         if coords is None:
-            side = randrange(4)
-            if side == 0:
-                self.__coords = (randrange(0, WIDTH), 0)
-            elif side == 1:
-                self.__coords = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
-            elif side == 2:
-                self.__coords = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
-            elif side == 3:
-                self.__coords = (0, randrange(0, HEIGHT))
-            else:
-                raise Exception(
-                    "Error in Zombie.__init__() : side = " + str(side))
+            self.__coords = randomCoords()
         else:
             self.__coords = coords
-        
-        #generating health bar for zombie
-        
-        
 
-    @property
-    def damage(self) -> int:
-        return self.__damage
-
-    @damage.setter
-    def damage(self, damage) -> None:
-        self.__damage = damage
-
-    @property
-    def speed(self) -> int:
-        return self.__speed
-
-    @speed.setter
-    def speed(self, speed) -> None:
-        self.__speed = speed
+        # generating health bar for zombie
 
     @property
     def health(self) -> int:
@@ -96,10 +68,10 @@ class Zombie(Animated):
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
         self.__coords = coords
-        center_x 			= coords[0] + self.size[0] / 2
-        health_bar_x 		= center_x - self.health_bar_size[0] / 2
-        health_bar_y 		= coords[1] - self.health_bar_size[1] - 5
-        health_bar_coords 	= (health_bar_x, health_bar_y)
+        center_x = coords[0] + self.size[0] / 2
+        health_bar_x = center_x - self.health_bar_size[0] / 2
+        health_bar_y = coords[1] - self.health_bar_size[1] - 5
+        health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 
     @property
@@ -114,10 +86,6 @@ class Zombie(Animated):
     def hitbox_collision(self) -> pygame.Rect:
 
         return pygame.Rect((self.coords[0]+COLLIDBOX_SIZE, self.coords[1]+COLLIDBOX_SIZE), (self.size[0]-2*COLLIDBOX_SIZE, self.size[1]-2*COLLIDBOX_SIZE))
-
-    @property
-    def size(self) -> tuple[int, int]:
-        return self.__size
 
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
@@ -160,15 +128,19 @@ class Zombie(Animated):
     def update(self, elements: dict) -> None:
 
         olds = self.coords
+
+        # Dirrection du player
         direction = self.get_direction(
             self.get_target(elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
 
+        # Si le zombie est en colision avec une frite
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
             for i in elements["fries"]:
                 if i.hitbox.colliderect(self.hitbox_degats):
-                    self.is_attacked(self.__damage)
+                    self.is_attacked(self.damage)
                     elements["fries"].remove(i)
+
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
         else:
