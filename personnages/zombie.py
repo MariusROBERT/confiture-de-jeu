@@ -140,7 +140,7 @@ class Zombie:
                 if i.hitbox.colliderect(self.hitbox_degats):
                     print("fries")
                     self.is_attacked(self.__damage)
-                    i.kill()
+                    # i.kill()
                     elements["fries"].remove(i)
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
