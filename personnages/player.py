@@ -14,7 +14,7 @@ class Player(Animated):
         self._current_animation = "walk"
 
         self.potatoe_mini = load_image(
-            "./images/player/autre/potatoemini.png", (15, 15))
+            "./images/player/autre/potatoemini.png", (20, 20))
         self.size = (70, 70)
         self.coords = (20, 20)
         self._speed = 300 / FPS
@@ -48,11 +48,8 @@ class Player(Animated):
         valeur = self._speed
         if len(self.direction) == 2:
             valeur *= 0.8
-
         if self.time_since_move < 10:
-
             valeur *= (1 * self.time_since_move + 3) / 10
-
         return valeur
 
     @digging.setter
@@ -66,36 +63,21 @@ class Player(Animated):
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
-            if len(self.direction) >= 2:
-                return
-            if event.key == pygame.K_z:
-                if not "down" in self.direction and not "up" in self.direction:
-                    self.direction.append("up")
-            if event.key == pygame.K_s:
-                if not "up" in self.direction and not "down" in self.direction:
-                    self.direction.append("down")
-            if event.key == pygame.K_q:
-                if not "right" in self.direction and not "left" in self.direction:
-                    self.direction.append("left")
-            if event.key == pygame.K_d:
-                if not "left" in self.direction and not "right" in self.direction:
-                    self.direction.append("right")
-            if len(self.direction) > 0:
-                self.current_animation = "walk"
-
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_z and "up" in self.direction:
-                self.direction.remove("up")
-            if event.key == pygame.K_s and "down" in self.direction:
-                self.direction.remove("down")
-            if event.key == pygame.K_q and "left" in self.direction:
-                self.direction.remove("left")
-            if event.key == pygame.K_d and "right" in self.direction:
-                self.direction.remove("right")
-
-            if len(self.direction) == 0:
-                self.current_animation = "idle"
-                self.time_since_move = 0
+            if not len(self.direction) >= 2:
+                if event.key == pygame.K_z:
+                    if not "down" in self.direction and not "up" in self.direction:
+                        self.direction.append("up")
+                if event.key == pygame.K_s:
+                    if not "up" in self.direction and not "down" in self.direction:
+                        self.direction.append("down")
+                if event.key == pygame.K_q:
+                    if not "right" in self.direction and not "left" in self.direction:
+                        self.direction.append("left")
+                if event.key == pygame.K_d:
+                    if not "left" in self.direction and not "right" in self.direction:
+                        self.direction.append("right")
+                if len(self.direction) > 0:
+                    self.current_animation = "walk"
 
             if event.key == pygame.K_SPACE:
                 # Si il est a proximitée d'un pig
@@ -114,6 +96,20 @@ class Player(Animated):
                     self.digging = True
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_z and "up" in self.direction:
+                self.direction.remove("up")
+            if event.key == pygame.K_s and "down" in self.direction:
+                self.direction.remove("down")
+            if event.key == pygame.K_q and "left" in self.direction:
+                self.direction.remove("left")
+            if event.key == pygame.K_d and "right" in self.direction:
+                self.direction.remove("right")
+
+            if len(self.direction) == 0:
+                self.current_animation = "idle"
+                self.time_since_move = 0
 
     def tick_update(self, elements) -> None:
         self.current_frame += 1
@@ -164,4 +160,4 @@ class Player(Animated):
 
         for i in range(len(self.inventory)):
             screen.blit(
-                self.potatoe_mini, (self.coords[0] + i*15, self.coords[1] - 15))
+                self.potatoe_mini, (self.coords[0] + i*20, self.coords[1] - 20))
