@@ -50,10 +50,16 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
+        print(len(elements["frites"]))
+
+        for frite in elements["frites"]:
+            if not frite.alive:
+                elements["frites"].remove(frite)
+
         terrain.tick_update()
         for pig in elements["pigs"]:
             pig.tick_update()
-
+    # 500 miliseconds
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
@@ -61,6 +67,7 @@ def event_loop(event: pygame.event.Event):
             if new_fries is not None:
                 elements["frites"].append(new_fries)
 
+    # 100 miliseconds
     if event.type == TICKEVENT100:
         player.tick_update(elements)
         for pig in elements["pigs"]:

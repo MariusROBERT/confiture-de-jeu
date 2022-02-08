@@ -1,10 +1,11 @@
 # General
 FPS = 60
+SHOW_HITBOX = True
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
 AGE_MAX_TROU = 16
-CASE_SIZE = 30
+CASE_SIZE = 40
 BORDER_SIZE = 5
 
 # Potatoes
