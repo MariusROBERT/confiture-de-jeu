@@ -78,7 +78,7 @@ class Pig(Animated):
     def tick_update(self):
         self.health -= 9
 
-    def tick_update_2(self, elements) -> None:
+    def tick_update_100(self, elements) -> None:
         self.current_frame += 1
 
     def get_fries(self):
@@ -88,7 +88,7 @@ class Pig(Animated):
                 self.target.coords[1] - self.coords[1]))
 
             normalized_vector = vector_to_target / \
-                                np.sqrt(np.sum(vector_to_target ** 2))
+                np.sqrt(np.sum(vector_to_target ** 2))
             # print(vector_from_speed_angle(FRIES_SPEED, angle))
             return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
 
@@ -100,7 +100,8 @@ class Pig(Animated):
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
-        self.target = nearest_zombie(elements["zombies"], self.coords)
+        self.target = nearest_zombie(
+            [zombie for zombie in elements["zombies"] if not zombie.dead], self.coords)
 
     def display(self, screen: pygame.Surface) -> None:
         self.health_bar.display(screen)

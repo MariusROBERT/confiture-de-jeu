@@ -3,7 +3,7 @@ import pygame
 from lib.lib import load_animation, load_image
 
 from personnages.potatoes import Potatoes
-from constantes import NB_ELEM_X, NB_ELEM_Y, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
+from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
 class Terrain:
@@ -77,6 +77,7 @@ class Terrain:
                 if (i, j) in [x.get_pos_pousse() for x in self.potatoes]:
                     screen.blit(self.pousse, (i, j))
 
-                if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
-                    rect = pygame.Rect(i + 15, j + 15, 20, 20)
-                    pygame.draw.rect(screen, (255, 0, 0), rect, 1)
+                if SHOW_HITBOX:
+                    if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
+                        rect = pygame.Rect(i + 15, j + 15, 20, 20)
+                        pygame.draw.rect(screen, (255, 0, 0), rect, 1)

@@ -115,7 +115,7 @@ class Player(Animated):
                 self.current_animation = "idle"
                 self.time_since_move = 0
 
-    def tick_update(self, elements) -> None:
+    def tick_update_100(self, elements) -> None:
         self.current_frame += 1
         if self.digging:
             self.time_since_dig += 1
