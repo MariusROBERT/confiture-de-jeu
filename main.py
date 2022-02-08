@@ -51,11 +51,11 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
-        print(len(elements["zombies"]))
+        print(len(elements["fries"]))
 
-        for frite in elements["frites"]:
+        for frite in elements["fries"]:
             if not frite.alive:
-                elements["frites"].remove(frite)
+                elements["fries"].remove(frite)
 
         for zombie in elements["zombies"]:
             if not zombie.alive:

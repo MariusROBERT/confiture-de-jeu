@@ -33,8 +33,9 @@ class Fries:
 	def damage(self, value: int):
 		self.__damage = value
 
-	# def kill(self):
-	# 	self.__alive = False
+	@property
+	def alive(self) -> bool:
+		return self.__alive
 
 	def update(self, elements: dict):
 		self.coords = self.coords[0] + self.movement_vector[0], self.coords[1] + self.movement_vector[1]
