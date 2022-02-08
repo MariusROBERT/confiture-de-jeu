@@ -84,19 +84,19 @@ class Zombie:
     def alive(self) -> bool:
         return self.__alive
 
-        @property
-        def health(self) -> int:
-            return self.hp
+    @property
+    def health(self) -> int:
+        return self.hp
 
-        @health.setter
-        def health(self, health) -> None:
-            self.hp = health
+    @health.setter
+    def health(self, health) -> None:
+        self.hp = health
 
-        def is_attacked(self, damage: int) -> None:
-            self.hp -= damage
+    def is_attacked(self, damage: int) -> None:
+        self.hp -= damage
 
-        def attack(self, target) -> None:
-            target.is_attacked(self.__damage)
+    def attack(self, target) -> None:
+        target.is_attacked(self.__damage)
 
     def display(self, screen: pygame.Surface) -> None:
         screen.blit(self.sprite, self.__coords)
