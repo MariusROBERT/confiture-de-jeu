@@ -129,13 +129,9 @@ class Zombie:
         produit = abs(direction[0]) + abs(direction[1])
 
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
-            print("Zombie ate a pig")
             for i in elements["fries"]:
-                print("fries 1")
                 if i.hitbox.colliderect(self.hitbox_degats):
-                    print("fries")
                     self.is_attacked(self.__damage)
-                    # i.kill()
                     elements["fries"].remove(i)
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)

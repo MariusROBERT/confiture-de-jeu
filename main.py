@@ -51,7 +51,6 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
-        print(len(elements["fries"]))
 
         for frite in elements["fries"]:
             if not frite.alive:
