@@ -158,7 +158,7 @@ class Zombie(Animated):
         else:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
-            self.speed, self.coords[1] + direction[1] * self.speed
+                      self.speed, self.coords[1] + direction[1] * self.speed
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
