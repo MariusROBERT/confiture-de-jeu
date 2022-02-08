@@ -26,7 +26,8 @@ class Zombie:
 			else:
 				raise Exception("Error in Zombie.__init__() : side = " + str(side))
 		else:
-			self.coords = coords
+			self.__coords = coords
+
 	@property
 	def damage(self) -> int:
 		return self.__damage
@@ -57,8 +58,8 @@ class Zombie:
 			self.__alive = False
 
 	@property
-	def latest_vector(self) -> tuple[int]:
-		return (1,1) # Place holder
+	def latest_vector(self) -> tuple[int, int]:
+		return 1, 1  # Place holder
 
 	@property
 	def sprite(self) -> pygame.Surface:
@@ -89,5 +90,5 @@ class Zombie:
 	def display(self, screen: pygame.Surface) -> None:
 		screen.blit(self.sprite, self.__coords)
 
-	def update(self, elements : dict) -> None:
+	def update(self, elements: dict) -> None:
 		self.coords = self.coords[0] + 1, self.coords[1] + 1
