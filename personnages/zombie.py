@@ -3,20 +3,26 @@ from random import randrange
 import pygame
 from math import sqrt
 from lib.lib import load_image
+from lib.animated import Animated
+
 
 from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
 
 
-class Zombie:
+class Zombie(Animated):
     def __init__(self, speed: int = 1, name: string = "Zombie",
                  damage: int = 10, hp: int = 100, coords: tuple = None):
+
+        super().__init__("zombie", (SIZE_ZOMBIE, SIZE_ZOMBIE))
+
         self.__name = name
         self.__health = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
         self.__size = (SIZE_ZOMBIE, SIZE_ZOMBIE)
-        self.__sprite = load_image("./images/zombie.png", self.size)
+
+        self.current_animation = "walk"
 
         if coords is None:
             side = randrange(4)
@@ -66,14 +72,6 @@ class Zombie:
     @property
     def latest_vector(self) -> tuple[int, int]:
         return 1, 1  # Place holder
-
-    @property
-    def sprite(self) -> pygame.Surface:
-        return self.__sprite
-
-    @sprite.setter
-    def sprite(self, sprite) -> None:
-        self.__sprite = sprite
 
     @property
     def coords(self) -> tuple[int, int]:
@@ -127,6 +125,9 @@ class Zombie:
     def get_direction_vector(self, target: tuple[int, int]) -> tuple[float, float]:
         return self.get_direction(target)[0] / self.get_distance(target), \
             self.get_direction(target)[1] / self.get_distance(target)
+
+    def tick_update(self, elements: tuple) -> None:
+        self.current_frame += 1
 
     def display(self, screen: pygame.Surface) -> None:
         screen.blit(self.sprite, self.__coords)
