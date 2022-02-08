@@ -27,8 +27,6 @@ class Terrain:
         self.terrain_texture_index = [random.randint(
             0, len(self.base_terrains) - 1) for i in range(self.nbcase+100)]
 
-        print(len(self.terrain_texture_index))
-
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
             self.potatoes.append(Potatoes())

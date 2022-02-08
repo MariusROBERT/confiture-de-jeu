@@ -7,6 +7,9 @@ from lib.player import dir_to_angle
 from .autre_element.health_bar import HealthBar
 import py_sounds
 
+directions = ["up", "down", "left", "right"]
+keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
+
 
 class Player(Animated):
     def __init__(self):
@@ -23,6 +26,7 @@ class Player(Animated):
 
         self._speed = PLAYER_SPEED
         self.direction = []
+        self.pending_direction = []
         self.__alive = True
 
         self.time_since_dig = 0
@@ -51,7 +55,6 @@ class Player(Animated):
             self.__health = hp
 
         self.__health_bar.health = self.__health
-        print(self.__health,  self.__health_bar.health)
 
     @property
     def alive(self) -> bool:
@@ -89,23 +92,38 @@ class Player(Animated):
         else:
             self.current_animation = self._paused_animation
 
+    def add_direction(self, direction: str) -> None:
+        if direction == "up":
+            if not "down" in self.direction and not "up" in self.direction:
+                self.direction.append("up")
+                return True
+        elif direction == "down":
+            if not "up" in self.direction and not "down" in self.direction:
+                self.direction.append("down")
+                return True
+        elif direction == "left":
+            if not "right" in self.direction and not "left" in self.direction:
+                self.direction.append("left")
+                return True
+        elif direction == "right":
+            if not "left" in self.direction and not "right" in self.direction:
+                self.direction.append("right")
+                return True
+        return False
+
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
+
+            dirrection = directions[keys.index(event.key)]
+
             if not len(self.direction) >= 2:
-                if event.key == pygame.K_z:
-                    if not "down" in self.direction and not "up" in self.direction:
-                        self.direction.append("up")
-                if event.key == pygame.K_s:
-                    if not "up" in self.direction and not "down" in self.direction:
-                        self.direction.append("down")
-                if event.key == pygame.K_q:
-                    if not "right" in self.direction and not "left" in self.direction:
-                        self.direction.append("left")
-                if event.key == pygame.K_d:
-                    if not "left" in self.direction and not "right" in self.direction:
-                        self.direction.append("right")
+                self.add_direction(dirrection)
                 if len(self.direction) > 0:
                     self.current_animation = "walk"
+
+            for i in range(len(directions)):
+                if event.key == keys[i] and not directions[i] in self.direction:
+                    self.pending_direction.append(directions[i])
 
             if event.key == pygame.K_SPACE:
                 # Si il est a proximitée d'un pig
@@ -122,19 +140,22 @@ class Player(Animated):
                 # si il est dans la hitbox d'une potatoe
                 if not feeded:
                     self.digging = True
+                    queue_event(py_sounds.DIG)
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
                         queue_event(py_sounds.COLLECT_POTATOE)
 
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_z and "up" in self.direction:
-                self.direction.remove("up")
-            if event.key == pygame.K_s and "down" in self.direction:
-                self.direction.remove("down")
-            if event.key == pygame.K_q and "left" in self.direction:
-                self.direction.remove("left")
-            if event.key == pygame.K_d and "right" in self.direction:
-                self.direction.remove("right")
+            for i in range(4):
+                if event.key == keys[i]:
+                    if directions[i] in self.direction:
+                        self.direction.remove(directions[i])
+                    elif directions[i] in self.pending_direction:
+                        self.pending_direction.remove(directions[i])
+
+            # Ajoute les directions en attente
+            if len(self.pending_direction) > 0 and len(self.direction) < 2:
+                self.add_direction(self.pending_direction.pop(0))
 
             if len(self.direction) == 0:
                 self.current_animation = "idle"

@@ -8,6 +8,7 @@ from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
 import numpy as np
+import py_sounds
 
 """
                ,-,------,
@@ -31,13 +32,14 @@ class Pig(Animated):
         health_bar_size = (size[0] + oversize*2, 10)
         self.health_bar = HealthBar(
             (
-                self.coords[0] - oversize + 2, #2 fix due to texture offset
-                self.coords[1] - (DEFAULT_HEALTH_BAR_BOTTOM_MARGIN + health_bar_size[1])), 
-            value=50, 
-            size= health_bar_size, 
+                self.coords[0] - oversize + 2,  # 2 fix due to texture offset
+                self.coords[1] - (DEFAULT_HEALTH_BAR_BOTTOM_MARGIN + health_bar_size[1])),
+            value=50,
+            size=health_bar_size,
             border_size=2,
             color=(203, 219, 11))
-        self.health = 50
+
+        self.__health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
 
         feed_space = 20
@@ -56,12 +58,16 @@ class Pig(Animated):
     @health.setter
     def health(self, value: int) -> None:
         min_value = -10
+
+        if (value > self.__health):
+            queue_event(py_sounds.FEEDED)
         self.__health = value
         if self.__health <= min_value:
             self.__health = min_value
 
-        if self.__health <= 0:
+        if self.__health <= 0 and self.current_animation != "idle":
             self.current_animation = "idle"
+            queue_event(py_sounds.OUT_OF_FOOD)
 
         self.health_bar.health = value
 
@@ -96,10 +102,10 @@ class Pig(Animated):
 
             normalized_vector = vector_to_target / \
                 np.sqrt(np.sum(vector_to_target ** 2))
-            # print(vector_from_speed_angle(FRIES_SPEED, angle))
             return [Fries(self.center_coords, normalized_vector * FRIES_SPEED)]
         else:
             return []
+
     def tick_update(self):
         self.health -= AUTO_DAMAGE_SPEED
 
