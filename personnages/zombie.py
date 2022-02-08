@@ -88,7 +88,10 @@ class Zombie(Animated):
 
     @property
     def hitbox_degats(self) -> pygame.Rect:
-        return pygame.Rect(self.coords, self.size)
+        if not self.dead:
+            return pygame.Rect(self.coords, self.size)
+        else:
+            return pygame.Rect((0, 0), (0, 0))
 
     @property
     def hitbox_collision(self) -> pygame.Rect:

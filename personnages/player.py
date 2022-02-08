@@ -30,24 +30,26 @@ class Player(Animated):
 
         self.time_since_move = 0
 
-        hp=100
-        new_health_bar= HealthBar((0,0),max=hp,value=hp,color=(159,3,1))
-        self.__health_bar=new_health_bar
-        self.__health=hp
+        hp = 100
+        new_health_bar = HealthBar((0, 0), max=hp, value=hp, color=(159, 3, 1))
+        self.__health_bar = new_health_bar
+        self.__health = hp
 
     @property
-    def health(self)->int:
+    def health(self) -> int:
         return self.__health
 
     @health.setter
-    def health(self,hp)->None:
-        if hp<=0:
-            self.__health=0
-            self.__alive=False
-            self.current_animation="dead"
+    def health(self, hp) -> None:
+        if hp <= 0:
+            self.__health = 0
+            self.__alive = False
+            self.current_animation = "dead"
         else:
-            self.__health=hp
-        self.__health_bar.health=self.__health
+            self.__health = hp
+
+        self.__health_bar.health = self.__health
+        print(self.__health,  self.__health_bar.health)
 
     @property
     def alive(self) -> bool:
@@ -148,7 +150,14 @@ class Player(Animated):
 
     def update(self, elements: dict) -> None:
         # Effectue les deplacement
-        if self._digging:
+
+        zombies_hitboxs = [
+            element.hitbox_degats for element in elements["zombies"]]
+
+        if self.hitbox.collidelist(zombies_hitboxs) != -1:
+            self.health -= 0.1
+
+        if self._digging or self.health <= 0:
             return
 
         for direction in self.direction:
@@ -194,5 +203,5 @@ class Player(Animated):
         for i in range(len(self.inventory)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
-        
+
         self.__health_bar.display(screen)
