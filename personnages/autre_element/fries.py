@@ -1,10 +1,11 @@
 import pygame
-from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, SHOW_HITBOX, HITBOX_FRIES, FRIES_DAMAGE
+from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, SHOW_HITBOX
+from constantes import FRIES_SIZE, FRIES_DAMAGE, HITBOX_FRIES, FRIES_SPEED
 from lib.lib import *
 
 
 class Fries:
-	def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = (6, 40)):
+	def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = FRIES_SIZE):
 		self.coords = coords
 		self.size = size
 		self.__damage = FRIES_DAMAGE
@@ -46,8 +47,7 @@ class Fries:
 		self.__alive = False
 
 	def update(self, elements: dict):
-		self.coords = self.coords[0] + self.movement_vector[0], self.coords[1] + self.movement_vector[1]
-
+		self.coords = self.coords[0] + self.movement_vector[0]*FRIES_SPEED, self.coords[1] + self.movement_vector[1]*FRIES_SPEED
 		self.__alive = self.__alive and 0 < self.coords[0] < WIDTH and 0 < self.coords[1] < HEIGHT
 
 	def display(self, screen):

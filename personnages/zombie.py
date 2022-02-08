@@ -1,21 +1,19 @@
 import string
-from random import randrange
 import pygame
-from math import sqrt
-from lib.lib import load_image
+from lib.lib import get_angle_between_vectors
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
 from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 from lib.animated import Animated
-from lib.zombie import randomCoords
 
-
-from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
 
 
 class Zombie(Animated):
-    def __init__(self, speed: int = 1, name: string = "Zombie",
-                 damage: int = 10, hp: int = 100, coords: tuple = None, size: tuple = (CASE_SIZE, CASE_SIZE)):
+    def __init__(self, speed: int = ZOMBIE_SPEED, name: string = "Zombie",
+                 damage: int = ZOMBIE_DAMAGE, hp: int = ZOMBIE_HEALTH, coords: tuple = None,
+                 size: tuple = (CASE_SIZE, CASE_SIZE)):
         self.health_bar_size = (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
         new_health_bar = HealthBar(
             (-1000, -1000),
@@ -36,6 +34,7 @@ class Zombie(Animated):
         self.size = size
         self.dead = False
         self._time_since_dead = 0
+        self.angle = 0
 
         self.current_animation = "walk"
 
@@ -93,7 +92,8 @@ class Zombie(Animated):
 
     @property
     def hitbox_collision(self) -> pygame.Rect:
-        return pygame.Rect((self.coords[0]+COLLIDBOX_SIZE, self.coords[1]+COLLIDBOX_SIZE), (self.size[0]-2*COLLIDBOX_SIZE, self.size[1]-2*COLLIDBOX_SIZE))
+        return pygame.Rect((self.coords[0] + COLLIDBOX_SIZE, self.coords[1] + COLLIDBOX_SIZE),
+                           (self.size[0] - 2 * COLLIDBOX_SIZE, self.size[1] - 2 * COLLIDBOX_SIZE))
 
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
@@ -142,6 +142,13 @@ class Zombie(Animated):
                 if i.hitbox.colliderect(self.hitbox_degats):
                     self.is_attacked(self.damage)
                     elements["fries"].remove(i)
+
+        # Direction du zombie
+        olds = self.coords
+        direction = get_direction(
+            self.coords, get_target(self.coords, elements["player"][0].coords))
+        produit = abs(direction[0]) + abs(direction[1])
+        self.angle = get_angle_between_vectors(direction, (1, 0))
 
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
