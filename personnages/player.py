@@ -1,9 +1,10 @@
 import pygame
 import os
-from constantes import BORDER_SIZE, CASE_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
+from .autre_element.health_bar import HealthBar
 
 
 class Player(Animated):
@@ -28,6 +29,25 @@ class Player(Animated):
         self._paused_animation = ""
 
         self.time_since_move = 0
+
+        hp=100
+        new_health_bar= HealthBar((0,0),max=hp,value=hp,color=(159,3,1))
+        self.__health_bar=new_health_bar
+        self.__health=hp
+
+    @property
+    def health(self)->int:
+        return self.__health
+
+    @health.setter
+    def health(self,hp)->None:
+        if hp<=0:
+            self.__health=0
+            self.__alive=False
+            self.current_animation="dead"
+        else:
+            self.__health=hp
+        self.__health_bar.health=self.__health
 
     @property
     def alive(self) -> bool:
@@ -174,3 +194,5 @@ class Player(Animated):
         for i in range(len(self.inventory)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
+        
+        self.__health_bar.display(screen)

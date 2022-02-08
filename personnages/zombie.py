@@ -3,7 +3,7 @@ import pygame
 from lib.lib import get_angle_between_vectors
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
-from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
+from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from lib.animated import Animated
 
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
@@ -82,7 +82,7 @@ class Zombie(Animated):
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
-        health_bar_y = coords[1] - self.health_bar_size[1] - 5
+        health_bar_y = coords[1] - self.health_bar_size[1] - DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
         health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 

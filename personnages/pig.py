@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -27,9 +27,16 @@ class Pig(Animated):
         self.coords = (x, y)
 
         self.size = size
-
+        oversize = 10
+        health_bar_size = (size[0] + oversize*2, 10)
         self.health_bar = HealthBar(
-            (self.coords[0] + 11, self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203, 219, 11))
+            (
+                self.coords[0] - oversize + 2, #2 fix due to texture offset
+                self.coords[1] - (DEFAULT_HEALTH_BAR_BOTTOM_MARGIN + health_bar_size[1])), 
+            value=50, 
+            size= health_bar_size, 
+            border_size=2,
+            color=(203, 219, 11))
         self.health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
 
