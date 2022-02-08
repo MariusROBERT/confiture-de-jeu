@@ -92,8 +92,11 @@ class Zombie(Animated):
 
     @property
     def hitbox_collision(self) -> pygame.Rect:
-        return pygame.Rect((self.coords[0] + COLLIDBOX_SIZE, self.coords[1] + COLLIDBOX_SIZE),
-                           (self.size[0] - 2 * COLLIDBOX_SIZE, self.size[1] - 2 * COLLIDBOX_SIZE))
+        if not self.dead:
+            return pygame.Rect((self.coords[0] + COLLIDBOX_SIZE, self.coords[1] + COLLIDBOX_SIZE),
+                               (self.size[0] - 2 * COLLIDBOX_SIZE, self.size[1] - 2 * COLLIDBOX_SIZE))
+        else:
+            return pygame.Rect((0, 0), (0, 0))
 
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
