@@ -11,11 +11,13 @@ class Zombie:
     def __init__(self, speed: int = 1, name: string = "Zombie",
                  damage: int = 10, hp: int = 100, coords: tuple = None):
         self.__name = name
-        self.__hp = hp
+        self.__health = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__sprite = load_image("./images/zombie.png", (CASE_SIZE, CASE_SIZE))
+        self.__size = (CASE_SIZE, CASE_SIZE)
+        self.__sprite = load_image("./images/zombie.png", self.size)
+        self.__hitbox = self.sprite.get_rect()
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -48,16 +50,16 @@ class Zombie:
         self.__speed = speed
 
     @property
-    def hp(self) -> int:
-        return self.__hp
+    def health(self) -> int:
+        return self.__health
 
-    @hp.setter
-    def hp(self, hp) -> None:
+    @health.setter
+    def health(self, hp) -> None:
         if hp <= 0:
-            self.__hp = 0
+            self.__health = 0
         else:
-            self.__hp = hp
-        if self.__hp <= 0:
+            self.__health = hp
+        if self.__health <= 0:
             self.__alive = False
 
     @property
@@ -85,30 +87,18 @@ class Zombie:
         return self.__alive
 
     @property
-    def health(self) -> int:
-        return self.hp
+    def hitbox(self) -> pygame.Rect:
+        return pygame.Rect(self.coords, self.size)
 
-    @health.setter
-    def health(self, health) -> None:
-        self.hp = health
+    @property
+    def size(self) -> tuple[int, int]:
+        return self.__size
 
     def is_attacked(self, damage: int) -> None:
-        self.hp -= damage
+        self.health -= damage
 
     def attack(self, target) -> None:
         target.is_attacked(self.__damage)
-
-    def display(self, screen: pygame.Surface) -> None:
-        screen.blit(self.sprite, self.__coords)
-
-    def update(self, elements: dict) -> None:
-        direction = self.get_direction(self.get_target(elements["player"][0].coords))
-        produit = abs(direction[0]) + abs(direction[1])
-        if produit != 0:
-            direction = (direction[0] / produit, direction[1] / produit)
-        else:
-            direction = (0, 0)
-        self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
 
     def get_distance(self, coords: tuple[int, int]) -> float:
         return sqrt((self.coords[0] - coords[0]) ** 2 + (self.coords[1] - coords[1]) ** 2)
@@ -131,6 +121,24 @@ class Zombie:
         return self.get_direction(target)[0] / self.get_distance(target), \
                self.get_direction(target)[1] / self.get_distance(target)
 
-# def move(self, target) -> None:
-# 	direction = self.get_direction(self.get_target(self.coords))
-# 	self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
+    def display(self, screen: pygame.Surface) -> None:
+        screen.blit(self.sprite, self.__coords)
+
+    def update(self, elements: dict) -> None:
+        direction = self.get_direction(self.get_target(elements["player"][0].coords))
+        produit = abs(direction[0]) + abs(direction[1])
+
+        if self.hitbox.collidelist([element.hitbox for element in elements["fries"]]) != -1:
+            print("Zombie ate a pig")
+            for i in elements["fries"]:
+                print("fries 1")
+                if i.hitbox.colliderect(self.hitbox):
+                    print("fries")
+                    self.is_attacked(self.__damage)
+                    # i.kill()
+                    elements["fries"].remove(i)
+        if produit != 0:
+            direction = (direction[0] / produit, direction[1] / produit)
+        else:
+            direction = (0, 0)
+        self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
