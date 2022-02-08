@@ -1,4 +1,3 @@
-from tkinter import N
 from constantes import HEIGHT, SIZE, WIDTH, TOURS
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
