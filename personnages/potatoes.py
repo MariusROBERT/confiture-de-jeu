@@ -10,26 +10,22 @@ class Potatoes:
         x_pousse = random.randint(0, NB_ELEM_X)
         y_pousse = random.randint(0, NB_ELEM_Y)
         self.__pos_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
-        print("pos_pousse", self.__pos_pousse)
 
         for i in TOURS:
             while (self.__pos_pousse[0] == i[0] and self.__pos_pousse[1] == i[1]) or (self.__pos_pousse[0] > (SIZE[0]-CASE_SIZE) or self.__pos_pousse[0]<0) or (self.__pos_pousse[1] > (SIZE[1]-CASE_SIZE) or self.__pos_pousse[1]<0):
                 x_pousse = random.randint(0, NB_ELEM_X)
                 y_pousse = random.randint(0, NB_ELEM_Y)
                 self.__pos_pousse = x_pousse * CASE_SIZE, y_pousse * CASE_SIZE
-                print("entrée while pos pousse", self.__pos_pousse)
 
         x_patate = randrange(x_pousse - 1, x_pousse + 2)
         y_patate = randrange(y_pousse - 1, y_pousse + 2)
         self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
-        print("pos_patate", self.__pos_patate)
 
         for i in TOURS:
             while (self.__pos_patate[0]== i[0] and self.__pos_patate[1]==i[1]) or (self.__pos_patate[0] > (SIZE[0]-CASE_SIZE) or self.__pos_patate[0]<0) or (self.__pos_patate[1] > (SIZE[1]-CASE_SIZE) or self.__pos_patate[1]<0):
                 x_patate = randrange(x_pousse - 1, x_pousse + 2)
                 y_patate = randrange(y_pousse - 1, y_pousse + 2)
                 self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
-                print("entrée while pos patate:" , self.__pos_patate)
 
         self.image_patate = pygame.image.load("./images/patate.png")
         self.image_pousse = pygame.image.load("./images/pousse_patate.png")
