@@ -17,13 +17,15 @@ class Player(Animated):
             "./images/player/autre/potatoemini.png", (15, 15))
         self.size = (70, 70)
         self.coords = (20, 20)
-        self.speed = 350 / FPS
+        self._speed = 300 / FPS
         self.direction = []
         self.__alive = True
 
         self.time_since_dig = 0
         self._digging = False
         self._paused_animation = ""
+
+        self.time_since_move = 0
 
     @property
     def alive(self) -> bool:
@@ -40,6 +42,18 @@ class Player(Animated):
     @property
     def digging(self) -> bool:
         return self._digging
+
+    @property
+    def speed(self) -> int:
+        valeur = self._speed
+        if len(self.direction) == 2:
+            valeur *= 0.8
+
+        if self.time_since_move < 10:
+
+            valeur *= (1 * self.time_since_move + 3) / 10
+
+        return valeur
 
     @digging.setter
     def digging(self, value: bool) -> None:
@@ -81,6 +95,7 @@ class Player(Animated):
 
             if len(self.direction) == 0:
                 self.current_animation = "idle"
+                self.time_since_move = 0
 
             if event.key == pygame.K_SPACE:
                 # Si il est a proximitée d'un pig
@@ -107,6 +122,9 @@ class Player(Animated):
             if self.time_since_dig > len(self.animation["dig"]):
                 self.digging = False
                 self.time_since_dig = 0
+
+        if len(self.direction) > 0:
+            self.time_since_move += 1
 
     def update(self, elements: dict) -> None:
         # Effectue les deplacement
