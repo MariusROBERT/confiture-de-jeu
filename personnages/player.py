@@ -10,9 +10,9 @@ class Player:
         self.inventory = []
 
         self.animation = {
-            "walk": load_animation("./images/player/walk/walk", (80, 80), 3),
-            "idle": load_animation("./images/player/idle/idle", (80, 80), 2),
-            "dig": load_animation("./images/player/dig/dig", (80, 80), 3)
+            "walk": load_animation("./images/player/walk", (80, 80)),
+            "idle": load_animation("./images/player/idle", (80, 80)),
+            "dig": load_animation("./images/player/dig", (80, 80))
         }
         self._current_animation = "walk"
         self._current_frame = 0

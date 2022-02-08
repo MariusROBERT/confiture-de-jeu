@@ -1,14 +1,18 @@
 import pygame
 import numpy as np
 import math
+import os
 
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
     return pygame.transform.scale(pygame.image.load(path), size).convert_alpha()
 
 
-def load_animation(path: str, size: tuple, nb_frames: int) -> list:
-    return [load_image(f"{path}{i}.png", size) for i in range(1, nb_frames + 1)]
+def load_animation(path: str, size: tuple) -> list:
+    folder_content = sorted(os.listdir(path))
+    print(folder_content)
+    animation = []
+    return [load_image(f"{path}/{file}", size) for file in folder_content]
 
 
 def get_angle_between_vectors(v1: tuple, v2: tuple) -> int:
