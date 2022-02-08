@@ -3,19 +3,19 @@ from random import randrange
 import pygame
 from math import sqrt
 from lib.lib import load_image
-
-from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS
+from .autre_element.health_bar import HealthBar
+from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 
 
 class Zombie:
     def __init__(self, speed: int = 1, name: string = "Zombie",
-                 damage: int = 10, hp: int = 100, coords: tuple = None):
+                 damage: int = 10, hp: int = 100, coords: tuple = None, size : tuple = (CASE_SIZE, CASE_SIZE)):
         self.__name = name
         self.__hp = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__sprite = load_image("./images/zombie.png", (CASE_SIZE, CASE_SIZE))
+        self.__sprite = load_image("./images/zombie.png", size)
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -30,6 +30,16 @@ class Zombie:
                 raise Exception("Error in Zombie.__init__() : side = " + str(side))
         else:
             self.__coords = coords
+        
+        #generating health bar for zombie
+        center_x 			= coords[0] - size[0] / 2
+        center_y 			= coords[1] - size[1] / 2
+        health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
+        health_bar_x 		= center_x - health_bar_size[0] / 2
+        health_bar_y 		= center_y - health_bar_size[1] / 2
+        health_bar_coords 	= (health_bar_x, health_bar_y)
+        new_health_bar = HealthBar(health_bar_coords, size=health_bar_size, max=hp, value=hp-10, color=(255,30,255), auto_hide=True)
+        
 
     @property
     def damage(self) -> int:
