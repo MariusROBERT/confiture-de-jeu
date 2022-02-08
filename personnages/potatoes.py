@@ -1,7 +1,7 @@
 import pygame
 import random
 from random import randrange
-from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
+from constantes import CASE_SIZE, PROBA_PATATE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 
 
 class Potatoes:
@@ -20,11 +20,15 @@ class Potatoes:
         def position(self):
             #x_patate = randrange(x_pousse - 1, x_pousse + 2)
             #y_patate = randrange(y_pousse - 1, y_pousse + 2)
-            x_patate=random.randint(x_pousse-1,x_pousse+1)
-            if x_patate!=0 :
+            if random.randint(0,PROBA_PATATE) == 0:
+                x_patate=x_pousse
                 y_patate=y_pousse
             else:
-                y_patate=random.randint(y_pousse-1,y_pousse+1)
+                x_patate=random.randint(x_pousse-1,x_pousse+1)
+                if x_patate!=0 :
+                    y_patate=y_pousse
+                else:
+                    y_patate=random.randint(y_pousse-1,y_pousse+1)
             self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
             return self.__pos_patate
 

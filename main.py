@@ -23,7 +23,7 @@ terrain = Terrain()
 elements = {
     "terrain": [terrain],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
-    "zombies": [Zombie() for i in range(5)],
+    "zombies": [Zombie() for i in range(10)],
     "player": [player],
     "fries": [],
 

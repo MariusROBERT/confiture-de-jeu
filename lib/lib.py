@@ -26,7 +26,7 @@ def vector_from_speed_angle(speed : int, angle : int) -> tuple:
    tan_teta = math.tan(math.radians(angle))
    vector_y = (speed * tan_teta) / (1 + tan_teta)
    vector_x = speed - vector_y
-   return (vector_x, vector_y)
+   return vector_x, vector_y
 
 def rot_center(image, angle, x, y):
     
@@ -36,11 +36,11 @@ def rot_center(image, angle, x, y):
     return rotated_image, new_rect
 
 def nearest_zombie(zombies : 'Zombie', coords : tuple) -> 'Zombie':
-    nearest_zombie = None
+    nearest = None
     nearest_distance = float('inf')
     for zombie in zombies:
         distance = math.sqrt((zombie.coords[0] - coords[0])**2 + (zombie.coords[1] - coords[1])**2)
         if distance < nearest_distance:
-            nearest_zombie = zombie
+            nearest = zombie
             nearest_distance = distance
-    return nearest_zombie
+    return nearest
