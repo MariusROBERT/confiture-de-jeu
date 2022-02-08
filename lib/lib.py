@@ -5,7 +5,7 @@ import os
 
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
-    return pygame.tra1nsform.scale(pygame.image.load(path), size).convert_alpha()
+    return pygame.transform.scale(pygame.image.load(path), size).convert_alpha()
 
 
 def load_animation(path: str, size: tuple) -> list:
