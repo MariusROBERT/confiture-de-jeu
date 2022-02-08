@@ -1,4 +1,5 @@
 import random
+from tkinter import W
 import pygame
 from lib.lib import load_animation, load_image
 
@@ -8,8 +9,11 @@ from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_M
 
 class Terrain:
     def __init__(self) -> None:
-        self.base_terrain = load_image(
-            "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
+        # self.base_terrain = load_image(
+        #     "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
+
+        self.base_terrains = load_animation(
+            "images/terrain/sol", (CASE_SIZE, CASE_SIZE))
         self.pousse = load_image(
             "images/terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
         self.trous_images = load_animation(
@@ -18,7 +22,12 @@ class Terrain:
         self.potatoes = []
         self.trous = []
 
-        self.nbcase = NB_ELEM_X * NB_ELEM_Y
+        self.nbcase = (NB_ELEM_X + 1) * (NB_ELEM_Y + 1)
+
+        self.terrain_texture_index = [random.randint(
+            0, len(self.base_terrains) - 1) for i in range(self.nbcase+100)]
+
+        print(len(self.terrain_texture_index))
 
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
@@ -35,7 +44,7 @@ class Terrain:
                 self.trous.remove(trou)
                 pass
 
-    @property
+    @ property
     def potatoes_hitbox(self) -> list:
         pos_patates = [x.get_pos_patate() for x in self.potatoes]
 
@@ -57,10 +66,12 @@ class Terrain:
         pass
 
     def display(self, screen: pygame.Surface) -> None:
+        a = 0
         for i in range(0, SIZE[0], CASE_SIZE):
             for j in range(0, SIZE[1], CASE_SIZE):
 
-                screen.blit(self.base_terrain, (i, j))
+                screen.blit(
+                    self.base_terrains[self.terrain_texture_index[a]], (i, j))
                 trou = list(
                     filter(lambda x: x["coords"] == (i, j), self.trous))
                 if len(trou) > 0:
@@ -81,3 +92,5 @@ class Terrain:
                     if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
                         rect = pygame.Rect(i + 15, j + 15, 20, 20)
                         pygame.draw.rect(screen, (255, 0, 0), rect, 1)
+
+                a += 1
