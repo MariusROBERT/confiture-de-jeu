@@ -78,6 +78,9 @@ def event_loop(event: pygame.event.Event):
         for pig in elements["pigs"]:
             pig.tick_update_2(elements)
 
+        for zombie in elements["zombies"]:
+            zombie.tick_update(elements)
+
         if random() < PROB_ZOMBIE_SPAWN:
             elements["zombies"].append(Zombie(speed=random()*1.5+0.8))
 

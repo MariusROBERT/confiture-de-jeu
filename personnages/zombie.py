@@ -3,20 +3,37 @@ from random import randrange
 import pygame
 from math import sqrt
 from lib.lib import load_image
+from .autre_element.health_bar import HealthBar
+from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
+from lib.animated import Animated
+
 
 from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
 
 
-class Zombie:
+class Zombie(Animated):
     def __init__(self, speed: int = 1, name: string = "Zombie",
-                 damage: int = 10, hp: int = 100, coords: tuple = None):
+                 damage: int = 10, hp: int = 100, coords: tuple = None, size : tuple = (CASE_SIZE, CASE_SIZE)):
+        self.health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
+        new_health_bar = HealthBar(
+            (-1000,-1000), 
+            size=self.health_bar_size, 
+            max=hp, 
+            value=hp, 
+            color=(255,30,255), 
+            auto_hide=True)
+        self.__health_bar = new_health_bar
+
+        super().__init__("zombie", (SIZE_ZOMBIE, SIZE_ZOMBIE))
+
         self.__name = name
         self.__health = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__size = (SIZE_ZOMBIE, SIZE_ZOMBIE)
-        self.__sprite = load_image("./images/zombie.png", self.size)
+        self.__size = size
+
+        self.current_animation = "walk"
 
         if coords is None:
             side = randrange(4)
@@ -33,6 +50,10 @@ class Zombie:
                     "Error in Zombie.__init__() : side = " + str(side))
         else:
             self.__coords = coords
+        
+        #generating health bar for zombie
+        
+        
 
     @property
     def damage(self) -> int:
@@ -62,18 +83,11 @@ class Zombie:
             self.__health = hp
         if self.__health <= 0:
             self.__alive = False
+        self.__health_bar.health = self.__health
 
     @property
     def latest_vector(self) -> tuple[int, int]:
         return 1, 1  # Place holder
-
-    @property
-    def sprite(self) -> pygame.Surface:
-        return self.__sprite
-
-    @sprite.setter
-    def sprite(self, sprite) -> None:
-        self.__sprite = sprite
 
     @property
     def coords(self) -> tuple[int, int]:
@@ -82,6 +96,11 @@ class Zombie:
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
         self.__coords = coords
+        center_x 			= coords[0] + self.size[0] / 2
+        health_bar_x 		= center_x - self.health_bar_size[0] / 2
+        health_bar_y 		= coords[1] - self.health_bar_size[1] - 5
+        health_bar_coords 	= (health_bar_x, health_bar_y)
+        self.__health_bar.move_to(health_bar_coords)
 
     @property
     def alive(self) -> bool:
@@ -128,8 +147,12 @@ class Zombie:
         return self.get_direction(target)[0] / self.get_distance(target), \
             self.get_direction(target)[1] / self.get_distance(target)
 
+    def tick_update(self, elements: tuple) -> None:
+        self.current_frame += 1
+
     def display(self, screen: pygame.Surface) -> None:
         screen.blit(self.sprite, self.__coords)
+        self.__health_bar.display(screen)
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_degats, 1)
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_collision, 1)
