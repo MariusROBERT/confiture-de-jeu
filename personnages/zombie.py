@@ -17,7 +17,7 @@ class Zombie:
         self.__alive = True
         self.__size = (CASE_SIZE, CASE_SIZE)
         self.__sprite = load_image("./images/zombie.png", self.size)
-        self.__hitbox = self.sprite.get_rect()
+        self.__hitbox_degats = self.sprite.get_rect()
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -87,7 +87,7 @@ class Zombie:
         return self.__alive
 
     @property
-    def hitbox(self) -> pygame.Rect:
+    def hitbox_degats(self) -> pygame.Rect:
         return pygame.Rect(self.coords, self.size)
 
     @property
@@ -128,11 +128,11 @@ class Zombie:
         direction = self.get_direction(self.get_target(elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
 
-        if self.hitbox.collidelist([element.hitbox for element in elements["fries"]]) != -1:
+        if self.hitbox_degats.collidelist([element.hitbox_degats for element in elements["fries"]]) != -1:
             print("Zombie ate a pig")
             for i in elements["fries"]:
                 print("fries 1")
-                if i.hitbox.colliderect(self.hitbox):
+                if i.hitbox_degats.colliderect(self.hitbox_degats):
                     print("fries")
                     self.is_attacked(self.__damage)
                     # i.kill()
