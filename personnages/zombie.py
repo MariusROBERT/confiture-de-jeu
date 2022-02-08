@@ -2,19 +2,20 @@ import string
 from random import randrange
 import pygame
 from math import sqrt
+from lib.lib import load_image
 
 from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS
 
 
 class Zombie:
-    def __init__(self, speed: int = 0.01, name: string = "Zombie",
+    def __init__(self, speed: int = 1, name: string = "Zombie",
                  damage: int = 10, hp: int = 100, coords: tuple = None):
         self.__name = name
         self.__hp = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__sprite = pygame.image.load("./images/zombie.png")
+        self.__sprite = load_image("./images/zombie.png", (CASE_SIZE, CASE_SIZE))
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -94,6 +95,13 @@ class Zombie:
 
     def update(self, elements: dict) -> None:
         direction = self.get_direction(self.get_target(elements["player"][0].coords))
+        if direction[0] > 0: direction = (1, direction[1])
+        elif direction[0] < 0: direction = (-1, direction[1])
+        else: direction = (0, direction[1])
+        if direction[1] > 0: direction = (direction[0], 1)
+        elif direction[1] < 0: direction = (direction[0], -1)
+        else: direction = (direction[0], 0)
+        # TODO: slow down on diaagonals and would be better to move in more than 8 directions
         self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
 
     def get_distance(self, coords: tuple[int, int]) -> float:
