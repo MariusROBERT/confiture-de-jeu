@@ -2,9 +2,10 @@ import pygame
 import os
 from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
-from lib.lib import load_animation, load_image
+from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
 from .autre_element.health_bar import HealthBar
+import py_sounds
 
 
 class Player(Animated):
@@ -123,6 +124,7 @@ class Player(Animated):
                     self.digging = True
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
+                        queue_event(py_sounds.COLLECT_POTATOE)
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_z and "up" in self.direction:

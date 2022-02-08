@@ -32,7 +32,8 @@ def vector_from_speed_angle(speed: int, angle: int) -> tuple:
 
 def rot_center(image, angle, x, y):
     rotated_image = pygame.transform.rotate(image, angle)
-    new_rect = rotated_image.get_rect(center=image.get_rect(center=(x, y)).center)
+    new_rect = rotated_image.get_rect(
+        center=image.get_rect(center=(x, y)).center)
 
     return rotated_image, new_rect
 
@@ -41,8 +42,13 @@ def nearest_zombie(zombies: 'Zombie', coords: tuple) -> 'Zombie':
     nearest = None
     nearest_distance = float('inf')
     for zombie in zombies:
-        distance = math.sqrt((zombie.coords[0] - coords[0]) ** 2 + (zombie.coords[1] - coords[1]) ** 2)
+        distance = math.sqrt(
+            (zombie.coords[0] - coords[0]) ** 2 + (zombie.coords[1] - coords[1]) ** 2)
         if distance < nearest_distance:
             nearest = zombie
             nearest_distance = distance
     return nearest
+
+
+def queue_event(id: int):
+    pygame.event.post(pygame.event.Event(id))

@@ -10,6 +10,7 @@ from personnages.player import Player
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
+import py_sounds
 
 pygame.init()
 
@@ -39,6 +40,7 @@ pygame.time.set_timer(TICKEVENT500, 200)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
+collect_sound = pygame.mixer.Sound("sounds/collect.wav")
 
 
 def clear_screen(screen: pygame.Surface):
@@ -51,9 +53,10 @@ def event_loop(event: pygame.event.Event):
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
 
+    py_sounds.sound_manager(pygame, event)  # Check si il faut jouer un son
+
     # Every seconds
     if event.type == TICKEVENT:
-
         for frite in elements["fries"]:
             if not frite.alive:
                 elements["fries"].remove(frite)

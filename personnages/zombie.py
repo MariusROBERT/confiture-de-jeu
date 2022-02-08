@@ -1,6 +1,6 @@
 import string
 import pygame
-from lib.lib import get_angle_between_vectors
+from lib.lib import get_angle_between_vectors, queue_event
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
 from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
@@ -8,6 +8,7 @@ from lib.animated import Animated
 
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
 from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
+import py_sounds
 
 
 class Zombie(Animated):
@@ -55,6 +56,7 @@ class Zombie(Animated):
             self.__health = 0
             self.dead = True
             self.current_animation = "dead"
+            queue_event(py_sounds.DEAD_ZOMBIE)
         else:
             self.__health = hp
         self.__health_bar.health = self.__health
@@ -82,7 +84,8 @@ class Zombie(Animated):
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
-        health_bar_y = coords[1] - self.health_bar_size[1] - DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+        health_bar_y = coords[1] - self.health_bar_size[1] - \
+            DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
         health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 
@@ -170,7 +173,7 @@ class Zombie(Animated):
         else:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
-                      self.speed, self.coords[1] + direction[1] * self.speed
+            self.speed, self.coords[1] + direction[1] * self.speed
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
