@@ -1,6 +1,6 @@
 import pygame
 import os
-from constantes import CASE_SIZE, FPS, PLAYER_SPEED, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, FPS, PLAYER_SPEED, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
@@ -146,15 +146,15 @@ class Player(Animated):
                     self.coords = originels
 
         # Verifie les collisions avec les bords
-        bordure = 5
-        if self.coords[0] < bordure:
-            self.coords = (bordure, self.coords[1])
-        if self.coords[0] > WIDTH - bordure - self.size[0]:
-            self.coords = (WIDTH - bordure - self.size[0], self.coords[1])
-        if self.coords[1] < bordure:
-            self.coords = (self.coords[0], bordure)
-        if self.coords[1] > HEIGHT - bordure - self.size[1]:
-            self.coords = (self.coords[0], HEIGHT - bordure - self.size[1])
+
+        if self.coords[0] < BORDER_SIZE:
+            self.coords = (BORDER_SIZE, self.coords[1])
+        if self.coords[0] > WIDTH - BORDER_SIZE - self.size[0]:
+            self.coords = (WIDTH - BORDER_SIZE - self.size[0], self.coords[1])
+        if self.coords[1] < BORDER_SIZE:
+            self.coords = (self.coords[0], BORDER_SIZE)
+        if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
+            self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
 
     def display(self, screen) -> None:
         angle = dir_to_angle(self.direction)
