@@ -38,7 +38,7 @@ class Pig:
         feed_space = 20
         self.__hitbox_feed = pygame.Rect(
             (self.coords[0] - feed_space, self.coords[1]-feed_space), (self.size[0]+feed_space*2, self.size[1] + feed_space*2))
-
+        self.center_coords = (self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
     @property
     def health(self) -> int:
         return self.__health
@@ -93,4 +93,4 @@ class Pig:
             
             normalized_vector = vector_to_target / np.sqrt(np.sum(vector_to_target**2))
             #print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return (Fries(self.coords, normalized_vector * FRIES_SPEED))
+            return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
