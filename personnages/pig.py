@@ -22,7 +22,8 @@ class Pig:
     def __init__(self, x: int, y: int, size=(80, 80)):
         self.coords = (x, y)
 
-        self.image = load_image("images/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
+        self.image = load_image(
+            "images/pig/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
 
         self.nb_frames = 240
         self.size = size
@@ -75,8 +76,7 @@ class Pig:
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
-        self.target=elements["zombies"][0]
-        
+        self.target = elements["zombies"][0]
 
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
@@ -86,9 +86,10 @@ class Pig:
 
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
-            vector_from_target = self.target.coords[0] - self.coords[0], self.target.coords[1] - self.coords[1]
+            vector_from_target = self.target.coords[0] - \
+                self.coords[0], self.target.coords[1] - self.coords[1]
             angle = get_angle_between_vectors(
                 self.target.latest_vector, vector_from_target)
-            
+
             #print(vector_from_speed_angle(FRIES_SPEED, angle))
             return (Fries(self.coords, vector_from_speed_angle(FRIES_SPEED, angle)))

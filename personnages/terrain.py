@@ -9,10 +9,11 @@ from constantes import SIZE, CASE_SIZE
 class Terrain:
     def __init__(self) -> None:
         self.base_terrain = load_image(
-            "images/soltest3.png", (CASE_SIZE, CASE_SIZE))
-        self.pousse = load_image("images/pousse2.png", (CASE_SIZE, CASE_SIZE))
+            "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
+        self.pousse = load_image(
+            "images/terrain/pousse2.png", (CASE_SIZE, CASE_SIZE))
         self.trous_image = load_image(
-            "images/trou.png", (CASE_SIZE, CASE_SIZE))
+            "images/terrain/trou.png", (CASE_SIZE, CASE_SIZE))
 
         self.potatoes = []
         self.trous = []

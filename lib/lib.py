@@ -1,16 +1,25 @@
 import pygame
 import numpy as np
 import math
+import os
+
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
     return pygame.tra1nsform.scale(pygame.image.load(path), size).convert_alpha()
 
-def get_angle_between_vectors(v1 : tuple, v2 : tuple) -> int:
+
+def load_animation(path: str, size: tuple) -> list:
+    folder_content = sorted(os.listdir(path))
+    return [load_image(f"{path}/{file}", size) for file in folder_content]
+
+
+def get_angle_between_vectors(v1: tuple, v2: tuple) -> int:
     dot_product = np.dot(v1, v2)
     angle = np.arccos(dot_product/(np.linalg.norm(v2)*np.linalg.norm(v1)))
     return math.degrees(angle)
 
-def get_vector_angle(v1 : tuple) -> int:
+
+def get_vector_angle(v1: tuple) -> int:
     return math.degrees(math.atan2(v1[1], v1[0]))
 
 def vector_from_speed_angle(speed : int, angle : int) -> tuple:
