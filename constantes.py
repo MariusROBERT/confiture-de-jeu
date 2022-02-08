@@ -1,6 +1,6 @@
 # General
 FPS = 60
-SHOW_HITBOX = True
+SHOW_HITBOX = False
 PROB_ZOMBIE_SPAWN = 0.08
 
 # Terrain
