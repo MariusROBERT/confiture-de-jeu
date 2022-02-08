@@ -1,6 +1,8 @@
 import pygame
 pygame.init()
 
+
+# EVENT DE 10 A 20 reservés
 COLLECT_POTATOE = pygame.USEREVENT + 10
 collect_sound = pygame.mixer.Sound("sounds/collect.wav")
 

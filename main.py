@@ -4,6 +4,7 @@ from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
 import sys
+from personnages.autre_element.fx_manager import Fx_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
 from personnages.player import Player
@@ -21,12 +22,15 @@ player = Player()
 # patate=Potatoe()
 terrain = Terrain()
 
+fx_manager = Fx_manager()
+
 elements = {
     "terrain": [terrain],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [Zombie() for i in range(ZOMBIE_SPAWN)],
     "player": [player],
     "fries": [],
+    "fx_manager": [fx_manager]
 
 }
 
@@ -54,9 +58,11 @@ def event_loop(event: pygame.event.Event):
         player.move(event, elements)
 
     py_sounds.sound_manager(pygame, event)  # Check si il faut jouer un son
+    fx_manager.event_manager(event)
 
     # Every seconds
     if event.type == TICKEVENT:
+        terrain.tick_update()
         for frite in elements["fries"]:
             if not frite.alive:
                 elements["fries"].remove(frite)
@@ -65,8 +71,6 @@ def event_loop(event: pygame.event.Event):
             zombie.tick_update(elements)
             if not zombie.alive:
                 elements["zombies"].remove(zombie)
-
-        terrain.tick_update()
         for pig in elements["pigs"]:
             pig.tick_update()
 
@@ -80,6 +84,8 @@ def event_loop(event: pygame.event.Event):
     # 100 miliseconds
     if event.type == TICKEVENT100:
         player.tick_update_100(elements)
+        fx_manager.tick_update_100(elements)
+
         for pig in elements["pigs"]:
             pig.tick_update_100(elements)
 
