@@ -20,11 +20,11 @@ import numpy as np
 
 
 class Pig:
-    def __init__(self, x: int, y: int, size=(80, 80)):
+    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE)):
         self.coords = (x, y)
 
         self.image = load_image(
-            "images/pig/cochonwtf2.png", (CASE_SIZE, CASE_SIZE))
+            "images/pig/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
 
         self.nb_frames = 240
         self.size = size
@@ -38,7 +38,9 @@ class Pig:
         feed_space = 20
         self.__hitbox_feed = pygame.Rect(
             (self.coords[0] - feed_space, self.coords[1]-feed_space), (self.size[0]+feed_space*2, self.size[1] + feed_space*2))
-        self.center_coords = (self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
+        self.center_coords = (
+            self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
+
     @property
     def health(self) -> int:
         return self.__health
@@ -88,9 +90,10 @@ class Pig:
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
             vector_to_target = np.array((
-             self.target.coords[0] - self.coords[0], 
-             self.target.coords[1] - self.coords[1] ))
-            
-            normalized_vector = vector_to_target / np.sqrt(np.sum(vector_to_target**2))
+                self.target.coords[0] - self.coords[0],
+                self.target.coords[1] - self.coords[1]))
+
+            normalized_vector = vector_to_target / \
+                np.sqrt(np.sum(vector_to_target**2))
             #print(vector_from_speed_angle(FRIES_SPEED, angle))
             return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
