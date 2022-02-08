@@ -3,7 +3,7 @@ import pygame
 from lib.lib import load_animation, load_image
 
 from personnages.potatoes import Potatoes
-from constantes import NB_ELEM_X, NB_ELEM_Y, SIZE, CASE_SIZE, AGE_MAX_TROU
+from constantes import NB_ELEM_X, NB_ELEM_Y, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
 class Terrain:
@@ -15,17 +15,13 @@ class Terrain:
         self.trous_images = load_animation(
             "images/terrain/trou",  (CASE_SIZE, CASE_SIZE))
 
-        # load_image(
-        #     "images/terrain/trou2.png", (CASE_SIZE, CASE_SIZE))
-
         self.potatoes = []
         self.trous = []
 
         self.nbcase = NB_ELEM_X * NB_ELEM_Y
 
     def tick_update(self) -> None:
-        chance = 2
-        if random.randint(0, chance) == 0:
+        if random.randint(0, CHANCE_POTATO) == 0:
             self.potatoes.append(Potatoes())
 
         for potato in self.potatoes:
@@ -82,6 +78,5 @@ class Terrain:
                     screen.blit(self.pousse, (i, j))
 
                 if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
-                    potatosize = 20
                     rect = pygame.Rect(i+15, j+15, 20, 20)
                     pygame.draw.rect(screen, (255, 0, 0), rect, 1)
