@@ -1,6 +1,7 @@
 from operator import ne
 import pygame
 from pygame.locals import *
+from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
 from constantes import CASE_SIZE, FRIES_SPEED
 from .autre_element.health_bar import HealthBar
@@ -19,16 +20,13 @@ import numpy as np
 """
 
 
-class Pig:
+class Pig(Animated):
     def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE)):
+        super().__init__("pig", size)
         self.coords = (x, y)
-
-        self.image = load_image(
-            "images/pig/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
 
         self.nb_frames = 240
         self.size = size
-        self.__animation_frame = 1
 
         self.health_bar = HealthBar(
             (self.coords[0]+11, self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203, 219, 11))
@@ -41,6 +39,8 @@ class Pig:
         self.center_coords = (
             self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
 
+        self._current_animation = "fire"
+
     @property
     def health(self) -> int:
         return self.__health
@@ -49,8 +49,11 @@ class Pig:
     def health(self, value: int) -> None:
         min_value = -10
         self.__health = value
-        if self.__health <= min_value:
+        if (self.__health <= min_value):
             self.__health = min_value
+
+        if (self.__health <= 0):
+            self.current_animation = "idle"
 
         self.health_bar.health = value
 
@@ -66,16 +69,14 @@ class Pig:
     def hitbox_feed(self) -> pygame.Rect:
         return self.__hitbox_feed
 
-    def next_frame(self) -> None:
-        self.__animation_frame += 1
-        if self.__animation_frame > self.nb_frames:
-            self.__animation_frame = 1
-
     def feed(self, nourish_value: int = 20) -> None:
         self.health += 20
 
     def tick_update(self):
-        self.health -= 1
+        self.health -= 9
+
+    def tick_update_2(self, elements) -> None:
+        self.current_frame += 1
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
@@ -83,9 +84,7 @@ class Pig:
 
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
-        surface.blit(self.image, self.coords)
-
-        self.next_frame()
+        surface.blit(self.sprite, self.coords)
 
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
@@ -95,5 +94,5 @@ class Pig:
 
             normalized_vector = vector_to_target / \
                 np.sqrt(np.sum(vector_to_target**2))
-            #print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
+            # print(vector_from_speed_angle(FRIES_SPEED, angle))
+            return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
