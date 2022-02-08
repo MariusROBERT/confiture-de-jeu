@@ -1,6 +1,7 @@
 from random import random
 from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
 from constantes import FPS, HEIGHT, SIZE, WIDTH
+from constantes import ZOMBIE_SPAWN
 import pygame
 import sys
 from personnages.pig import Pig
@@ -22,14 +23,14 @@ terrain = Terrain()
 
 elements = {
     "terrain": [terrain],
-    "pigs": [Pig(x, y) for (x, y) in TOURS],
-    "zombies": [Zombie() for i in range(10)],
+    "pigs": [],#Pig(x, y) for (x, y) in TOURS],
+    "zombies": [Zombie() for i in range(ZOMBIE_SPAWN)],
     "player": [player],
     "fries": [],
 
 }
 
-elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
+# elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
 
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
@@ -84,8 +85,8 @@ def event_loop(event: pygame.event.Event):
         for zombie in elements["zombies"]:
             zombie.tick_update_100(elements)
 
-        if random() < PROB_ZOMBIE_SPAWN:
-            elements["zombies"].append(Zombie(speed=random()*1.5+0.8))
+        # if random() < PROB_ZOMBIE_SPAWN:
+        #     elements["zombies"].append(Zombie(speed=random()*1.5+0.8))
 
 
 def logic_loop():

@@ -156,14 +156,18 @@ class Zombie(Animated):
         direction = get_direction(
             self.coords, get_target(self.coords, elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
-        self.angle = get_angle_between_vectors(direction, (1, 0))
+
+        self.angle = get_angle_between_vectors(direction, (0, 1))
+        if direction[0] < 0:
+            self.angle = - self.angle
+        self.angle -= 90
 
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
         else:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
-            self.speed, self.coords[1] + direction[1] * self.speed
+                      self.speed, self.coords[1] + direction[1] * self.speed
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
