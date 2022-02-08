@@ -22,7 +22,7 @@ class Potatoes:
         self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
 
         for i in TOURS:
-            while self.__pos_patate in i and self.__pos_patate[0] < SIZE[0] and self.__pos_patate[1] < SIZE[1]:
+            while self.__pos_patate in i and self.__pos_patate[0] > SIZE[0] and self.__pos_patate[1] > SIZE[1]:
                 x_patate = randrange(x_pousse - 1, x_pousse + 2)
                 y_patate = randrange(y_pousse - 1, y_pousse + 2)
                 self.__pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
