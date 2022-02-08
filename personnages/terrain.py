@@ -13,7 +13,7 @@ class Terrain:
         self.pousse = load_image(
             "images/terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
         self.trous_images = load_animation(
-            "images/terrain/trou",  (CASE_SIZE, CASE_SIZE))
+            "images/terrain/trou", (CASE_SIZE, CASE_SIZE))
 
         self.potatoes = []
         self.trous = []
@@ -46,8 +46,8 @@ class Terrain:
             {"coords": coordsbase, "old": 0, "imgIndex": random.randint(1, len(self.trous_images))})
         for patate in self.potatoes:
             pos_patate = patate.get_pos_patate()
-            if pos_patate[0] > coords[0] - CASE_SIZE and pos_patate[0] < coords[0] + CASE_SIZE:
-                if pos_patate[1] > coords[1] - CASE_SIZE and pos_patate[1] < coords[1] + CASE_SIZE:
+            if coords[0] - CASE_SIZE < pos_patate[0] < coords[0] + CASE_SIZE:
+                if coords[1] - CASE_SIZE < pos_patate[1] < coords[1] + CASE_SIZE:
                     self.potatoes.remove(patate)
                     return True
 
@@ -78,5 +78,5 @@ class Terrain:
                     screen.blit(self.pousse, (i, j))
 
                 if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
-                    rect = pygame.Rect(i+15, j+15, 20, 20)
+                    rect = pygame.Rect(i + 15, j + 15, 20, 20)
                     pygame.draw.rect(screen, (255, 0, 0), rect, 1)
