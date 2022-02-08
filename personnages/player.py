@@ -1,6 +1,6 @@
 import pygame
 import os
-from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT
+from constantes import CASE_SIZE, FPS, PLAYER_SPEED, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
@@ -15,9 +15,10 @@ class Player(Animated):
 
         self.potatoe_mini = load_image(
             "./images/player/autre/potatoemini.png", (20, 20))
-        self.size = (CASE_SIZE/0.8, CASE_SIZE/0.8)
+        self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (20, 20)
-        self._speed = 300 / FPS
+
+        self._speed = PLAYER_SPEED
         self.direction = []
         self.__alive = True
 
