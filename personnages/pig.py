@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -86,7 +86,7 @@ class Pig(Animated):
             return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
 
     def tick_update(self):
-        self.health -= 9
+        self.health -= AUTO_DAMAGE_SPEED
 
     def tick_update_2(self, elements) -> None:
         self.current_frame += 1
