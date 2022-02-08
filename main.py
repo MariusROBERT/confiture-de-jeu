@@ -23,7 +23,7 @@ elements = {
     "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [Zombie(coords=(0, 0)) for i in range(1)],
     "player": [player],
-    "frites": [],
+    "fries": [],
 
 }
 
@@ -59,7 +59,7 @@ def event_loop(event: pygame.event.Event):
             new_fries = pig.get_fries()
 
             if new_fries is not None:
-                elements["frites"].append(new_fries)
+                elements["fries"].append(new_fries)
 
     if event.type == TICKEVENT100:
         player.tick_update(elements)
