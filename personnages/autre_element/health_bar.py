@@ -43,6 +43,7 @@ class HealthBar:
         elif value < 0:
             value = 0
         self.value = value
+        self.update()
 
     def update(self):
         self.colored_rect = pygame.Rect(

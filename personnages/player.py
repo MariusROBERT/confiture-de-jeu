@@ -1,6 +1,6 @@
 import pygame
 import os
-from constantes import BORDER_SIZE, CASE_SIZE, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
@@ -31,7 +31,8 @@ class Player(Animated):
         self.time_since_move = 0
 
         hp = 100
-        new_health_bar = HealthBar((0, 0), max=hp, value=hp, color=(159, 3, 1))
+        new_health_bar = HealthBar(
+            (50, 10), max=hp, value=hp, color=(159, 3, 1))
         self.__health_bar = new_health_bar
         self.__health = hp
 
@@ -155,7 +156,7 @@ class Player(Animated):
             element.hitbox_degats for element in elements["zombies"]]
 
         if self.hitbox.collidelist(zombies_hitboxs) != -1:
-            self.health -= 0.1
+            self.health -= DAMAGE_ZOMBIE_PER_TICK
 
         if self._digging or self.health <= 0:
             return
