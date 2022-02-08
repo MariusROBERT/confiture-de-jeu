@@ -90,8 +90,9 @@ class Pig(Animated):
             normalized_vector = vector_to_target / \
                 np.sqrt(np.sum(vector_to_target ** 2))
             # print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
-
+            return [Fries(self.center_coords, normalized_vector * FRIES_SPEED)]
+        else:
+            return []
     def tick_update(self):
         self.health -= AUTO_DAMAGE_SPEED
 

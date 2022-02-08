@@ -1,9 +1,10 @@
 from random import random
-from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS
+from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
 import sys
 from personnages.pig import Pig
+from personnages.golden_pig import GoldenPig
 from personnages.player import Player
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
@@ -28,6 +29,7 @@ elements = {
 
 }
 
+elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
 
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
@@ -69,9 +71,9 @@ def event_loop(event: pygame.event.Event):
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
-
-            if new_fries is not None:
-                elements["fries"].append(new_fries)
+            for fries in new_fries:
+                elements["fries"].append(fries)
+            
 
     # 100 miliseconds
     if event.type == TICKEVENT100:
