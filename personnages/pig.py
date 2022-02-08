@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import CASE_SIZE, FRIES_SPEED
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -50,10 +50,10 @@ class Pig(Animated):
     def health(self, value: int) -> None:
         min_value = -10
         self.__health = value
-        if self.__health <= min_value:
+        if (self.__health <= min_value):
             self.__health = min_value
 
-        if self.__health <= 0:
+        if (self.__health <= 0):
             self.current_animation = "idle"
 
         self.health_bar.health = value
@@ -72,6 +72,9 @@ class Pig(Animated):
 
     def feed(self, nourish_value: int = 20) -> None:
         self.health += 20
+        if (self.health > 0):
+            self._current_animation = "fire"
+
 
     def tick_update(self):
         self.health -= 9
@@ -88,12 +91,21 @@ class Pig(Animated):
             normalized_vector = vector_to_target / \
                                 np.sqrt(np.sum(vector_to_target ** 2))
             # print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
+            return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
+
+    def tick_update(self):
+        self.health -= AUTO_DAMAGE_SPEED
+
+    def tick_update_2(self, elements) -> None:
+        self.current_frame += 1
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
         self.target = nearest_zombie(elements["zombies"], self.coords)
 
-    def display(self, surface: pygame.Surface) -> None:
-        self.health_bar.display(surface)
-        surface.blit(self.sprite, self.coords)
+    def display(self, screen: pygame.Surface) -> None:
+        self.health_bar.display(screen)
+        screen.blit(self.sprite, self.coords)
+        if SHOW_HITBOX:
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
+            pygame.draw.rect(screen, (255, 0, 0), self.__hitbox_feed, 1)

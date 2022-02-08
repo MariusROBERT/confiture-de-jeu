@@ -1,6 +1,6 @@
 import pygame
 import os
-from constantes import BORDER_SIZE, CASE_SIZE, FPS, PLAYER_SPEED, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
 from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
@@ -8,13 +8,14 @@ from lib.player import dir_to_angle
 
 class Player(Animated):
     def __init__(self):
-        super().__init__("player", (CASE_SIZE, CASE_SIZE))
+        super().__init__("player", (SIZE_PLAYER, SIZE_PLAYER))
         self.inventory = []
 
         self._current_animation = "walk"
 
         self.potatoe_mini = load_image(
             "./images/player/autre/potatoemini.png", (20, 20))
+
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (20, 20)
 
@@ -157,9 +158,18 @@ class Player(Animated):
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
 
     def display(self, screen) -> None:
+
         angle = dir_to_angle(self.direction)
-        rotated = pygame.transform.rotate(self.sprite, angle)
-        screen.blit(rotated, self.coords)
+        # rotated = pygame.transform.rotate(self.sprite, angle)
+
+        rotated_image = pygame.transform.rotate(self.sprite, angle)
+        new_rect = rotated_image.get_rect(
+            center=self.sprite.get_rect(topleft=self.coords).center)
+
+        screen.blit(rotated_image, new_rect)
+
+        if SHOW_HITBOX:
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
 
         for i in range(len(self.inventory)):
             screen.blit(
