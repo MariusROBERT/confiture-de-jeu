@@ -10,12 +10,11 @@ from personnages.player import Player
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
-pygame.init()
 
+pygame.init()
 
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
-
 
 player = Player()
 # patate=Potatoe()
@@ -23,7 +22,7 @@ terrain = Terrain()
 
 elements = {
     "terrain": [terrain],
-    "pigs": [],#Pig(x, y) for (x, y) in TOURS],
+    "pigs": [Pig(x, y) for (x, y) in TOURS],
     "zombies": [Zombie() for i in range(ZOMBIE_SPAWN)],
     "player": [player],
     "fries": [],
@@ -74,7 +73,6 @@ def event_loop(event: pygame.event.Event):
             new_fries = pig.get_fries()
             for fries in new_fries:
                 elements["fries"].append(fries)
-            
 
     # 100 miliseconds
     if event.type == TICKEVENT100:
@@ -85,8 +83,8 @@ def event_loop(event: pygame.event.Event):
         for zombie in elements["zombies"]:
             zombie.tick_update_100(elements)
 
-        # if random() < PROB_ZOMBIE_SPAWN:
-        #     elements["zombies"].append(Zombie(speed=random()*1.5+0.8))
+        if random() < PROB_ZOMBIE_SPAWN:
+            elements["zombies"].append(Zombie(speed=random() * 1.5 + 0.8))
 
 
 def logic_loop():
