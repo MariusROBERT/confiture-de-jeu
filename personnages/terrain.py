@@ -1,9 +1,9 @@
 import random
 import pygame
-from lib.lib import load_image
+from lib.lib import load_animation, load_image
 
 from personnages.potatoes import Potatoes
-from constantes import SIZE, CASE_SIZE
+from constantes import NB_ELEM_X, NB_ELEM_Y, SIZE, CASE_SIZE, AGE_MAX_TROU
 
 
 class Terrain:
@@ -12,11 +12,16 @@ class Terrain:
             "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
         self.pousse = load_image(
             "images/terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
-        self.trous_image = load_image(
-            "images/terrain/trou.png", (CASE_SIZE, CASE_SIZE))
+        self.trous_images = load_animation(
+            "images/terrain/trou",  (CASE_SIZE, CASE_SIZE))
+
+        # load_image(
+        #     "images/terrain/trou2.png", (CASE_SIZE, CASE_SIZE))
 
         self.potatoes = []
         self.trous = []
+
+        self.nbcase = NB_ELEM_X * NB_ELEM_Y
 
     def tick_update(self) -> None:
         chance = 2
@@ -30,7 +35,7 @@ class Terrain:
 
         for trou in self.trous:
             trou["old"] += 1
-            if trou["old"] > 8:
+            if trou["old"] > AGE_MAX_TROU:
                 self.trous.remove(trou)
                 pass
 
@@ -42,7 +47,7 @@ class Terrain:
         coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
                       coords[1] // CASE_SIZE * CASE_SIZE)
         self.trous.append(
-            {"coords": coordsbase, "old": 0})
+            {"coords": coordsbase, "old": 0, "imgIndex": random.randint(1, len(self.trous_images))})
         for patate in self.potatoes:
             pos_patate = patate.get_pos_patate()
             if pos_patate[0] > coords[0] - CASE_SIZE and pos_patate[0] < coords[0] + CASE_SIZE:
@@ -59,10 +64,19 @@ class Terrain:
         for i in range(0, SIZE[0], CASE_SIZE):
             for j in range(0, SIZE[1], CASE_SIZE):
 
-                if (i, j) in [x["coords"] for x in self.trous]:
-                    screen.blit(self.trous_image, (i, j))
-                else:
-                    screen.blit(self.base_terrain, (i, j))
+                screen.blit(self.base_terrain, (i, j))
+                trou = list(
+                    filter(lambda x: x["coords"] == (i, j), self.trous))
+                if len(trou) > 0:
+                    indexImage = trou[0]["imgIndex"] - 1
+                    # ( A optimiser !!! ) (( si besoin mdr ))
+                    image = self.trous_images[indexImage].copy()
+
+                    transparence = 255 - (trou[0]["old"] * 255 // AGE_MAX_TROU)
+                    image.fill((255, 255, 255, transparence),
+                               special_flags=pygame.BLEND_RGBA_MULT)
+
+                    screen.blit(image, (i, j))
 
                 if (i, j) in [x.get_pos_pousse() for x in self.potatoes]:
                     screen.blit(self.pousse, (i, j))
