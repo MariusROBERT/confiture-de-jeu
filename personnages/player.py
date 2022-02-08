@@ -143,7 +143,7 @@ class Player(Animated):
                 self.coords = (self.coords[0] + self.speed, self.coords[1])
             # Verifie les collisions avec les autres elements ( pigs ) (!!! A mieux optimiser !!!)
             if self.coords != originels:
-                if self.hitbox.collidelist([element.hitbox_degats for element in elements["pigs"]]) != -1:
+                if self.hitbox.collidelist([element.hitbox for element in elements["pigs"]]) != -1:
                     self.coords = originels
 
         # Verifie les collisions avec les bords
