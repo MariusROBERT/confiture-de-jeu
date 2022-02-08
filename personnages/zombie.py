@@ -16,11 +16,11 @@ class Zombie(Animated):
                  damage: int = 10, hp: int = 100, coords: tuple = None, size : tuple = (CASE_SIZE, CASE_SIZE)):
         self.health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
         new_health_bar = HealthBar(
-            (-1000,-1000), 
-            size=self.health_bar_size, 
-            max=hp, 
-            value=hp, 
-            color=(255,30,255), 
+            (-1000,-1000),
+            size=self.health_bar_size,
+            max=hp,
+            value=hp,
+            color=(255,30,255),
             auto_hide=True)
         self.__health_bar = new_health_bar
 
@@ -50,10 +50,10 @@ class Zombie(Animated):
                     "Error in Zombie.__init__() : side = " + str(side))
         else:
             self.__coords = coords
-        
+
         #generating health bar for zombie
-        
-        
+
+
 
     @property
     def damage(self) -> int:
@@ -79,10 +79,9 @@ class Zombie(Animated):
     def health(self, hp) -> None:
         if hp <= 0:
             self.__health = 0
+            self.__alive = False
         else:
             self.__health = hp
-        if self.__health <= 0:
-            self.__alive = False
         self.__health_bar.health = self.__health
 
     @property
@@ -166,8 +165,9 @@ class Zombie(Animated):
 
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
             for i in elements["fries"]:
-                if i.hitbox.colliderect(self.hitbox_degats):
-                    self.is_attacked(self.__damage)
+                if self.hitbox_degats.colliderect(i.hitbox):
+                    # print("collision")
+                    self.is_attacked(i.damage)
                     elements["fries"].remove(i)
         if produit != 0:
             direction = (direction[0] / produit, direction[1] / produit)
