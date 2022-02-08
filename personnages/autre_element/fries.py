@@ -7,7 +7,7 @@ class Fries:
 	def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = (6, 40)):
 		self.coords = coords
 		self.size = size
-		self.__damage = 2
+		self.__damage = 50 # Zombie got 100hp
 		self.__movement_vector = movement_vector
 		sprite = pygame.image.load("./images/frite.png")
 		sprite = pygame.transform.scale(sprite, size)
@@ -36,6 +36,9 @@ class Fries:
 	@property
 	def alive(self) -> bool:
 		return self.__alive
+
+	def kill(self):
+		self.__alive = False
 
 	def update(self, elements: dict):
 		self.coords = self.coords[0] + self.movement_vector[0], self.coords[1] + self.movement_vector[1]
