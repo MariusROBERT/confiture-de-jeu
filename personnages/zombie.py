@@ -4,7 +4,7 @@ import pygame
 from math import sqrt
 from lib.lib import load_image
 
-from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
 
 
 class Zombie:
@@ -29,7 +29,8 @@ class Zombie:
             elif side == 3:
                 self.__coords = (0, randrange(0, HEIGHT))
             else:
-                raise Exception("Error in Zombie.__init__() : side = " + str(side))
+                raise Exception(
+                    "Error in Zombie.__init__() : side = " + str(side))
         else:
             self.__coords = coords
 
@@ -104,7 +105,8 @@ class Zombie:
         return sqrt((self.coords[0] - coords[0]) ** 2 + (self.coords[1] - coords[1]) ** 2)
 
     def get_target(self, coords_player: tuple[int, int]) -> tuple[int, int]:
-        distance = sqrt((coords_player[0] - self.coords[0]) ** 2 + (coords_player[1] - self.coords[1]) ** 2)
+        distance = sqrt((coords_player[0] - self.coords[0])
+                        ** 2 + (coords_player[1] - self.coords[1]) ** 2)
         target = coords_player
         # KEEP COMMENT TO FOLLOW PLAYER ONLY
         # for pig in TOURS:
@@ -119,13 +121,16 @@ class Zombie:
 
     def get_direction_vector(self, target: tuple[int, int]) -> tuple[float, float]:
         return self.get_direction(target)[0] / self.get_distance(target), \
-               self.get_direction(target)[1] / self.get_distance(target)
+            self.get_direction(target)[1] / self.get_distance(target)
 
     def display(self, screen: pygame.Surface) -> None:
         screen.blit(self.sprite, self.__coords)
+        if SHOW_HITBOX:
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox_degats, 1)
 
     def update(self, elements: dict) -> None:
-        direction = self.get_direction(self.get_target(elements["player"][0].coords))
+        direction = self.get_direction(
+            self.get_target(elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
 
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
@@ -137,4 +142,5 @@ class Zombie:
             direction = (direction[0] / produit, direction[1] / produit)
         else:
             direction = (0, 0)
-        self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
+        self.coords = self.coords[0] + direction[0] * \
+            self.speed, self.coords[1] + direction[1] * self.speed
