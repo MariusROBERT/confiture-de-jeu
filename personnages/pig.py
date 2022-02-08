@@ -49,7 +49,7 @@ class Pig:
     def health(self, value: int) -> None:
         min_value = -10
         self.__health = value
-        if (self.__health <= min_value):
+        if self.__health <= min_value:
             self.__health = min_value
 
         self.health_bar.health = value
@@ -96,4 +96,4 @@ class Pig:
             normalized_vector = vector_to_target / \
                 np.sqrt(np.sum(vector_to_target**2))
             #print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
+            return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
