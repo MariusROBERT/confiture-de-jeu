@@ -23,7 +23,7 @@ class Pig:
         self.coords = (x, y)
 
         self.image = load_image(
-            "images/pig/cochonwtf.png", (CASE_SIZE, CASE_SIZE))
+            "images/pig/cochonwtf2.png", (CASE_SIZE, CASE_SIZE))
 
         self.nb_frames = 240
         self.size = size
