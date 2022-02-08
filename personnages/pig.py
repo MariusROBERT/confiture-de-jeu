@@ -6,6 +6,7 @@ from constantes import CASE_SIZE, FRIES_SPEED
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
+import numpy as np
 """
                ,-,------,
               _ \(\(_,--'
@@ -76,7 +77,7 @@ class Pig:
 
     def update(self, elements: dict) -> None:
         self.health_bar.update()
-        self.target = elements["zombies"][0]
+        self.target = nearest_zombie(elements["zombies"], self.coords)
 
     def display(self, surface: pygame.Surface) -> None:
         self.health_bar.display(surface)
@@ -86,10 +87,10 @@ class Pig:
 
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
-            vector_from_target = self.target.coords[0] - \
-                self.coords[0], self.target.coords[1] - self.coords[1]
-            angle = get_angle_between_vectors(
-                self.target.latest_vector, vector_from_target)
-
+            vector_to_target = np.array((
+             self.target.coords[0] - self.coords[0], 
+             self.target.coords[1] - self.coords[1] ))
+            
+            normalized_vector = vector_to_target / np.sqrt(np.sum(vector_to_target**2))
             #print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return (Fries(self.coords, vector_from_speed_angle(FRIES_SPEED, angle)))
+            return (Fries(self.coords, normalized_vector * FRIES_SPEED))

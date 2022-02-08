@@ -34,3 +34,13 @@ def rot_center(image, angle, x, y):
     new_rect = rotated_image.get_rect(center = image.get_rect(center = (x, y)).center)
 
     return rotated_image, new_rect
+
+def nearest_zombie(zombies : 'Zombie', coords : tuple) -> 'Zombie':
+    nearest_zombie = None
+    nearest_distance = float('inf')
+    for zombie in zombies:
+        distance = math.sqrt((zombie.coords[0] - coords[0])**2 + (zombie.coords[1] - coords[1])**2)
+        if distance < nearest_distance:
+            nearest_zombie = zombie
+            nearest_distance = distance
+    return nearest_zombie
