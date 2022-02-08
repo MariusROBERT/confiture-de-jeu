@@ -10,12 +10,23 @@ from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 class Zombie:
     def __init__(self, speed: int = 1, name: string = "Zombie",
                  damage: int = 10, hp: int = 100, coords: tuple = None, size : tuple = (CASE_SIZE, CASE_SIZE)):
+        self.health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
+        new_health_bar = HealthBar(
+            (-1000,-1000), 
+            size=self.health_bar_size, 
+            max=hp, 
+            value=hp, 
+            color=(255,30,255), 
+            auto_hide=True)
+        self.__health_bar = new_health_bar
         self.__name = name
-        self.__hp = hp
+        self.__health = hp
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__sprite = load_image("./images/zombie.png", size)
+        self.__size = size
+        self.__sprite = load_image("./images/zombie.png", self.size)
+        self.__hitbox_degats = self.sprite.get_rect()
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -32,13 +43,7 @@ class Zombie:
             self.__coords = coords
         
         #generating health bar for zombie
-        center_x 			= coords[0] - size[0] / 2
-        center_y 			= coords[1] - size[1] / 2
-        health_bar_size 	= (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
-        health_bar_x 		= center_x - health_bar_size[0] / 2
-        health_bar_y 		= center_y - health_bar_size[1] / 2
-        health_bar_coords 	= (health_bar_x, health_bar_y)
-        new_health_bar = HealthBar(health_bar_coords, size=health_bar_size, max=hp, value=hp-10, color=(255,30,255), auto_hide=True)
+        
         
 
     @property
@@ -58,17 +63,18 @@ class Zombie:
         self.__speed = speed
 
     @property
-    def hp(self) -> int:
-        return self.__hp
+    def health(self) -> int:
+        return self.__health
 
-    @hp.setter
-    def hp(self, hp) -> None:
+    @health.setter
+    def health(self, hp) -> None:
         if hp <= 0:
-            self.__hp = 0
+            self.__health = 0
         else:
-            self.__hp = hp
-        if self.__hp <= 0:
+            self.__health = hp
+        if self.__health <= 0:
             self.__alive = False
+        self.__health_bar.health = self.__health
 
     @property
     def latest_vector(self) -> tuple[int, int]:
@@ -89,36 +95,29 @@ class Zombie:
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
         self.__coords = coords
+        center_x 			= coords[0] + self.size[0] / 2
+        health_bar_x 		= center_x - self.health_bar_size[0] / 2
+        health_bar_y 		= coords[1] - self.health_bar_size[1] - 5
+        health_bar_coords 	= (health_bar_x, health_bar_y)
+        self.__health_bar.move_to(health_bar_coords)
 
     @property
     def alive(self) -> bool:
         return self.__alive
 
     @property
-    def health(self) -> int:
-        return self.hp
+    def hitbox_degats(self) -> pygame.Rect:
+        return pygame.Rect(self.coords, self.size)
 
-    @health.setter
-    def health(self, health) -> None:
-        self.hp = health
+    @property
+    def size(self) -> tuple[int, int]:
+        return self.__size
 
     def is_attacked(self, damage: int) -> None:
-        self.hp -= damage
+        self.health -= damage
 
     def attack(self, target) -> None:
         target.is_attacked(self.__damage)
-
-    def display(self, screen: pygame.Surface) -> None:
-        screen.blit(self.sprite, self.__coords)
-
-    def update(self, elements: dict) -> None:
-        direction = self.get_direction(self.get_target(elements["player"][0].coords))
-        produit = abs(direction[0]) + abs(direction[1])
-        if produit != 0:
-            direction = (direction[0] / produit, direction[1] / produit)
-        else:
-            direction = (0, 0)
-        self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
 
     def get_distance(self, coords: tuple[int, int]) -> float:
         return sqrt((self.coords[0] - coords[0]) ** 2 + (self.coords[1] - coords[1]) ** 2)
@@ -141,6 +140,25 @@ class Zombie:
         return self.get_direction(target)[0] / self.get_distance(target), \
                self.get_direction(target)[1] / self.get_distance(target)
 
-# def move(self, target) -> None:
-# 	direction = self.get_direction(self.get_target(self.coords))
-# 	self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed
+    def display(self, screen: pygame.Surface) -> None:
+        screen.blit(self.sprite, self.__coords)
+        self.__health_bar.display(screen)
+
+    def update(self, elements: dict) -> None:
+        direction = self.get_direction(self.get_target(elements["player"][0].coords))
+        produit = abs(direction[0]) + abs(direction[1])
+
+        if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
+            print("Zombie ate a pig")
+            for i in elements["fries"]:
+                print("fries 1")
+                if i.hitbox.colliderect(self.hitbox_degats):
+                    print("fries")
+                    self.is_attacked(self.__damage)
+                    # i.kill()
+                    elements["fries"].remove(i)
+        if produit != 0:
+            direction = (direction[0] / produit, direction[1] / produit)
+        else:
+            direction = (0, 0)
+        self.coords = self.coords[0] + direction[0] * self.speed, self.coords[1] + direction[1] * self.speed

@@ -3,11 +3,12 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
 import numpy as np
+
 """
                ,-,------,
               _ \(\(_,--'
@@ -25,17 +26,17 @@ class Pig(Animated):
         super().__init__("pig", size)
         self.coords = (x, y)
 
-        self.nb_frames = 240
         self.size = size
 
         self.health_bar = HealthBar(
-            (self.coords[0]+11, self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203, 219, 11))
+            (self.coords[0] + 11, self.coords[1] - 30), value=50, size=(65, 10), border_size=2, color=(203, 219, 11))
         self.health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
 
         feed_space = 20
         self.__hitbox_feed = pygame.Rect(
-            (self.coords[0] - feed_space, self.coords[1]-feed_space), (self.size[0]+feed_space*2, self.size[1] + feed_space*2))
+            (self.coords[0] - feed_space, self.coords[1] - feed_space),
+            (self.size[0] + feed_space * 2, self.size[1] + feed_space * 2))
         self.center_coords = (
             self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
 
@@ -74,6 +75,13 @@ class Pig(Animated):
         if (self.health > 0):
             self._current_animation = "fire"
 
+
+    def tick_update(self):
+        self.health -= 9
+
+    def tick_update_2(self, elements) -> None:
+        self.current_frame += 1
+
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
             vector_to_target = np.array((
@@ -81,12 +89,12 @@ class Pig(Animated):
                 self.target.coords[1] - self.coords[1]))
 
             normalized_vector = vector_to_target / \
-                np.sqrt(np.sum(vector_to_target**2))
+                                np.sqrt(np.sum(vector_to_target ** 2))
             # print(vector_from_speed_angle(FRIES_SPEED, angle))
             return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
 
     def tick_update(self):
-        self.health -= 9
+        self.health -= AUTO_DAMAGE_SPEED
 
     def tick_update_2(self, elements) -> None:
         self.current_frame += 1

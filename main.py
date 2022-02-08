@@ -1,4 +1,5 @@
-from constantes import HEIGHT, SIZE, WIDTH, TOURS
+from random import random
+from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 import pygame
 import sys
@@ -21,9 +22,9 @@ terrain = Terrain()
 elements = {
     "terrain": [terrain],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
-    "zombies": [Zombie(coords=(0, 0), hp=20) for i in range(1)],
+    "zombies": [Zombie() for i in range(5)],
     "player": [player],
-    "frites": [],
+    "fries": [],
 
 }
 
@@ -50,28 +51,36 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
-        print(len(elements["frites"]))
+        print(len(elements["fries"]))
 
-        for frite in elements["frites"]:
+        for frite in elements["fries"]:
             if not frite.alive:
-                elements["frites"].remove(frite)
+                elements["fries"].remove(frite)
+
+        for zombie in elements["zombies"]:
+            if not zombie.alive:
+                elements["zombies"].remove(zombie)
 
         terrain.tick_update()
         for pig in elements["pigs"]:
             pig.tick_update()
+
     # 500 miliseconds
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
 
             if new_fries is not None:
-                elements["frites"].append(new_fries)
+                elements["fries"].append(new_fries)
 
     # 100 miliseconds
     if event.type == TICKEVENT100:
         player.tick_update(elements)
         for pig in elements["pigs"]:
             pig.tick_update_2(elements)
+
+        if random() < PROB_ZOMBIE_SPAWN:
+            elements["zombies"].append(Zombie(speed=random()*1.5+0.8))
 
 
 def logic_loop():
