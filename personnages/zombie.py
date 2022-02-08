@@ -4,7 +4,7 @@ import pygame
 from math import sqrt
 from lib.lib import load_image
 
-from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
 
 
 class Zombie:
@@ -15,9 +15,9 @@ class Zombie:
         self.__damage = damage
         self.__speed = speed
         self.__alive = True
-        self.__size = (CASE_SIZE, CASE_SIZE)
+        self.__size = (SIZE_ZOMBIE, SIZE_ZOMBIE)
         self.__sprite = load_image("./images/zombie.png", self.size)
-        self.__hitbox_degats = self.sprite.get_rect()
+
         if coords is None:
             side = randrange(4)
             if side == 0:
@@ -92,6 +92,11 @@ class Zombie:
         return pygame.Rect(self.coords, self.size)
 
     @property
+    def hitbox_collision(self) -> pygame.Rect:
+
+        return pygame.Rect((self.coords[0]+COLLIDBOX_SIZE, self.coords[1]+COLLIDBOX_SIZE), (self.size[0]-2*COLLIDBOX_SIZE, self.size[1]-2*COLLIDBOX_SIZE))
+
+    @property
     def size(self) -> tuple[int, int]:
         return self.__size
 
@@ -127,8 +132,11 @@ class Zombie:
         screen.blit(self.sprite, self.__coords)
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_degats, 1)
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox_collision, 1)
 
     def update(self, elements: dict) -> None:
+
+        olds = self.coords
         direction = self.get_direction(
             self.get_target(elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
@@ -148,3 +156,9 @@ class Zombie:
             direction = (0, 0)
         self.coords = self.coords[0] + direction[0] * \
             self.speed, self.coords[1] + direction[1] * self.speed
+
+        zombie_except_me = [
+            zombie for zombie in elements["zombies"] if zombie != self]
+
+        if self.hitbox_collision.collidelist([element.hitbox_collision for element in zombie_except_me]) != -1:
+            self.coords = olds
