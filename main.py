@@ -51,7 +51,6 @@ def event_loop(event: pygame.event.Event):
 
     # Every seconds
     if event.type == TICKEVENT:
-        print(len(elements["fries"]))
 
         for frite in elements["fries"]:
             if not frite.alive:
@@ -78,6 +77,9 @@ def event_loop(event: pygame.event.Event):
         player.tick_update(elements)
         for pig in elements["pigs"]:
             pig.tick_update_2(elements)
+
+        for zombie in elements["zombies"]:
+            zombie.tick_update(elements)
 
         if random() < PROB_ZOMBIE_SPAWN:
             elements["zombies"].append(Zombie(speed=random()*1.5+0.8))

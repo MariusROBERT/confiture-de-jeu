@@ -50,10 +50,10 @@ class Pig(Animated):
     def health(self, value: int) -> None:
         min_value = -10
         self.__health = value
-        if (self.__health <= min_value):
+        if self.__health <= min_value:
             self.__health = min_value
 
-        if (self.__health <= 0):
+        if self.__health <= 0:
             self.current_animation = "idle"
 
         self.health_bar.health = value
@@ -72,9 +72,8 @@ class Pig(Animated):
 
     def feed(self, nourish_value: int = 20) -> None:
         self.health += 20
-        if (self.health > 0):
+        if self.health > 0:
             self._current_animation = "fire"
-
 
     def tick_update(self):
         self.health -= 9
@@ -91,7 +90,7 @@ class Pig(Animated):
             normalized_vector = vector_to_target / \
                                 np.sqrt(np.sum(vector_to_target ** 2))
             # print(vector_from_speed_angle(FRIES_SPEED, angle))
-            return (Fries(self.center_coords, normalized_vector * FRIES_SPEED))
+            return Fries(self.center_coords, normalized_vector * FRIES_SPEED)
 
     def tick_update(self):
         self.health -= AUTO_DAMAGE_SPEED
