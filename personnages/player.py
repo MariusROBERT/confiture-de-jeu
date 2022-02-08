@@ -1,24 +1,20 @@
 import pygame
-
+import os
 from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT
+from lib.animated import Animated
 from lib.lib import load_animation, load_image
 from lib.player import dir_to_angle
 
 
-class Player:
+class Player(Animated):
     def __init__(self):
+        super().__init__("player", (CASE_SIZE, CASE_SIZE))
         self.inventory = []
 
-        self.animation = {
-            "walk": load_animation("./images/player/walk", (80, 80)),
-            "idle": load_animation("./images/player/idle", (80, 80)),
-            "dig": load_animation("./images/player/dig", (80, 80))
-        }
         self._current_animation = "walk"
-        self._current_frame = 0
 
         self.potatoe_mini = load_image(
-            "./images/player/potatoemini.png", (15, 15))
+            "./images/player/autre/potatoemini.png", (15, 15))
         self.size = (70, 70)
         self.coords = (20, 20)
         self.speed = 350 / FPS
@@ -40,30 +36,6 @@ class Player:
     @property
     def center_coords(self) -> tuple:
         return (self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
-
-    @property
-    def current_animation(self) -> str:
-        return self._current_animation
-
-    @current_animation.setter
-    def current_animation(self, animation: str) -> None:
-        self._current_animation = animation
-        self._current_frame = 0
-
-    @property
-    def current_frame(self) -> int:
-        return self._current_frame
-
-    @current_frame.setter
-    def current_frame(self, value: int) -> None:
-        self._current_frame = value
-        if value >= len(self.animation[self.current_animation]):
-            self._current_frame = 0
-
-    @property
-    def sprite(self) -> pygame.Surface:
-        current_frame = self.current_frame
-        return self.animation[self.current_animation][self.current_frame]
 
     @property
     def digging(self) -> bool:
