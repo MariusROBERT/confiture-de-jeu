@@ -4,7 +4,7 @@ from lib.lib import *
 
 
 class Fries:
-	def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = (10, 80)):
+	def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = (6, 40)):
 		self.coords = coords
 		self.size = size
 		self.__movement_vector = movement_vector

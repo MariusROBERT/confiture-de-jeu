@@ -32,10 +32,10 @@ TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
 
 TICKEVENT500 = pygame.USEREVENT + 2
-pygame.time.set_timer(TICKEVENT500, 400)
+pygame.time.set_timer(TICKEVENT500, 200)
 
-TICKEVENT100 = pygame.USEREVENT + 2
-pygame.time.set_timer(TICKEVENT500, 100)
+TICKEVENT100 = pygame.USEREVENT + 3
+pygame.time.set_timer(TICKEVENT100, 100)
 
 
 def clear_screen(screen: pygame.Surface):
@@ -54,12 +54,13 @@ def event_loop(event: pygame.event.Event):
         for pig in elements["pigs"]:
             pig.tick_update()
 
+
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
             if new_fries is not None:
                 elements["frites"].append(new_fries)
-
+            
     if event.type == TICKEVENT100:
         player.tick_update(elements)
 

@@ -9,7 +9,7 @@ from constantes import NB_ELEM_X, NB_ELEM_Y, SIZE, CASE_SIZE, AGE_MAX_TROU
 class Terrain:
     def __init__(self) -> None:
         self.base_terrain = load_image(
-            "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
+            "images/terrain/soltest4.png", (CASE_SIZE, CASE_SIZE))
         self.pousse = load_image(
             "images/terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
         self.trous_images = load_animation(
