@@ -70,4 +70,4 @@ class Terrain:
                 if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
                     potatosize = 20
                     rect = pygame.Rect(i+15, j+15, 20, 20)
-                    # pygame.draw.rect(screen, (255, 0, 0), rect, 1)
+                    pygame.draw.rect(screen, (255, 0, 0), rect, 1)
