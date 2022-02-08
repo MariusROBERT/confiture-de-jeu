@@ -7,6 +7,7 @@ from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
 from constantes import WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE
 from lib.animated import Animated
+from lib.zombie import randomCoords
 
 
 from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
@@ -51,10 +52,9 @@ class Zombie(Animated):
     def health(self, hp) -> None:
         if hp <= 0:
             self.__health = 0
+            self.__alive = False
         else:
             self.__health = hp
-        if self.__health <= 0:
-            self.__alive = False
         self.__health_bar.health = self.__health
 
     @property
