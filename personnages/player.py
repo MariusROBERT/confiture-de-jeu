@@ -118,7 +118,7 @@ class Player(Animated):
         self.current_frame += 1
         if self.digging:
             self.time_since_dig += 1
-            if self.time_since_dig > len(self.animation["dig"]):
+            if self.time_since_dig > len(self._animation["dig"]):
                 self.digging = False
                 self.time_since_dig = 0
 

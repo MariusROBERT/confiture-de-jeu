@@ -5,11 +5,11 @@ import pygame
 
 class Animated:
     def __init__(self, name: str, size: tuple):
-        self.animation = {}
+        self._animation = {}
 
         animations_names = os.listdir("./images/{}/" .format(name))
         for animation_name in animations_names:
-            self.animation[animation_name] = load_animation(
+            self._animation[animation_name] = load_animation(
                 f"./images/{name}/{animation_name}", size
             )
 
@@ -31,10 +31,9 @@ class Animated:
     @current_frame.setter
     def current_frame(self, value: int) -> None:
         self._current_frame = value
-        if value >= len(self.animation[self.current_animation]):
+        if value >= len(self._animation[self.current_animation]):
             self._current_frame = 0
 
     @property
     def sprite(self) -> pygame.Surface:
-        current_frame = self.current_frame
-        return self.animation[self.current_animation][self.current_frame]
+        return self._animation[self.current_animation][int(self.current_frame)]

@@ -54,15 +54,17 @@ def event_loop(event: pygame.event.Event):
         for pig in elements["pigs"]:
             pig.tick_update()
 
-
     if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
+
             if new_fries is not None:
                 elements["frites"].append(new_fries)
-            
+
     if event.type == TICKEVENT100:
         player.tick_update(elements)
+        for pig in elements["pigs"]:
+            pig.tick_update_2(elements)
 
 
 def logic_loop():
