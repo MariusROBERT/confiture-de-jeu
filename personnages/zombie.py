@@ -9,12 +9,12 @@ from lib.animated import Animated
 from lib.zombie import randomCoords
 
 
-from constantes import COLLIDBOX_SIZE, SHOW_HITBOX, SIZE_ZOMBIE, WIDTH, HEIGHT, CASE_SIZE, TOURS
-
+from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
 
 class Zombie(Animated):
-    def __init__(self, speed: int = 1, name: string = "Zombie",
-                 damage: int = 10, hp: int = 100, coords: tuple = None, size: tuple = (CASE_SIZE, CASE_SIZE)):
+    def __init__(self, speed: int = ZOMBIE_SPEED, name: string = "Zombie",
+                 damage: int = ZOMBIE_DAMAGE, hp: int = ZOMBIE_HEALTH, coords: tuple = None, size: tuple = (CASE_SIZE, CASE_SIZE)):
         self.health_bar_size = (size[0], DEFAULT_HEALTH_BAR_SIZE[1])
         new_health_bar = HealthBar(
             (-1000, -1000),
