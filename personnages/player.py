@@ -2,6 +2,7 @@ import pygame
 
 from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT
 from lib.lib import load_animation, load_image
+from lib.player import dir_to_angle
 
 
 class Player:
@@ -11,6 +12,7 @@ class Player:
         self.animation = {
             "walk": load_animation("./images/player/walk/walk", (80, 80), 3),
             "idle": load_animation("./images/player/idle/idle", (80, 80), 2),
+            "dig": load_animation("./images/player/dig/dig", (80, 80), 3)
         }
         self._current_animation = "walk"
         self._current_frame = 0
@@ -22,6 +24,10 @@ class Player:
         self.speed = 350 / FPS
         self.direction = []
         self.__alive = True
+
+        self.time_since_dig = 0
+        self._digging = False
+        self._paused_animation = ""
 
     @property
     def alive(self) -> bool:
@@ -58,6 +64,19 @@ class Player:
     def sprite(self) -> pygame.Surface:
         current_frame = self.current_frame
         return self.animation[self.current_animation][self.current_frame]
+
+    @property
+    def digging(self) -> bool:
+        return self._digging
+
+    @digging.setter
+    def digging(self, value: bool) -> None:
+        self._digging = value
+        if value:
+            self._paused_animation = self.current_animation
+            self.current_animation = "dig"
+        else:
+            self.current_animation = self._paused_animation
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
@@ -104,17 +123,26 @@ class Player:
                                 break
 
                 # si il est dans la hitbox d'une potatoe
-                if not feeded and elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
-                    self.inventory.append("potatoe")
+                if not feeded:
+                    self.digging = True
+                    if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
+                        self.inventory.append("potatoe")
 
     def tick_update(self, elements) -> None:
         self.current_frame += 1
+        if self.digging:
+            self.time_since_dig += 1
+            if self.time_since_dig > len(self.animation["dig"]):
+                self.digging = False
+                self.time_since_dig = 0
 
     def update(self, elements: dict) -> None:
         # Effectue les deplacement
+        if self._digging:
+            return
+
         for direction in self.direction:
             originels = self.coords
-
             if direction == "up":
                 self.coords = (self.coords[0], self.coords[1] - self.speed)
             if direction == "down":
@@ -123,7 +151,6 @@ class Player:
                 self.coords = (self.coords[0] - self.speed, self.coords[1])
             if direction == "right":
                 self.coords = (self.coords[0] + self.speed, self.coords[1])
-
             # Verifie les collisions avec les autres elements ( pigs ) (!!! A mieux optimiser !!!)
             if self.coords != originels:
                 if self.hitbox.collidelist([element.hitbox for element in elements["pigs"]]) != -1:
@@ -141,29 +168,7 @@ class Player:
             self.coords = (self.coords[0], HEIGHT - bordure - self.size[1])
 
     def display(self, screen) -> None:
-        # self.update()
-        angle = 0
-        dir_sorted = sorted(self.direction)
-        if len(dir_sorted) > 0:
-            if ["left", "up"] == dir_sorted:
-                angle = 180 + 90/2
-            elif ["right", "up"] == dir_sorted:
-                angle = 135
-            elif ["down", "left"] == dir_sorted:
-                angle = 315
-            elif ["down", "right"] == dir_sorted:
-                angle = 45
-            elif ["up"] == dir_sorted:
-                angle = 180
-            elif ["down"] == dir_sorted:
-                angle = 0
-            elif ["left"] == dir_sorted:
-                angle = 270
-            elif ["right"] == dir_sorted:
-                angle = 90
-
-        # angle = 180 + 90
-
+        angle = dir_to_angle(self.direction)
         rotated = pygame.transform.rotate(self.sprite, angle)
         screen.blit(rotated, self.coords)
 
