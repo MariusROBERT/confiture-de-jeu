@@ -119,7 +119,7 @@ def event_loop(event: pygame.event.Event):
 
         if random() < night_manager.prob_zombie_spawn:
             elements["zombies"].append(
-                Zombie(speed=night_manager.speed_zombies))
+                Zombie(speed=night_manager.speed_zombies, size=night_manager.size_zombie))
 
 
 def logic_loop():
