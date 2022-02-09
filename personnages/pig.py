@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -23,7 +23,7 @@ import py_sounds
 
 
 class Pig(Animated):
-    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE)):
+    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health = DEFAULT_PIG_HEALTH):
         super().__init__("pig", size)
         self.coords = (x, y)
 
@@ -41,7 +41,7 @@ class Pig(Animated):
 
         self.__health = 50
         self.__hitbox = pygame.Rect(self.coords, self.size)
-
+        self.__max_health = max_health
         feed_space = 20
         self.__hitbox_feed = pygame.Rect(
             (self.coords[0] - feed_space, self.coords[1] - feed_space),
@@ -64,7 +64,8 @@ class Pig(Animated):
         self.__health = value
         if self.__health <= min_value:
             self.__health = min_value
-
+        if self.__health > self.__max_health:
+            self.__health = self.__max_health
         if self.__health <= 0 and self.current_animation != "idle":
             self.current_animation = "idle"
             queue_event(py_sounds.OUT_OF_FOOD)
