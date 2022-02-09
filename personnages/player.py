@@ -1,6 +1,7 @@
 import pygame
 import os
-from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, \
+    SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
 from lib.animated import Animated
 from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
@@ -23,7 +24,7 @@ class Player(Animated):
             "/player/autre/potatoemini.png", (20, 20))
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
-        self.coords = (WIDTH/2,HEIGHT/2 )
+        self.coords = (WIDTH / 2, HEIGHT / 2)
 
         self._speed = PLAYER_SPEED
         self.direction = []
@@ -36,7 +37,7 @@ class Player(Animated):
 
         self.time_since_move = 0
 
-        hp = 100
+        hp = PLAYER_MAX_HP
         new_health_bar = HealthBar(
             (50, 10), max=hp, value=hp, color=(159, 3, 1))
         self.__health_bar = new_health_bar
@@ -55,6 +56,8 @@ class Player(Animated):
             self.__health = 0
             self.__alive = False
             self.current_animation = "dead"
+        elif hp >= PLAYER_MAX_HP:
+            self.__health = PLAYER_MAX_HP
         else:
             self.__health = hp
 
@@ -147,6 +150,9 @@ class Player(Animated):
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
                         queue_event(py_sounds.COLLECT_POTATOE)
+                        # Heal 5hp if full inventory
+                        if len(self.inventory) == 5:
+                            self.health += 5
 
         elif event.type == pygame.KEYUP:
             for i in range(4):
