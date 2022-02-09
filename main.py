@@ -16,7 +16,6 @@ import py_sounds
 from menu import *
 pygame.init()
 from datetime import datetime, timedelta
-import time
 
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
@@ -27,6 +26,8 @@ terrain = Terrain()
 
 fx_manager = Fx_manager()
 
+counter=0
+
 elements = {
     "terrain": [terrain],
     "pigs": [Pig(x, y) for (x, y) in TOURS],
@@ -34,8 +35,8 @@ elements = {
     "player": [player],
     "fries": [],
     "fx_manager": [fx_manager]
-
 }
+score_surface = pygame.Surface((30, 20))
 
 # elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
 
@@ -47,20 +48,18 @@ pygame.time.set_timer(TICKEVENT500, 370)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
-counter=0
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
-def score(screen, text, size=20, color=(43,43,43), font="Arial"):
-    text=str(text)
-    print("text1:",text)
-    font=pygame.font.SysFont(font,size)
-    text=font.render(text,True,color)
-    print("text2:",text)
-    screen.blit(text,(650,10))
-    print("text3:",text)
+def refresh_score(time):
+    font=pygame.font.SysFont("Arial",20)
+    text=font.render(time,True,(255,255,255))
+    return text
 
+def display_score(screen):
+    screen.blit(score_surface,(650,10))
+    
 def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
         sys.exit()
@@ -83,13 +82,7 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
-        if player.alive==True : 
-            global counter
-            tt=datetime.fromtimestamp(counter)
-            time2=tt.strftime("%M:%S")
-            score(screen,time2)
-            print(time2)
-            counter+=1
+        
 
     # 500 miliseconds
     if event.type == TICKEVENT500:
@@ -117,12 +110,19 @@ def logic_loop():
     for key in elements.keys():
         for element in elements[key]:
             element.update(elements)
-
+    if player.alive==True : 
+            global counter
+            tt=datetime.fromtimestamp(counter)
+            time=tt.strftime("%M:%S")
+            global score_surface
+            score_surface=refresh_score(time)
+            counter+=1
 
 def display_loop():
     for key in elements.keys():
         for element in elements[key]:
             element.display(screen)
+    display_score(screen)
 
 #dddmain_menu(screen, clock)*
 
