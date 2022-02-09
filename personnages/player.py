@@ -46,6 +46,7 @@ class Player(Animated):
         score=0
         new_score_bar= Score((650,10))
         self.__score_bar = new_score_bar
+        self.__score=score
 
     @property
     def health(self) -> int:
@@ -64,6 +65,15 @@ class Player(Animated):
             self.__health = hp
 
         self.__health_bar.health = self.__health
+
+    @property
+    def score(self) -> int:
+        return self.__score
+
+    @score.setter
+    def score(self, score):
+        self.__score = score
+        self.__score_bar.score = score
 
     @property
     def alive(self) -> bool:
