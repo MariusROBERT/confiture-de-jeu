@@ -30,28 +30,29 @@ class Night_manager:
 
     @property
     def prob_zombie_spawn(self):
-
+        value = PROB_ZOMBIE_SPAWN
         if self.is_night:
             maxadd = 1
-            add = (self.night_count / 15)
+            add = (self.night_count / 25)
             if add > maxadd:
                 add = maxadd
                 print("max difficulty prob spwan")
-            return PROB_ZOMBIE_SPAWN * 1.4 + add
+            value = PROB_ZOMBIE_SPAWN * 1.4 + add
 
-        return PROB_ZOMBIE_SPAWN
+        print("prob zombie spawn", value)
+        return value
 
     @property
     def speed_zombies(self):
         if self.is_night:
             maxadd = (PLAYER_SPEED - (1.5 + 1.3)) - 0.5
-            add = (self.night_count / 15)
+            add = (self.night_count / 25)
             if add > maxadd:
                 add = maxadd
                 print("max difficluty speed")
             return (random() * 1.5) + 1.3 + (self.night_count / 6)
 
-        return(random() * 1.5) + 0.8
+        return(random() * 1.5) + 0.7
 
     @property
     def size_zombie(self):

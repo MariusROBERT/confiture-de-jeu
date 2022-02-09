@@ -10,7 +10,7 @@ import pygame
 import sys
 
 from personnages.autre_element.fx_manager import Fx_manager
-from personnages.night_manager import Night_manager
+from personnages.autre_element.night_manager import Night_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
 from personnages.player import Player, AutoPlayer
@@ -57,6 +57,7 @@ pygame.time.set_timer(TICKEVENT100, 100)
 
 TICKEVENT10 = pygame.USEREVENT + 4
 pygame.time.set_timer(TICKEVENT10, 5)
+
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
@@ -123,6 +124,8 @@ def event_loop(event: pygame.event.Event):
         if random() < night_manager.prob_zombie_spawn:
             elements["zombies"].append(
                 Zombie(speed=night_manager.speed_zombies, size=night_manager.size_zombie))
+        for frie in elements["fries"]:
+            frie.tick_update_100(elements)
 
 
 def logic_loop():
