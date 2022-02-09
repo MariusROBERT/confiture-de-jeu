@@ -96,13 +96,22 @@ class Pig(Animated):
 
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
-            vector_to_target = np.array((
-                self.target.coords[0] - self.coords[0],
-                self.target.coords[1] - self.coords[1]))
+            fries_vector = vector_to_target_tea_time_algorithm(
+                self.target.coords,
+                self.target.latest_movement_vector,
+                self.center_coords,
+                FRIES_SPEED
+                )
+            if fries_vector is None:
+                print("Falling back")
+                vector_to_target = np.array((
+                    self.target.coords[0] - self.coords[0],
+                    self.target.coords[1] - self.coords[1]))
 
-            normalized_vector = vector_to_target / \
-                np.sqrt(np.sum(vector_to_target ** 2))
-            return [Fries(self.center_coords, normalized_vector * FRIES_SPEED)]
+                normalized_vector = vector_to_target / \
+                    np.sqrt(np.sum(vector_to_target ** 2))
+                fries_vector = normalized_vector * FRIES_SPEED
+            return [Fries(self.center_coords, fries_vector)]
         else:
             return []
 

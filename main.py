@@ -1,4 +1,5 @@
 from random import random
+from re import M
 from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
@@ -11,7 +12,7 @@ from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
 import py_sounds
-
+from menu import *
 pygame.init()
 
 screen = pygame.display.set_mode(SIZE)
@@ -101,6 +102,7 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
 
+#dddmain_menu(screen, clock)
 
 while 1:
     clear_screen(screen)

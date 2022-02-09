@@ -36,7 +36,7 @@ class Zombie(Animated):
         self.dead = False
         self._time_since_dead = 0
         self.angle = 0
-
+        self.__latest_movement_vector = (0,0)
         self.current_animation = "walk"
 
         if coords is None:
@@ -72,8 +72,8 @@ class Zombie(Animated):
             self.alive = False
 
     @property
-    def latest_vector(self) -> tuple[int, int]:
-        return 1, 1  # Place holder
+    def latest_movement_vector(self) -> tuple[int, int]:
+        return self.__latest_movement_vector
 
     @property
     def coords(self) -> tuple[int, int]:
@@ -81,6 +81,8 @@ class Zombie(Animated):
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
+        self.__latest_movement_vector = (coords[0] - self.coords[0], coords[1] - self.coords[1])
+        
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
