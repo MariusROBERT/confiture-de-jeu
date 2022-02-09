@@ -1,7 +1,7 @@
 import pygame
 import random
 from random import randrange
-from constantes import CASE_SIZE, PROBA_PATATE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
+from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 
 
 class Potatoes:
@@ -28,7 +28,7 @@ class Potatoes:
                 self.__pos_patate = self.position()
 
         self.age = 0
-        self.lifespan = 26
+        self.lifespan = 26000
 
     @property
     def alive(self):
@@ -60,14 +60,7 @@ class Potatoes:
         return self.__pos_patate
 
     def position(self):
-        if random.randint(0, PROBA_PATATE) == 0:
-            x_patate = self.x_pousse
-            y_patate = self.y_pousse
-        else:
-            x_patate = random.randint(self.x_pousse - 1, self.x_pousse + 1)
-            if x_patate != 0:
-                y_patate = self.y_pousse
-            else:
-                y_patate = random.randint(self.y_pousse - 1, self.y_pousse + 1)
+        x_patate = self.x_pousse
+        y_patate = self.y_pousse
         pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
         return pos_patate
