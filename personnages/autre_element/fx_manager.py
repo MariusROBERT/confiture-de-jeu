@@ -21,7 +21,7 @@ class Fx_manager:
         self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
         self.nuit_screen.fill((255, 255, 255, OPACITY_NIGHT),
                               special_flags=pygame.BLEND_RGBA_MULT)
-        self.nuit_screen_on = True
+        self.nuit_screen_on = False
 
     def event_manager(self, event: pygame.event.Event):
         if event.type == DAMAGE_EVENT:

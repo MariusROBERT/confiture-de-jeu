@@ -23,20 +23,20 @@ class Night_manager:
             self.is_night = not self.is_night
             self._timer_night = 0
             queue_event(CHANGE_NIGHT)
-            print("NIGHT")
 
     @property
     def prob_zombie_spawn(self):
         if self.is_night:
-            return PROB_ZOMBIE_SPAWN * 1.2
+            return PROB_ZOMBIE_SPAWN * 1.5
 
         return PROB_ZOMBIE_SPAWN
 
     @property
     def speed_zombies(self):
         if self.is_night:
-            return random() * 1.5 + 1.3
-        return random() * 1.5 + 0.8
+            return (random() * 1.5) + 3
+
+        return(random() * 1.5) + 0.8
 
     def event_manager(self, event: pygame.event.Event):
         pass
