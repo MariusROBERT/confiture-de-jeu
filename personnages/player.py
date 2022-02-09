@@ -4,6 +4,7 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
+from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
 import py_sounds
 
@@ -47,6 +48,9 @@ class Player(Animated):
 
     @health.setter
     def health(self, hp) -> None:
+
+        if hp < self.__health:
+            queue_event(DAMAGE_EVENT)
         if hp <= 0:
             self.__health = 0
             self.__alive = False
@@ -113,13 +117,12 @@ class Player(Animated):
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
-
-            dirrection = directions[keys.index(event.key)]
-
-            if not len(self.direction) >= 2:
-                self.add_direction(dirrection)
-                if len(self.direction) > 0:
-                    self.current_animation = "walk"
+            if event.key in keys:
+                dirrection = directions[keys.index(event.key)]
+                if not len(self.direction) >= 2:
+                    self.add_direction(dirrection)
+                    if len(self.direction) > 0:
+                        self.current_animation = "walk"
 
             for i in range(len(directions)):
                 if event.key == keys[i] and not directions[i] in self.direction:
