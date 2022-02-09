@@ -3,13 +3,19 @@ import numpy as np
 import math
 import os
 
+from constantes import DATAPACK
+
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
-    return pygame.transform.scale(pygame.image.load(path), size).convert_alpha()
+    path2 = "./datapacks/" + DATAPACK + "/images/" + path
+    return pygame.transform.scale(pygame.image.load(path2), size).convert_alpha()
 
 
 def load_animation(path: str, size: tuple) -> list:
-    folder_content = sorted(os.listdir(path))
+    path2 = "./datapacks/" + DATAPACK + "/images/" + path
+    folder_content = sorted(os.listdir(path2))
+    filtered_folder_content = list(
+        filter(lambda x: x.endswith(".png"), folder_content))
     return [load_image(f"{path}/{file}", size) for file in folder_content]
 
 
@@ -21,6 +27,7 @@ def get_angle_between_vectors(v1: tuple, v2: tuple) -> int:
 
 def get_vector_angle(v1: tuple) -> int:
     return math.degrees(math.atan2(v1[1], v1[0]))
+
 
 def rot_center(image, angle, x, y):
     rotated_image = pygame.transform.rotate(image, angle)
@@ -44,19 +51,21 @@ def nearest_zombie(zombies: 'Zombie', coords: tuple) -> 'Zombie':
 
 def queue_event(id: int):
     pygame.event.post(pygame.event.Event(id))
-    
-def quadratic_equation_roots(a : int, b : int, c : int) -> tuple:
+
+
+def quadratic_equation_roots(a: int, b: int, c: int) -> tuple:
     delta = b**2 - 4*a*c
-    if delta < 0 or a +b == 0:
+    if delta < 0 or a + b == 0:
         return None
     else:
         return (-b + math.sqrt(delta)) / (2*a), (-b - math.sqrt(delta)) / (2*a)
-    
+
+
 def vector_to_target_tea_time_algorithm(
-        moving_object_coords : tuple, 
-        moving_object_vector : tuple, 
-        interceptor_origin_coords : tuple, 
-        interceptor_vector_norm : int) -> tuple:
+        moving_object_coords: tuple,
+        moving_object_vector: tuple,
+        interceptor_origin_coords: tuple,
+        interceptor_vector_norm: int) -> tuple:
     """[summary]
 
     Args:
@@ -83,7 +92,8 @@ def vector_to_target_tea_time_algorithm(
 \_____________________/
     """
     # solving the quadratic equation
-    a = moving_object_vector[0]**2 + moving_object_vector[1]**2 - interceptor_vector_norm**2
+    a = moving_object_vector[0]**2 + \
+        moving_object_vector[1]**2 - interceptor_vector_norm**2
     b = 0
     c = moving_object_coords[0]**2 \
         + moving_object_coords[1]**2 \
@@ -100,9 +110,12 @@ def vector_to_target_tea_time_algorithm(
         if holly_tea == 0:
             # interception not possible
             return None
-        u = (moving_object_coords[0] - interceptor_origin_coords[0]) / holly_tea + moving_object_vector[0]
-        v = (moving_object_coords[1] - interceptor_origin_coords[1]) / holly_tea + moving_object_vector[1]
+        u = (moving_object_coords[0] - interceptor_origin_coords[0]
+             ) / holly_tea + moving_object_vector[0]
+        v = (moving_object_coords[1] - interceptor_origin_coords[1]
+             ) / holly_tea + moving_object_vector[1]
         return (u, v), holly_tea
+
 
 def np_to_tuple(a):
     try:
@@ -110,6 +123,7 @@ def np_to_tuple(a):
     except TypeError:
         return a
 
+
 def normalize_vector(vector: tuple) -> tuple:
     norm = math.sqrt(vector[0]**2 + vector[1]**2)
-    return vector[0]/norm, vector[1]/norm    
+    return vector[0]/norm, vector[1]/norm

@@ -102,11 +102,12 @@ class Pig(Animated):
                 self.target.latest_movement_vector,
                 self.center_coords,
                 FRIES_SPEED
-                )
+            )
             intersection_coords = (
-                self.target.center_coords[0] + self.target.latest_movement_vector[0] * t,
+                self.target.center_coords[0] +
+                self.target.latest_movement_vector[0] * t,
                 self.target.center_coords[1] + self.target.latest_movement_vector[1] * t)
-            size = (20,20)
+            size = (20, 20)
             intersection_box = pygame.Rect(
                 intersection_coords[0] - size[0]//2,
                 intersection_coords[1] - size[1]//2,
@@ -123,7 +124,7 @@ class Pig(Animated):
                 normalized_vector = vector_to_target / \
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
-            return [Fries(self.center_coords, fries_vector, intersection_box = intersection_box)]
+            return [Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
         else:
             return []
 
