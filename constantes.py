@@ -9,6 +9,7 @@ SHOW_HITBOX = config["debug"]
 PROB_ZOMBIE_SPAWN = config["zombie_spawn_rate"]
 ZOMBIE_SPAWN = config["zombie_at_start"]
 DATAPACK = config["datapack"]
+OPACITY_NIGHT = 150
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720

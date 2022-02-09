@@ -1,5 +1,5 @@
 import pygame
-from constantes import OPACITY, WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, WIDTH, HEIGHT
 from lib.lib import load_image
 
 
@@ -18,7 +18,7 @@ class Fx_manager:
         self.damage_screen_on = False
 
         self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
-        self.nuit_screen.fill((255, 255, 255, OPACITY),
+        self.nuit_screen.fill((255, 255, 255, OPACITY_NIGHT),
                               special_flags=pygame.BLEND_RGBA_MULT)
         self.nuit_screen_on = True
 

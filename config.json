@@ -1,5 +1,5 @@
 {
-  "datapack": "minecraft",
+  "datapack": "base",
   "debug": false,
   "pig_health": 0,
   "zombie_at_start": 1,
