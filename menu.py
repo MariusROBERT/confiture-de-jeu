@@ -5,6 +5,8 @@ pygame.font.init() # you have to call this at the start,
                    # if you want to use this module.
 from personnages.autre_element.text import Text
 from constantes import WIDTH, HEIGHT, FPS
+from personnages.terrain import Terrain
+
 
 def menu_event_loop(screen : pygame.display, clock, elements, user_events):
     for event in pygame.event.get():
@@ -19,7 +21,10 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                     return "Play"
             if event.type == user_events[0]:
                 for element in elements:
-                    element.tick_event_100()     
+                    try:
+                        element.tick_event_100()
+                    except AttributeError:
+                        pass   
             
 
 def menu_display_loop(screen : pygame.display, elements):
@@ -27,20 +32,27 @@ def menu_display_loop(screen : pygame.display, elements):
         element.display(screen)
 def init_menu_elements():
     menu_elements = []
+    terrain = Terrain()
+    menu_elements.append(terrain)
+    
     main_title = Text(
         (WIDTH//2, 100),
         "FRIES NIGHT AT PIGGIES",
         "menu.ttf",
         size=40,
         centerd_around_coords=True,
-        floating_effect_speed=1.2
+        floating_effect=True
     )
     menu_elements.append(main_title)
+    
+    hint = Text((WIDTH//2, 150),"Press Enter to start", "menu.ttf", size=15, centerd_around_coords=True, color=(255, 255,255))
+    menu_elements.append(hint)
+    
     return menu_elements
 
 def menu_logic_loop(menu_elements):
     for element in menu_elements:
-        element.update()
+        element.update(None)
     
         
 def main_menu(screen : pygame.display, clock, user_events):

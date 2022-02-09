@@ -54,7 +54,7 @@ TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
 
 TICKEVENT10 = pygame.USEREVENT + 4
-pygame.time.set_timer(TICKEVENT10, 40)
+pygame.time.set_timer(TICKEVENT10, 5)
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
