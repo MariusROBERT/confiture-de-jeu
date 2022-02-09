@@ -2,6 +2,7 @@ import pygame
 import random
 from random import randrange
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
+from constantes import POTATO_LIFESPAN
 
 
 class Potatoes:
@@ -28,7 +29,7 @@ class Potatoes:
                 self.__pos_patate = self.position()
 
         self.age = 0
-        self.lifespan = 26000
+        self.lifespan = POTATO_LIFESPAN
 
     @property
     def alive(self):
