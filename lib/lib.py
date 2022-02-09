@@ -14,9 +14,9 @@ def load_image(path: str, size: tuple) -> pygame.Surface:
 def load_animation(path: str, size: tuple) -> list:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
     folder_content = sorted(os.listdir(path2))
-    # filtered_folder_content = list(
-    #     filter(lambda x: x.endswith(".png"), folder_content))
-    return [load_image(f"{path}/{file}", size) for file in folder_content]
+    filtered_folder_content = list(
+        filter(lambda x: x.endswith(".png"), folder_content))
+    return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
 
 def get_angle_between_vectors(v1: tuple, v2: tuple) -> float:

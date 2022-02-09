@@ -10,7 +10,9 @@ class Animated:
 
         animations_names = os.listdir(
             "datapacks/{}/images/{}/" .format(DATAPACK, name))
-        for animation_name in animations_names:
+        filtered_folder_content = [
+            animation for animation in animations_names if animation != ".DS_Store"]
+        for animation_name in filtered_folder_content:
             self._animation[animation_name] = load_animation(
                 f"{name}/{animation_name}", size
             )
