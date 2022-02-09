@@ -2,8 +2,8 @@ from operator import ne
 import pygame
 from pygame.locals import *
 from lib.animated import Animated
-from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM
+from lib.lib import load_image
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -95,14 +95,26 @@ class Pig(Animated):
         self.current_frame += 1
 
     def get_fries(self):
+        intersection_box = None
         if self.target and self.target.alive and self.health > 0:
-            fries_vector = vector_to_target_tea_time_algorithm(
+            fries_vector, t = vector_to_target_tea_time_algorithm(
                 self.target.center_coords,
                 self.target.latest_movement_vector,
                 self.center_coords,
                 FRIES_SPEED
                 )
+            intersection_coords = (
+                self.target.center_coords[0] + self.target.latest_movement_vector[0] * t,
+                self.target.center_coords[1] + self.target.latest_movement_vector[1] * t)
+            size = (20,20)
+            intersection_box = pygame.Rect(
+                intersection_coords[0] - size[0]//2,
+                intersection_coords[1] - size[1]//2,
+                size[0],
+                size[1])
             if fries_vector is None or OVERRIDE_TEA_TIME_ALGORITHM:
+                if NO_DIRECT_SHOT:
+                    return []
                 print("Falling back")
                 vector_to_target = np.array((
                     self.target.coords[0] - self.coords[0],
@@ -111,7 +123,7 @@ class Pig(Animated):
                 normalized_vector = vector_to_target / \
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
-            return [Fries(self.center_coords, fries_vector)]
+            return [Fries(self.center_coords, fries_vector, intersection_box = intersection_box)]
         else:
             return []
 

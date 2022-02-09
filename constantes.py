@@ -56,7 +56,8 @@ ZOMBIE_HEALTH = 100
 HITBOX_FRIES = (10, 10)
 FRIES_DAMAGE = 40
 FRIES_SIZE = (6, 40)
-FRIES_SPEED = 3
+FRIES_SPEED = 10
 OVERRIDE_TEA_TIME_ALGORITHM = False 
+NO_DIRECT_SHOT = False
 #If True, the tea time algorithm will be disabled
 #tea time allow to shoot anticipating zombie movement
