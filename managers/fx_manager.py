@@ -26,6 +26,7 @@ class Fx_manager:
         self.size_explosion = (SIZE_PLAYER*3, SIZE_PLAYER*3)
         self.explosion_screen = load_animation(
             "particle/explosion", self.size_explosion)
+
         self.explosion_on = False
         self.explosion_old = 0
         self.pos_explosion = (0, 0)
@@ -40,18 +41,19 @@ class Fx_manager:
             self.pos_explosion = (elements["player"][0].center_coords[0] -
                                   self.size_explosion[0]/2, elements["player"][0].center_coords[1] - self.size_explosion[1]/2)
 
+    def tick_update_50(self, elements):
+        if self.explosion_on:
+            self.explosion_old += 1
+            if self.explosion_old >= len(self.explosion_screen)-1:
+                self.explosion_on = False
+                self.explosion_old = 0
+
     def tick_update_100(self, elements):
         if self.damage_screen_on:
             self.damage_screen_old += 1
             if self.damage_screen_old > DAMAGE_DURATION:
                 self.damage_screen_on = False
                 self.damage_screen_old = 0
-
-        if self.explosion_on:
-            self.explosion_old += 1
-            if self.explosion_old >= len(self.explosion_screen)-1:
-                self.explosion_on = False
-                self.explosion_old = 0
 
     def update(self, elements):
         pass

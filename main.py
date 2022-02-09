@@ -54,6 +54,9 @@ pygame.time.set_timer(FIREFRIE, SPAWN_DELAY)
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
 
+TICKEVENT50 = pygame.USEREVENT + 3
+pygame.time.set_timer(TICKEVENT100, 50)
+
 TICKEVENT10 = pygame.USEREVENT + 4
 pygame.time.set_timer(TICKEVENT10, 5)
 
@@ -125,6 +128,9 @@ def event_loop(event: pygame.event.Event):
                 Zombie(speed=night_manager.speed_zombies, size=night_manager.size_zombie))
         for frie in elements["fries"]:
             frie.tick_update_100(elements)
+
+    if event.type == TICKEVENT50:
+        fx_manager.tick_update_50(elements)
 
 
 def logic_loop():

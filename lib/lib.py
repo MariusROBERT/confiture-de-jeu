@@ -12,12 +12,18 @@ def load_image(path: str, size: tuple) -> pygame.Surface:
     return pygame.transform.scale(pygame.image.load(path2), size)
 
 
-
 def load_animation(path: str, size: tuple) -> list:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
     folder_content = sorted(os.listdir(path2))
     filtered_folder_content = list(
         filter(lambda x: x.endswith(".png"), folder_content))
+    print(filtered_folder_content)
+
+    # image format = image:number:.png
+    if len(filtered_folder_content) >= 9:
+        filtered_folder_content.sort(
+            key=lambda x: int(x.split(".")[0].split(":")[1]))
+
     return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
 
@@ -123,6 +129,7 @@ def vector_to_target_tea_time_algorithm(
              ) / holly_tea + moving_object_vector[1]
         return (u, v), holly_tea
 
+
 def np_to_tuple(a):
     try:
         return tuple(np_to_tuple(i) for i in a)
@@ -134,9 +141,11 @@ def normalize_vector(vector: tuple) -> tuple:
     norm = math.sqrt(vector[0]**2 + vector[1]**2)
     return vector[0]/norm, vector[1]/norm
 
+
 def load_font(path: str, size: int) -> pygame.font.Font:
     path2 = "./datapacks/" + DATAPACK + "/fonts/" + path
     return pygame.font.Font(path2, size)
+
 
 def vector_to_target(
         moving_object_coords: tuple,
@@ -160,12 +169,13 @@ def vector_to_target(
     return np_to_tuple(normed_array)
 
 
-
 def dotproduct(v1, v2):
-  return sum((a*b) for a, b in zip(v1, v2))
+    return sum((a*b) for a, b in zip(v1, v2))
+
 
 def length(v):
-  return math.sqrt(dotproduct(v, v))
+    return math.sqrt(dotproduct(v, v))
+
 
 def g_angle(v1, v2):
     cos = dotproduct(v1, v2) / (length(v1) * length(v2))
@@ -175,13 +185,14 @@ def g_angle(v1, v2):
         cos = -0.9999999999999999
     try:
         return math.degrees(
-        math.acos(
-            cos))
+            math.acos(
+                cos))
     except ValueError:
         print(cos)
         raise ValueError
 
-def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int = None):
+
+def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = None):
     angle = get_angle_between_vectors(v1, v2)
     angle = angle
     if angle <= 180:
@@ -193,10 +204,11 @@ def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int
     rad_angle = math.radians(angle)
     cs = math.cos(rad_angle)
     sn = math.sin(rad_angle)
-    u = v1[0] * cs - v1[1] * sn  
+    u = v1[0] * cs - v1[1] * sn
     v = v1[0] * sn + v1[1] * cs
-    v3 = np.array(normalize_vector((u,v))) * 3
+    v3 = np.array(normalize_vector((u, v))) * 3
     return np_to_tuple(v3)
 
-def distance_between(coord1 : tuple, coords2:tuple) -> float:
+
+def distance_between(coord1: tuple, coords2: tuple) -> float:
     return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)
