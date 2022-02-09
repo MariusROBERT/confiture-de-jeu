@@ -23,8 +23,9 @@ class Fx_manager:
         self.nuit_screen_on = False
 
         # Explosion
+        self.size_explosion = (SIZE_PLAYER*3, SIZE_PLAYER*3)
         self.explosion_screen = load_animation(
-            "particle/explosion", (SIZE_PLAYER*2, SIZE_PLAYER*2))
+            "particle/explosion", self.size_explosion)
         self.explosion_on = False
         self.explosion_old = 0
         self.pos_explosion = (0, 0)
@@ -36,7 +37,8 @@ class Fx_manager:
             self.nuit_screen_on = not self.nuit_screen_on
         elif event.type == DEAD_ZOMBIE:
             self.explosion_on = True
-            self.pos_explosion = elements["player"][0].coords
+            self.pos_explosion = (elements["player"][0].center_coords[0] -
+                                  self.size_explosion[0]/2, elements["player"][0].center_coords[1] - self.size_explosion[1]/2)
 
     def tick_update_100(self, elements):
         if self.damage_screen_on:
@@ -66,9 +68,9 @@ class Fx_manager:
 
             screen.blit(dm_screen, (0, 0))
 
-        if self.nuit_screen_on:
-            screen.blit(self.nuit_screen, (0, 0))
-
         if self.explosion_on:
             screen.blit(
                 self.explosion_screen[self.explosion_old], self.pos_explosion)
+
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))
