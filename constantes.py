@@ -9,6 +9,7 @@ SHOW_HITBOX = constantes["debug"]
 PROB_ZOMBIE_SPAWN = 0.08
 ZOMBIE_SPAWN = 1
 DATAPACK = constantes["datapack"]
+OPACITY = 170
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
@@ -64,5 +65,6 @@ FRIES_SIZE = (6, 40)
 FRIES_SPEED = 10
 OVERRIDE_TEA_TIME_ALGORITHM = False
 NO_DIRECT_SHOT = False
+FREQUENCY_SHOT = 250
 # If True, the tea time algorithm will be disabled
 # tea time allow to shoot anticipating zombie movement
