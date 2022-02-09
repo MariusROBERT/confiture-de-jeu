@@ -26,6 +26,7 @@ class HealthBar:
         self.size = size
         self.border_size = border_size
 
+        self.main_rect = self.colored_rect_coords = self.colored_rect_max_size = None
         self.color = color
         self.colored_rect = None
         self.move_to(coords)
@@ -58,8 +59,8 @@ class HealthBar:
             coords[1] + self.border_size
         )
         self.colored_rect_max_size = (
-            self.size[0] - 2*self.border_size,
-            self.size[1] - 2*self.border_size
+            self.size[0] - 2 * self.border_size,
+            self.size[1] - 2 * self.border_size
         )
         self.coords = coords
         self.update()

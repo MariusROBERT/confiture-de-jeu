@@ -1,4 +1,3 @@
-from operator import ne
 import pygame
 from pygame.locals import *
 from lib.animated import Animated
@@ -39,7 +38,7 @@ class Pig(Animated):
             border_size=2,
             color=(203, 219, 11))
 
-        self.__health = DEFAULT_PIG_HEALTH
+        self.__health = health
         self.__hitbox = pygame.Rect(self.coords, self.size)
         self.__max_health = max_health
         feed_space = 20
@@ -50,6 +49,7 @@ class Pig(Animated):
             self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
 
         self._current_animation = "fire"
+        self.target = None
 
     @property
     def health(self) -> int:
@@ -59,7 +59,7 @@ class Pig(Animated):
     def health(self, value: int) -> None:
         min_value = -10
 
-        if (value > self.__health):
+        if value > self.__health:
             queue_event(py_sounds.FEEDED)
         self.__health = value
         if self.__health <= min_value:
@@ -85,7 +85,7 @@ class Pig(Animated):
         return self.__hitbox_feed
 
     def feed(self, nourish_value: int = 20) -> None:
-        self.health += 20
+        self.health += nourish_value
         if self.health > 0:
             self._current_animation = "fire"
 
