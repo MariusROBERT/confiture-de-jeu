@@ -6,12 +6,14 @@ from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, SPAWN_DELAY, WIDTH, TOUR
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
+
 import sys
+
 from personnages.autre_element.fx_manager import Fx_manager
 from personnages.night_manager import Night_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
-from personnages.player import Player
+from personnages.player import Player, AutoPlayer
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
@@ -100,7 +102,7 @@ def event_loop(event: pygame.event.Event):
             global score_surface
             score_surface = refresh_score(time)
             counter += 1
-
+        
     if event.type == FIREFRIE:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()

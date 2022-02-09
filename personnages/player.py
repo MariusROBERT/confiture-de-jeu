@@ -1,15 +1,16 @@
+from re import M
 import pygame
 import os
 from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, \
     SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
 from lib.animated import Animated
-from lib.lib import load_animation, load_image, queue_event
+from lib.lib import *
 from lib.player import dir_to_angle
 from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
 import py_sounds
 from py_sounds import PLAYER_DEAD_EVENT
-
+import numpy as np
 directions = ["up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
 
@@ -37,7 +38,7 @@ class Player(Animated):
         self._paused_animation = ""
 
         self.time_since_move = 0
-
+        self.__old_angle = 0
         hp = PLAYER_MAX_HP
         new_health_bar = HealthBar(
             (50, 10), max=hp, value=hp, color=(159, 3, 1))
@@ -121,7 +122,15 @@ class Player(Animated):
                 self.direction.append("right")
                 return True
         return False
-
+    def dig(self, terrain):
+        self.digging = True
+        queue_event(py_sounds.DIG)
+        if terrain.harvrest(self.center_coords) and len(self.inventory) < 5:
+            self.inventory.append("potatoe")
+            queue_event(py_sounds.COLLECT_POTATOE)
+            # Heal 5hp if full inventory
+            if len(self.inventory) == 5:
+                self.health += 5
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
             if event.key in keys:
@@ -149,14 +158,7 @@ class Player(Animated):
 
                 # si il est dans la hitbox d'une potatoe
                 if not feeded:
-                    self.digging = True
-                    queue_event(py_sounds.DIG)
-                    if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
-                        self.inventory.append("potatoe")
-                        queue_event(py_sounds.COLLECT_POTATOE)
-                        # Heal 5hp if full inventory
-                        if len(self.inventory) == 5:
-                            self.health += 5
+                    self.dig(elements["terrain"][0])
 
         elif event.type == pygame.KEYUP:
             for i in range(4):
@@ -223,17 +225,15 @@ class Player(Animated):
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
 
-    def display(self, screen) -> None:
-
-        angle = dir_to_angle(self.direction)
-        # rotated = pygame.transform.rotate(self.sprite, angle)
-
+    def display(self, screen, angle = None) -> None:
+        if angle is None:
+            angle = dir_to_angle(self.direction)
+            
         rotated_image = pygame.transform.rotate(self.sprite, angle)
         new_rect = rotated_image.get_rect(
             center=self.sprite.get_rect(topleft=self.coords).center)
-
         screen.blit(rotated_image, new_rect)
-
+        
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
 
@@ -242,3 +242,63 @@ class Player(Animated):
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 
         self.__health_bar.display(screen)
+
+
+class AutoPlayer(Player):
+    def __init__(self, coords : tuple = (0,0), max_angle : int = 10):
+        super().__init__()
+        self.__nearest_zombie = None
+        self.__nearest_potatoe = None
+        self.__max_angle = max_angle
+        self.__moving_vector = (1,1)
+        self.update_moving_vector()
+        self.__safe_distance = 200
+    @property
+    def speed(self):
+        return 6
+    @property
+    def moving_vector(self):
+        return self.__moving_vector
+    
+    def update_moving_vector(self):
+        old_vector = self.__moving_vector
+        if self.__nearest_zombie is None or \
+            self.__nearest_zombie.health <= 0 or \
+            distance_between(self.__nearest_zombie.coords, self.coords) > self.__safe_distance:
+            
+            target_coords = (WIDTH/2, HEIGHT/2)
+            if self.__nearest_potatoe is not None:
+                target_coords = self.__nearest_potatoe.coords
+            v = vector_to_target(target_coords,self.center_coords ,self.speed)
+            self.__moving_vector = v
+       
+        else:
+            # Runnaway from the nearest zombie
+            to_zombie_vector = vector_to_target(self.__nearest_zombie.center_coords, self.center_coords, self.speed)
+            np_array = np.array(to_zombie_vector)
+            away_from_zombie_array = np_array * -1
+            self.__moving_vector = np_to_tuple(away_from_zombie_array)
+        
+        self.__moving_vector = intermediate_vector(old_vector, self.__moving_vector, max_angle=self.__max_angle)
+        
+    def update(self, elements):
+        terrain = elements["terrain"][0]
+        self.__nearest_zombie = nearest_zombie(elements["zombies"], self.center_coords)
+        self.__nearest_potatoe = nearest_zombie(terrain.potatoes, self.center_coords)
+        if (self.__nearest_zombie is None or \
+           distance_between(self.center_coords, self.__nearest_zombie.center_coords) > self.__safe_distance) and \
+            self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords, self.center_coords) < CASE_SIZE:
+            self.dig(terrain)
+           
+        self.coords = (self.coords[0] + self.moving_vector[0], self.coords[1] + self.moving_vector[1])
+        super().update(elements)
+    
+    def tick_update_100(self, elements):
+        super().tick_update_100(elements)
+        self.update_moving_vector()
+        
+    def display(self, screen):
+        angle = g_angle(self.moving_vector, (0, 1))
+        if self.moving_vector[0] <= 0:
+            angle = -angle
+        super().display(screen, angle)
