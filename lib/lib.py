@@ -68,13 +68,13 @@ def vector_to_target_tea_time_algorithm(
     """[summary]
 
     Args:
-        moving_object_coords (tuple): [description]
-        moving_object_vector (tuple): [description]
-        interceptor_origin_coords (tuple): [description]
-        interceptor_vector_norm (int): [description]
+        moving_object_coords (tuple): t0 coordinates of the moving object targeted
+        moving_object_vector (tuple): t0 movement vector of the moving object (acceleration is null)
+        interceptor_origin_coords (tuple): t0 coordinates of the interceptor
+        interceptor_vector_norm (int): norm of the interceptor vector (speed)
 
     Returns:
-        tuple: [description]
+        tuple: vector to intercept the moving target None if no interception possible
 
     TEA TIME ALGORITHM
 
