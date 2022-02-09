@@ -11,8 +11,7 @@ class Fries:
         self.__damage = FRIES_DAMAGE
         self.__intersection_box = intersection_box
         self.__movement_vector = movement_vector
-        sprite = pygame.image.load("./images/frite.png")
-        sprite = pygame.transform.scale(sprite, size)
+        sprite = load_image("frite.png", size)
         fries_angle = get_angle_between_vectors((0, 1), movement_vector)
         if movement_vector[0] < 0:
             fries_angle = 180 - fries_angle
