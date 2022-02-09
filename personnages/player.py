@@ -5,10 +5,11 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
-from personnages.autre_element.fx_manager import DAMAGE_EVENT
+from managers.events_const import COLLECT_POTATOE, DIG
+from managers.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
-import py_sounds
-from py_sounds import PLAYER_DEAD_EVENT
+import managers.sound_manager as sound_manager
+from managers.sound_manager import PLAYER_DEAD_EVENT
 
 directions = ["up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
@@ -53,7 +54,7 @@ class Player(Animated):
 
         if hp < self.__health and self.__health > 0:
             queue_event(DAMAGE_EVENT)
-        if hp <= 0:# and self.__alive:
+        if hp <= 0:  # and self.__alive:
             # TODO: faire que le son de mort se joue qu'une fois
             self.__health = 0
             self.__alive = False
@@ -150,10 +151,10 @@ class Player(Animated):
                 # si il est dans la hitbox d'une potatoe
                 if not feeded:
                     self.digging = True
-                    queue_event(py_sounds.DIG)
+                    queue_event(DIG)
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
-                        queue_event(py_sounds.COLLECT_POTATOE)
+                        queue_event(COLLECT_POTATOE)
                         # Heal 5hp if full inventory
                         if len(self.inventory) == 5:
                             self.health += 5

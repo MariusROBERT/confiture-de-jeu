@@ -7,15 +7,15 @@ from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
 import sys
-from personnages.autre_element.fx_manager import Fx_manager
-from personnages.autre_element.night_manager import Night_manager
+from managers.fx_manager import Fx_manager
+from managers.night_manager import Night_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
 from personnages.player import Player
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
-import py_sounds
+import managers.sound_manager as sound_manager
 from menu import *
 
 pygame.init()
@@ -77,8 +77,8 @@ def event_loop(event: pygame.event.Event):
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
 
-    py_sounds.sound_manager(pygame, event)  # Check si il faut jouer un son
-    fx_manager.event_manager(event)
+    sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
+    fx_manager.event_manager(event, elements)
 
     # Every seconds
     if event.type == TICKEVENT:

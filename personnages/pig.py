@@ -3,11 +3,12 @@ from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import load_image
 from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
+from managers.events_const import FEEDED, OUT_OF_FOOD
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
 import numpy as np
-import py_sounds
+import managers.sound_manager as sound_manager
 
 """
                ,-,------,
@@ -60,7 +61,7 @@ class Pig(Animated):
         min_value = -10
 
         if value > self.__health:
-            queue_event(py_sounds.FEEDED)
+            queue_event(FEEDED)
         self.__health = value
         if self.__health <= min_value:
             self.__health = min_value
@@ -68,7 +69,7 @@ class Pig(Animated):
             self.__health = self.__max_health
         if self.__health <= 0 and self.current_animation != "idle":
             self.current_animation = "idle"
-            queue_event(py_sounds.OUT_OF_FOOD)
+            queue_event(OUT_OF_FOOD)
 
         self.health_bar.health = value
 

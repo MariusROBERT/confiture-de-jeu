@@ -3,7 +3,7 @@ import pygame
 
 from constantes import BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SPAWN_CHANCE, NIGHT_DURATION, PLAYER_SPEED, PROB_ZOMBIE_SPAWN, SIZE_ZOMBIE
 from lib.lib import queue_event
-from personnages.autre_element.fx_manager import CHANGE_NIGHT
+from managers.fx_manager import CHANGE_NIGHT
 
 
 class Night_manager:
@@ -39,7 +39,6 @@ class Night_manager:
                 print("max difficulty prob spwan")
             value = PROB_ZOMBIE_SPAWN * 1.4 + add
 
-        print("prob zombie spawn", value)
         return value
 
     @property
