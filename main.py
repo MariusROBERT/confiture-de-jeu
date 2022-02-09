@@ -91,6 +91,13 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
+        if player.alive == True:
+            global counter
+            tt = datetime.fromtimestamp(counter)
+            time = tt.strftime("%M:%S")
+            global score_surface
+            score_surface = refresh_score(time)
+            counter += 1
 
     # 500 miliseconds
     if event.type == FIREFRIE:
@@ -119,13 +126,6 @@ def logic_loop():
     for key in elements.keys():
         for element in elements[key]:
             element.update(elements)
-    if player.alive == True:
-        global counter
-        tt = datetime.fromtimestamp(counter)
-        time = tt.strftime("%M:%S")
-        global score_surface
-        score_surface = refresh_score(time)
-        counter += 1
 
 
 def display_loop():
