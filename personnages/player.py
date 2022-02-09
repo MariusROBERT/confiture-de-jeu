@@ -23,7 +23,7 @@ class Player(Animated):
             "/player/autre/potatoemini.png", (20, 20))
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
-        self.coords = (20, 20)
+        self.coords = (WIDTH/2,HEIGHT/2 )
 
         self._speed = PLAYER_SPEED
         self.direction = []
