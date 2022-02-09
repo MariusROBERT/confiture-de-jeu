@@ -3,7 +3,8 @@ import pygame
 from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
-from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
+    DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from lib.animated import Animated
 import numpy
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
@@ -25,7 +26,7 @@ class Zombie(Animated):
             auto_hide=True)
         self.__health_bar = new_health_bar
 
-        super().__init__("zombie", (SIZE_ZOMBIE, SIZE_ZOMBIE))
+        super().__init__("zombie", size)
 
         self.__name = name
         self.__health = hp
@@ -36,7 +37,7 @@ class Zombie(Animated):
         self.dead = False
         self._time_since_dead = 0
         self.angle = 0
-        self.__latest_movement_vector = (0,0)
+        self.__latest_movement_vector = (0, 0)
         self.current_animation = "walk"
 
         if coords is None:
@@ -69,7 +70,7 @@ class Zombie(Animated):
     @time_since_dead.setter
     def time_since_dead(self, value: int) -> None:
         self._time_since_dead = value
-        if (self._time_since_dead) > DEAD_BODY_LIFESPAN:
+        if self._time_since_dead > DEAD_BODY_LIFESPAN:
             self.alive = False
 
     @property
@@ -82,7 +83,7 @@ class Zombie(Animated):
 
     @property
     def center_coords(self) -> tuple[int, int]:
-        return (self.coords[0] + self.size[0] // 2, self.coords[1] + self.size[1] // 2)
+        return self.coords[0] + self.size[0] // 2, self.coords[1] + self.size[1] // 2
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
@@ -113,9 +114,6 @@ class Zombie(Animated):
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
 
-    def attack(self, target) -> None:
-        target.is_attacked(self.__damage)
-
     def tick_update(self, elements: tuple) -> None:
         if self.dead:
             self.time_since_dead += 1
@@ -134,7 +132,7 @@ class Zombie(Animated):
             screen.blit(image, self.__coords)
         else:
 
-            angle = self.angle + 180 + 90
+            angle = self.angle + 90
             rotated_image = pygame.transform.rotate(self.sprite, angle)
             new_rect = rotated_image.get_rect(
                 center=self.sprite.get_rect(topleft=self.coords).center)
@@ -150,17 +148,16 @@ class Zombie(Animated):
         if self.dead:
             return
 
-        olds = self.coords
-        # Dirrection du player
-        direction = get_direction(
-            self.coords, get_target(self.coords, elements["player"][0].coords))
-        produit = abs(direction[0]) + abs(direction[1])
+        # Direction du player
+        # direction = get_direction(
+        #     self.coords, get_target(self.coords, elements["player"][0].coords))
+        # produit = abs(direction[0]) + abs(direction[1])
 
         # Si le zombie est en colision avec une frite
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
             for i in elements["fries"]:
                 if i.hitbox.colliderect(self.hitbox_degats):
-                    self.is_attacked(self.damage)
+                    self.is_attacked(i.damage)
                     elements["fries"].remove(i)
 
         # Direction du zombie
@@ -180,13 +177,16 @@ class Zombie(Animated):
             direction = (0, 0)
         direction = numpy.array(direction)
         normalized_vector = normalize_vector(direction)
-        movement_vector = np_to_tuple(numpy.array(normalized_vector) * self.speed)
+        movement_vector = np_to_tuple(
+            numpy.array(normalized_vector) * self.speed)
         self.__latest_movement_vector = movement_vector
-        self.coords = (self.coords[0] + movement_vector[0], 
+        self.coords = (self.coords[0] + movement_vector[0],
                        self.coords[1] + movement_vector[1])
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
 
         if self.hitbox_collision.collidelist([element.hitbox_collision for element in zombie_except_me]) != -1:
+            self.coords = olds
+        if self.hitbox_collision.collidelist([element.hitbox for element in elements["pigs"]]) != -1:
             self.coords = olds

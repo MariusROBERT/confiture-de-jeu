@@ -1,41 +1,58 @@
 import pygame
-
+from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from constantes import DATAPACK
+
 pygame.init()
 
-base_path_sounds = "./datapacks/"+DATAPACK+"/sounds/"
+def get_sound(sound_name: str) -> pygame.mixer.Sound:
+    try:
+        sound = pygame.mixer.Sound(base_path_sounds + sound_name + ".ogg")
+    except FileNotFoundError:
+        try:
+            sound = pygame.mixer.Sound(base_path_sounds + sound_name + ".wav")
+        except FileNotFoundError:
+            return None
+    return sound
+
+base_path_sounds = "./datapacks/" + DATAPACK + "/sounds/"
 # EVENT DE 10 A 20 reservés
 COLLECT_POTATOE = pygame.USEREVENT + 10
-# collect_sound = pygame.mixer.Sound("sounds/collect.wav")
-collect_sound = pygame.mixer.Sound(base_path_sounds+"grass1.ogg")
-
+collect_sound = get_sound("collect")
 
 DEAD_ZOMBIE = pygame.USEREVENT + 11
-dead_sound = pygame.mixer.Sound(base_path_sounds+"dead_zombie3.wav")
+dead_sound = get_sound("dead_zombie")
 
 FEEDED = pygame.USEREVENT + 12
-feed_sound = pygame.mixer.Sound(base_path_sounds+"feeded.wav")
+feed_sound = get_sound("feeded")
 
 OUT_OF_FOOD = pygame.USEREVENT + 13
-out_of_food_sound = pygame.mixer.Sound(base_path_sounds+"out_of_food.wav")
+out_of_food_sound = get_sound("out_of_food")
 
 DIG = pygame.USEREVENT + 14
-# dig_sound = pygame.mixer.Sound("sounds/dig.wav")
-dig_sound = pygame.mixer.Sound(base_path_sounds+"till1.ogg")
+dig_sound = get_sound("dig")
 
+hurt_sound = get_sound("hurt")
+
+PLAYER_DEAD_EVENT = pygame.USEREVENT + 15
+player_dead_sound = get_sound("player_dead")
 
 def sound_manager(pygame, event: pygame.event.Event):
     try:
         if event.type == COLLECT_POTATOE:
             collect_sound.play().set_volume(0.3)
-        if event.type == DEAD_ZOMBIE:
+        elif event.type == DEAD_ZOMBIE:
             dead_sound.play().set_volume(0.06)
-        if event.type == FEEDED:
+        elif event.type == FEEDED:
             feed_sound.play().set_volume(0.3)
-        if event.type == OUT_OF_FOOD:
+        elif event.type == OUT_OF_FOOD:
             out_of_food_sound.play().set_volume(0.3)
-        if event.type == DIG:
+        elif event.type == DIG:
             dig_sound.play().set_volume(0.3)
+        elif event.type == DAMAGE_EVENT:
+            hurt_sound.play().set_volume(0.3)
+            # print("DAMAGE_EVENT")
+        elif event.type == PLAYER_DEAD_EVENT:
+            player_dead_sound.play().set_volume(3)
 
     except Exception as e:
-        print(e)
+        print("{} : {}".format(event.type, e))

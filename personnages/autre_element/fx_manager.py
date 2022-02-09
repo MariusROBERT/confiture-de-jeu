@@ -1,11 +1,12 @@
 import pygame
-from constantes import WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, WIDTH, HEIGHT
 from lib.lib import load_image
 
 
 # EVENT DE 20 A 30 reservés
 
 DAMAGE_EVENT = pygame.USEREVENT + 20
+CHANGE_NIGHT = pygame.USEREVENT + 21
 
 
 DAMAGE_DURATION = 8
@@ -13,13 +14,20 @@ DAMAGE_DURATION = 8
 
 class Fx_manager:
     def __init__(self):
-        self.damage_screen = load_image("red4.png", (WIDTH, HEIGHT))
+        self.damage_screen = load_image("red.png", (WIDTH, HEIGHT))
         self.damage_screen_old = 0
         self.damage_screen_on = False
+
+        self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
+        self.nuit_screen.fill((255, 255, 255, OPACITY_NIGHT),
+                              special_flags=pygame.BLEND_RGBA_MULT)
+        self.nuit_screen_on = False
 
     def event_manager(self, event: pygame.event.Event):
         if event.type == DAMAGE_EVENT:
             self.damage_screen_on = True
+        elif event.type == CHANGE_NIGHT:
+            self.nuit_screen_on = not self.nuit_screen_on
 
     def tick_update_100(self, elements):
         if self.damage_screen_on:
@@ -42,3 +50,6 @@ class Fx_manager:
                            special_flags=pygame.BLEND_RGBA_MULT)
 
             screen.blit(dm_screen, (0, 0))
+
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))

@@ -16,16 +16,16 @@ def load_animation(path: str, size: tuple) -> list:
     folder_content = sorted(os.listdir(path2))
     filtered_folder_content = list(
         filter(lambda x: x.endswith(".png"), folder_content))
-    return [load_image(f"{path}/{file}", size) for file in folder_content]
+    return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
 
-def get_angle_between_vectors(v1: tuple, v2: tuple) -> int:
+def get_angle_between_vectors(v1: tuple, v2: tuple) -> float:
     dot_product = np.dot(v1, v2)
     angle = np.arccos(dot_product / (np.linalg.norm(v2) * np.linalg.norm(v1)))
     return math.degrees(angle)
 
 
-def get_vector_angle(v1: tuple) -> int:
+def get_vector_angle(v1: tuple) -> float:
     return math.degrees(math.atan2(v1[1], v1[0]))
 
 

@@ -1,13 +1,14 @@
 import pygame
 import os
-from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER
+from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, \
+    SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
 from lib.animated import Animated
 from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
 from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
-from .autre_element.score import Score
 import py_sounds
+from py_sounds import PLAYER_DEAD_EVENT
 
 directions = ["up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
@@ -24,7 +25,7 @@ class Player(Animated):
             "/player/autre/potatoemini.png", (20, 20))
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
-        self.coords = (20, 20)
+        self.coords = (WIDTH / 2, HEIGHT / 2)
 
         self._speed = PLAYER_SPEED
         self.direction = []
@@ -37,16 +38,11 @@ class Player(Animated):
 
         self.time_since_move = 0
 
-        hp = 100
+        hp = PLAYER_MAX_HP
         new_health_bar = HealthBar(
             (50, 10), max=hp, value=hp, color=(159, 3, 1))
         self.__health_bar = new_health_bar
         self.__health = hp
-
-        score=0
-        new_score_bar= Score((650,10))
-        self.__score_bar = new_score_bar
-        self.__score=score
 
     @property
     def health(self) -> int:
@@ -55,25 +51,21 @@ class Player(Animated):
     @health.setter
     def health(self, hp) -> None:
 
-        if hp < self.__health:
+        if hp < self.__health and self.__health > 0:
             queue_event(DAMAGE_EVENT)
-        if hp <= 0:
+        if hp <= 0:# and self.__alive:
+            # TODO: faire que le son de mort se joue qu'une fois
             self.__health = 0
             self.__alive = False
             self.current_animation = "dead"
+            queue_event(PLAYER_DEAD_EVENT)
+
+        elif hp >= PLAYER_MAX_HP:
+            self.__health = PLAYER_MAX_HP
         else:
             self.__health = hp
 
         self.__health_bar.health = self.__health
-
-    @property
-    def score(self) -> int:
-        return self.__score
-
-    @score.setter
-    def score(self, score):
-        self.__score = score
-        self.__score_bar.score = score
 
     @property
     def alive(self) -> bool:
@@ -111,7 +103,7 @@ class Player(Animated):
         else:
             self.current_animation = self._paused_animation
 
-    def add_direction(self, direction: str) -> None:
+    def add_direction(self, direction: str) -> bool:
         if direction == "up":
             if not "down" in self.direction and not "up" in self.direction:
                 self.direction.append("up")
@@ -162,6 +154,9 @@ class Player(Animated):
                     if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
                         self.inventory.append("potatoe")
                         queue_event(py_sounds.COLLECT_POTATOE)
+                        # Heal 5hp if full inventory
+                        if len(self.inventory) == 5:
+                            self.health += 5
 
         elif event.type == pygame.KEYUP:
             for i in range(4):
@@ -247,4 +242,3 @@ class Player(Animated):
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 
         self.__health_bar.display(screen)
-        self.__score_bar.display(screen)

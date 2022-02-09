@@ -7,13 +7,13 @@ from constantes import CASE_SIZE, HEIGHT, WIDTH, TOURS
 def randomCoords():
     side = randrange(4)
     if side == 0:
-        res = (randrange(0, WIDTH), 0)
+        res = (randrange(-CASE_SIZE, WIDTH), -CASE_SIZE)
     elif side == 1:
-        res = (WIDTH - CASE_SIZE, randrange(0, HEIGHT))
+        res = (WIDTH, randrange(-CASE_SIZE, HEIGHT))
     elif side == 2:
-        res = (randrange(0, WIDTH), HEIGHT - CASE_SIZE)
+        res = (randrange(-CASE_SIZE, WIDTH), HEIGHT)
     elif side == 3:
-        res = (0, randrange(0, HEIGHT))
+        res = (-CASE_SIZE, randrange(-CASE_SIZE, HEIGHT))
     else:
         raise Exception(
             "Error in Zombie.__init__() : side = " + str(side))
