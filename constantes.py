@@ -1,14 +1,14 @@
 from json import loads
 
 with open("config.json") as f:
-    constantes = loads(f.read())
+    config = loads(f.read())
 
 # General
 FPS = 60
-SHOW_HITBOX = constantes["debug"]
-PROB_ZOMBIE_SPAWN = 0.08
-ZOMBIE_SPAWN = 1
-DATAPACK = constantes["datapack"]
+SHOW_HITBOX = config["debug"]
+PROB_ZOMBIE_SPAWN = config["zombie_spawn_rate"]
+ZOMBIE_SPAWN = config["zombie_at_start"]
+DATAPACK = config["datapack"]
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
@@ -36,7 +36,7 @@ POS_TOUR_4 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
 TOURS = [POS_TOUR_1, POS_TOUR_2, POS_TOUR_3, POS_TOUR_4]
 
 AUTO_DAMAGE_SPEED = 0.5
-DEFAULT_PIG_HEALTH = 100
+DEFAULT_PIG_HEALTH = config["pig_health"]
 # Player
 SIZE_PLAYER = CASE_SIZE * 1.1
 PLAYER_SPEED = 300 / FPS

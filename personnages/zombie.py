@@ -191,3 +191,5 @@ class Zombie(Animated):
 
         if self.hitbox_collision.collidelist([element.hitbox_collision for element in zombie_except_me]) != -1:
             self.coords = olds
+        if self.hitbox_collision.collidelist([element.hitbox for element in elements["pigs"]]) != -1:
+            self.coords = olds
