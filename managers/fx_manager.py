@@ -1,7 +1,7 @@
 import pygame
 from constantes import OPACITY_NIGHT, SIZE_PLAYER, WIDTH, HEIGHT
 from lib.lib import load_animation, load_image
-from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT
+from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DEAD_ZOMBIE
 from managers.sound_manager import COLLECT_POTATOE
 
 
@@ -22,6 +22,7 @@ class Fx_manager:
                               special_flags=pygame.BLEND_RGBA_MULT)
         self.nuit_screen_on = False
 
+        # Explosion
         self.explosion_screen = load_animation(
             "particle/explosion", (SIZE_PLAYER*2, SIZE_PLAYER*2))
         self.explosion_on = False
@@ -33,7 +34,7 @@ class Fx_manager:
             self.damage_screen_on = True
         elif event.type == CHANGE_NIGHT:
             self.nuit_screen_on = not self.nuit_screen_on
-        elif event.type == COLLECT_POTATOE:
+        elif event.type == DEAD_ZOMBIE:
             self.explosion_on = True
             self.pos_explosion = elements["player"][0].coords
 
@@ -43,9 +44,10 @@ class Fx_manager:
             if self.damage_screen_old > DAMAGE_DURATION:
                 self.damage_screen_on = False
                 self.damage_screen_old = 0
-        if self.explosion_old:
+
+        if self.explosion_on:
             self.explosion_old += 1
-            if self.explosion_old > len(self.explosion_screen):
+            if self.explosion_old >= len(self.explosion_screen)-1:
                 self.explosion_on = False
                 self.explosion_old = 0
 
@@ -68,5 +70,5 @@ class Fx_manager:
             screen.blit(self.nuit_screen, (0, 0))
 
         if self.explosion_on:
-            self.explosion_screen.tick(screen, self.pos_explosion)
-            self.explosion_old += 1
+            screen.blit(
+                self.explosion_screen[self.explosion_old], self.pos_explosion)
