@@ -41,7 +41,7 @@ TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
 
 TICKEVENT500 = pygame.USEREVENT + 2
-pygame.time.set_timer(TICKEVENT500, 200)
+pygame.time.set_timer(TICKEVENT500, 370)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)

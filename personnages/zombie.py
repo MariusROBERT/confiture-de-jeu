@@ -79,6 +79,10 @@ class Zombie(Animated):
     def coords(self) -> tuple[int, int]:
         return self.__coords
 
+    @property
+    def center_coords(self) -> tuple[int, int]:
+        return (self.coords[0] + self.size[0] // 2, self.coords[1] + self.size[1] // 2)
+
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
         self.__latest_movement_vector = (coords[0] - self.coords[0], coords[1] - self.coords[1])

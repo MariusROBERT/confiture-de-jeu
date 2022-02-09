@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import get_angle_between_vectors, vector_from_speed_angle, load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -97,12 +97,12 @@ class Pig(Animated):
     def get_fries(self):
         if self.target and self.target.alive and self.health > 0:
             fries_vector = vector_to_target_tea_time_algorithm(
-                self.target.coords,
+                self.target.center_coords,
                 self.target.latest_movement_vector,
                 self.center_coords,
                 FRIES_SPEED
                 )
-            if fries_vector is None:
+            if fries_vector is None or OVERRIDE_TEA_TIME_ALGORITHM:
                 print("Falling back")
                 vector_to_target = np.array((
                     self.target.coords[0] - self.coords[0],
