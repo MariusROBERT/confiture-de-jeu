@@ -26,7 +26,7 @@ class Zombie(Animated):
             auto_hide=True)
         self.__health_bar = new_health_bar
 
-        super().__init__("zombie", (SIZE_ZOMBIE, SIZE_ZOMBIE))
+        super().__init__("zombie", size)
 
         self.__name = name
         self.__health = hp
@@ -92,7 +92,7 @@ class Zombie(Animated):
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
         health_bar_y = coords[1] - self.health_bar_size[1] - \
-                       DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+            DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
         health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 
