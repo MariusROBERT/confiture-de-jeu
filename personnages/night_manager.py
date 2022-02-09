@@ -1,7 +1,7 @@
 from random import random
 import pygame
 
-from constantes import BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SPAWN_CHANCE, NIGHT_DURATION, PROB_ZOMBIE_SPAWN, SIZE_ZOMBIE
+from constantes import BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SPAWN_CHANCE, NIGHT_DURATION, PLAYER_SPEED, PROB_ZOMBIE_SPAWN, SIZE_ZOMBIE
 from lib.lib import queue_event
 from personnages.autre_element.fx_manager import CHANGE_NIGHT
 
@@ -30,14 +30,25 @@ class Night_manager:
 
     @property
     def prob_zombie_spawn(self):
+
         if self.is_night:
-            return PROB_ZOMBIE_SPAWN * 1.4
+            maxadd = 1
+            add = (self.night_count // 20)
+            if add > maxadd:
+                add = maxadd
+                print("max difficulty prob spwan")
+            return PROB_ZOMBIE_SPAWN * 1.4 + add
 
         return PROB_ZOMBIE_SPAWN
 
     @property
     def speed_zombies(self):
         if self.is_night:
+            maxadd = (PLAYER_SPEED - (1.5 + 1.3)) - 0.5
+            add = (self.night_count // 20)
+            if add > maxadd:
+                add = maxadd
+                print("max difficluty speed")
             return (random() * 1.5) + 1.3 + (self.night_count / 6)
 
         return(random() * 1.5) + 0.8

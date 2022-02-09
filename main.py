@@ -99,7 +99,6 @@ def event_loop(event: pygame.event.Event):
             score_surface = refresh_score(time)
             counter += 1
 
-    # 500 miliseconds
     if event.type == FIREFRIE:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
