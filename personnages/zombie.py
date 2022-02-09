@@ -86,7 +86,7 @@ class Zombie(Animated):
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
-        
+        #Revert to old method of latest_movement_vector
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2

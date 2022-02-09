@@ -127,3 +127,7 @@ def np_to_tuple(a):
 def normalize_vector(vector: tuple) -> tuple:
     norm = math.sqrt(vector[0]**2 + vector[1]**2)
     return vector[0]/norm, vector[1]/norm
+
+def load_font(path: str, size: int) -> pygame.font.Font:
+    path2 = "./datapacks/" + DATAPACK + "/fonts/" + path
+    return pygame.font.Font(path2, size)

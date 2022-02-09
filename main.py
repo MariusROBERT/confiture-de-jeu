@@ -46,6 +46,8 @@ pygame.time.set_timer(TICKEVENT500, 370)
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
 
+TICKEVENT10 = pygame.USEREVENT + 4
+pygame.time.set_timer(TICKEVENT10, 40)
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
@@ -107,15 +109,23 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
 
-#dddmain_menu(screen, clock)
+user_events = [
+    TICKEVENT10,
+    TICKEVENT100,
+    TICKEVENT500,
+    TICKEVENT
+]
 
+code = main_menu(screen, clock, user_events)
+print(code)
+if code == "Play":
 
-while 1:
-    clear_screen(screen)
-    for event in pygame.event.get():
-        event_loop(event)
-    logic_loop()
-    display_loop()
+    while 1:
+        clear_screen(screen)
+        for event in pygame.event.get():
+            event_loop(event)
+        logic_loop()
+        display_loop()
 
-    clock.tick(FPS)
-    pygame.display.flip()
+        clock.tick(FPS)
+        pygame.display.flip()
