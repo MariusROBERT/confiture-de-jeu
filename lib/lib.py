@@ -8,7 +8,9 @@ from constantes import DATAPACK
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
-    return pygame.transform.scale(pygame.image.load(path2), size).convert_alpha()
+    print("loading image:", path2)
+    return pygame.transform.scale(pygame.image.load(path2), size)
+
 
 
 def load_animation(path: str, size: tuple) -> list:
@@ -21,7 +23,12 @@ def load_animation(path: str, size: tuple) -> list:
 
 def get_angle_between_vectors(v1: tuple, v2: tuple) -> float:
     dot_product = np.dot(v1, v2)
-    angle = np.arccos(dot_product / (np.linalg.norm(v2) * np.linalg.norm(v1)))
+    cos = dot_product / (np.linalg.norm(v2) * np.linalg.norm(v1))
+    if cos >= 1.0:
+        cos = 1.0
+    elif cos <= -1.0:
+        cos = -1.0
+    angle = np.arccos(cos)
     return math.degrees(angle)
 
 
@@ -116,7 +123,6 @@ def vector_to_target_tea_time_algorithm(
              ) / holly_tea + moving_object_vector[1]
         return (u, v), holly_tea
 
-
 def np_to_tuple(a):
     try:
         return tuple(np_to_tuple(i) for i in a)
@@ -131,3 +137,66 @@ def normalize_vector(vector: tuple) -> tuple:
 def load_font(path: str, size: int) -> pygame.font.Font:
     path2 = "./datapacks/" + DATAPACK + "/fonts/" + path
     return pygame.font.Font(path2, size)
+
+def vector_to_target(
+        moving_object_coords: tuple,
+        interceptor_origin_coords: tuple,
+        interceptor_vector_norm: int) -> tuple:
+    """[summary]
+    Direct vector to target algorithm
+    Args:
+        moving_object_coords (tuple): [description]
+        interceptor_origin_coords (tuple): [description]
+        interceptor_vector_norm (int): [description]
+
+    Returns:
+        tuple: [description]
+    """
+    raw_vector = (moving_object_coords[0] - interceptor_origin_coords[0],
+                  moving_object_coords[1] - interceptor_origin_coords[1])
+    normalized_vector = normalize_vector(raw_vector)
+    np_array = np.array(normalized_vector)
+    normed_array = np_array * interceptor_vector_norm
+    return np_to_tuple(normed_array)
+
+
+
+def dotproduct(v1, v2):
+  return sum((a*b) for a, b in zip(v1, v2))
+
+def length(v):
+  return math.sqrt(dotproduct(v, v))
+
+def g_angle(v1, v2):
+    cos = dotproduct(v1, v2) / (length(v1) * length(v2))
+    if cos >= 1.0:
+        cos = 0.99999999999999999
+    if cos <= -1.0:
+        cos = -0.9999999999999999
+    try:
+        return math.degrees(
+        math.acos(
+            cos))
+    except ValueError:
+        print(cos)
+        raise ValueError
+
+def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int = None):
+    angle = get_angle_between_vectors(v1, v2)
+    angle = angle
+    if angle <= 180:
+        if angle > max_angle:
+            angle = max_angle
+    else:
+        if angle > 360 - max_angle:
+            angle = 360 - max_angle
+    rad_angle = math.radians(angle)
+    cs = math.cos(rad_angle)
+    sn = math.sin(rad_angle)
+    u = v1[0] * cs - v1[1] * sn  
+    v = v1[0] * sn + v1[1] * cs
+    v3 = np.array(normalize_vector((u,v))) * 3
+    return np_to_tuple(v3)
+
+def distance_between(coord1 : tuple, coords2:tuple) -> float:
+    return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)

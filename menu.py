@@ -45,7 +45,7 @@ def init_menu_elements():
     )
     menu_elements.append(main_title)
     
-    hint = Text((WIDTH//2, 150),"Press Enter to start", "menu.ttf", size=15, centerd_around_coords=True, color=(255, 255,255))
+    hint = Text((WIDTH//2, 180),"Appuyez sur Entree pour lancer une partie", "menu.ttf", size=15, centerd_around_coords=True, color=(255, 255,255))
     menu_elements.append(hint)
     
     return menu_elements

@@ -53,4 +53,5 @@ def sound_manager(pygame, event: pygame.event.Event):
             player_dead_sound.play().set_volume(3)
 
     except Exception as e:
-        print("{} : {}".format(event.type, e))
+        #print("{} : {}".format(event.type, e))
+        pass

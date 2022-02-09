@@ -54,6 +54,10 @@ class Potatoes:
     def pos_patate(self):
         return self.__pos_patate
 
+    @property
+    def coords(self) -> tuple:
+        return self.pos_pousse
+    
     def get_pos_pousse(self):
         return self.__pos_pousse
 

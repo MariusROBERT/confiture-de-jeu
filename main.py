@@ -6,12 +6,13 @@ from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, SPAWN_DELAY, WIDTH, TOUR
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
+
 import sys
 from managers.fx_manager import Fx_manager
 from managers.night_manager import Night_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
-from personnages.player import Player
+from personnages.player import Player, AutoPlayer
 from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
