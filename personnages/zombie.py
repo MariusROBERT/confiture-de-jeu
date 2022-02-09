@@ -36,7 +36,7 @@ class Zombie(Animated):
         self.dead = False
         self._time_since_dead = 0
         self.angle = 0
-        self.__latest_movement_vector = (0,0)
+        self.__latest_movement_vector = (0, 0)
         self.current_animation = "walk"
 
         if coords is None:
@@ -86,7 +86,7 @@ class Zombie(Animated):
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
-        
+
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
@@ -134,7 +134,7 @@ class Zombie(Animated):
             screen.blit(image, self.__coords)
         else:
 
-            angle = self.angle + 180 + 90
+            angle = self.angle + 90
             rotated_image = pygame.transform.rotate(self.sprite, angle)
             new_rect = rotated_image.get_rect(
                 center=self.sprite.get_rect(topleft=self.coords).center)
@@ -180,13 +180,16 @@ class Zombie(Animated):
             direction = (0, 0)
         direction = numpy.array(direction)
         normalized_vector = normalize_vector(direction)
-        movement_vector = np_to_tuple(numpy.array(normalized_vector) * self.speed)
+        movement_vector = np_to_tuple(
+            numpy.array(normalized_vector) * self.speed)
         self.__latest_movement_vector = movement_vector
-        self.coords = (self.coords[0] + movement_vector[0], 
+        self.coords = (self.coords[0] + movement_vector[0],
                        self.coords[1] + movement_vector[1])
 
         zombie_except_me = [
             zombie for zombie in elements["zombies"] if zombie != self]
 
         if self.hitbox_collision.collidelist([element.hitbox_collision for element in zombie_except_me]) != -1:
+            self.coords = olds
+        if self.hitbox_collision.collidelist([element.hitbox for element in elements["pigs"]]) != -1:
             self.coords = olds

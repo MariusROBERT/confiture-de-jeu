@@ -1,27 +1,40 @@
 import pygame
 
 from constantes import DATAPACK
+
 pygame.init()
 
-base_path_sounds = "./datapacks/"+DATAPACK+"/sounds/"
+base_path_sounds = "./datapacks/" + DATAPACK + "/sounds/"
 # EVENT DE 10 A 20 reservés
 COLLECT_POTATOE = pygame.USEREVENT + 10
-# collect_sound = pygame.mixer.Sound("sounds/collect.wav")
-collect_sound = pygame.mixer.Sound(base_path_sounds+"grass1.ogg")
-
+try:
+    collect_sound = pygame.mixer.Sound(base_path_sounds + "collect.ogg")
+except FileNotFoundError:
+    collect_sound = pygame.mixer.Sound(base_path_sounds + "collect.wav")
 
 DEAD_ZOMBIE = pygame.USEREVENT + 11
-dead_sound = pygame.mixer.Sound(base_path_sounds+"dead_zombie3.wav")
+try:
+    dead_sound = pygame.mixer.Sound(base_path_sounds + "dead_zombie.wav")
+except FileNotFoundError:
+    dead_sound = pygame.mixer.Sound(base_path_sounds + "dead_zombie.ogg")
 
 FEEDED = pygame.USEREVENT + 12
-feed_sound = pygame.mixer.Sound(base_path_sounds+"feeded.wav")
+try:
+    feed_sound = pygame.mixer.Sound(base_path_sounds + "feeded.wav")
+except FileNotFoundError:
+    feed_sound = pygame.mixer.Sound(base_path_sounds + "feeded.ogg")
 
 OUT_OF_FOOD = pygame.USEREVENT + 13
-out_of_food_sound = pygame.mixer.Sound(base_path_sounds+"out_of_food.wav")
+try:
+    out_of_food_sound = pygame.mixer.Sound(base_path_sounds + "out_of_food.wav")
+except FileNotFoundError:
+    out_of_food_sound = pygame.mixer.Sound(base_path_sounds + "out_of_food.ogg")
 
 DIG = pygame.USEREVENT + 14
-# dig_sound = pygame.mixer.Sound("sounds/dig.wav")
-dig_sound = pygame.mixer.Sound(base_path_sounds+"till1.ogg")
+try:
+    dig_sound = pygame.mixer.Sound(base_path_sounds + "dig.wav")
+except FileNotFoundError:
+    dig_sound = pygame.mixer.Sound(base_path_sounds + "dig.ogg")
 
 
 def sound_manager(pygame, event: pygame.event.Event):
