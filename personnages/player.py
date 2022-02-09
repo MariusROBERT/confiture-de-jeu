@@ -6,7 +6,6 @@ from lib.lib import load_animation, load_image, queue_event
 from lib.player import dir_to_angle
 from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
-from .autre_element.score import Score
 import py_sounds
 
 directions = ["up", "down", "left", "right"]
@@ -43,11 +42,6 @@ class Player(Animated):
         self.__health_bar = new_health_bar
         self.__health = hp
 
-        score=0
-        new_score_bar= Score((650,10))
-        self.__score_bar = new_score_bar
-        self.__score=score
-
     @property
     def health(self) -> int:
         return self.__health
@@ -65,15 +59,6 @@ class Player(Animated):
             self.__health = hp
 
         self.__health_bar.health = self.__health
-
-    @property
-    def score(self) -> int:
-        return self.__score
-
-    @score.setter
-    def score(self, score):
-        self.__score = score
-        self.__score_bar.score = score
 
     @property
     def alive(self) -> bool:
@@ -247,4 +232,3 @@ class Player(Animated):
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 
         self.__health_bar.display(screen)
-        self.__score_bar.display(screen)
