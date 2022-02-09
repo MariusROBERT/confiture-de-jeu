@@ -1,6 +1,6 @@
 from random import random
 from re import M
-from constantes import FREQUENCY_SHOT, HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
+from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
@@ -42,8 +42,8 @@ elements = {
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
 
-SPAWNFRIES = pygame.USEREVENT + 2
-pygame.time.set_timer(SPAWNFRIES, FREQUENCY_SHOT)
+TICKEVENT500 = pygame.USEREVENT + 2
+pygame.time.set_timer(TICKEVENT500, 370)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
@@ -92,7 +92,7 @@ def event_loop(event: pygame.event.Event):
             counter+=1
 
     # 500 miliseconds
-    if event.type == SPAWNFRIES:
+    if event.type == TICKEVENT500:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
             for fries in new_fries:

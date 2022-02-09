@@ -47,6 +47,3 @@ class Fx_manager:
                            special_flags=pygame.BLEND_RGBA_MULT)
 
             screen.blit(dm_screen, (0, 0))
-
-        if self.nuit_screen_on:
-            screen.blit(self.nuit_screen, (0, 0))
