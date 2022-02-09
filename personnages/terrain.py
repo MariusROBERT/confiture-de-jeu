@@ -8,15 +8,13 @@ from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_M
 
 class Terrain:
     def __init__(self) -> None:
-        # self.base_terrain = load_image(
-        #     "images/terrain/soltest3.png", (CASE_SIZE, CASE_SIZE))
 
         self.base_terrains = load_animation(
-            "images/terrain/sol", (CASE_SIZE, CASE_SIZE))
+            "terrain/sol", (CASE_SIZE, CASE_SIZE))
         self.pousse = load_image(
-            "images/terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
+            "terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
         self.trous_images = load_animation(
-            "images/terrain/trou", (CASE_SIZE, CASE_SIZE))
+            "terrain/trou", (CASE_SIZE, CASE_SIZE))
 
         self.potatoes = []
         self.trous = []

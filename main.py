@@ -45,7 +45,6 @@ pygame.time.set_timer(TICKEVENT500, 370)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
-collect_sound = pygame.mixer.Sound("sounds/collect.wav")
 
 
 def clear_screen(screen: pygame.Surface):
@@ -109,6 +108,7 @@ def display_loop():
             element.display(screen)
 
 #dddmain_menu(screen, clock)
+
 
 while 1:
     clear_screen(screen)

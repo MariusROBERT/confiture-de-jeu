@@ -1,25 +1,27 @@
 import pygame
+
+from constantes import DATAPACK
 pygame.init()
 
-
+base_path_sounds = "./datapacks/"+DATAPACK+"/sounds/"
 # EVENT DE 10 A 20 reservés
 COLLECT_POTATOE = pygame.USEREVENT + 10
 # collect_sound = pygame.mixer.Sound("sounds/collect.wav")
-collect_sound = pygame.mixer.Sound("sounds/grass1.ogg")
+collect_sound = pygame.mixer.Sound(base_path_sounds+"grass1.ogg")
 
 
 DEAD_ZOMBIE = pygame.USEREVENT + 11
-dead_sound = pygame.mixer.Sound("sounds/dead_zombie3.wav")
+dead_sound = pygame.mixer.Sound(base_path_sounds+"dead_zombie3.wav")
 
 FEEDED = pygame.USEREVENT + 12
-feed_sound = pygame.mixer.Sound("sounds/feeded.wav")
+feed_sound = pygame.mixer.Sound(base_path_sounds+"feeded.wav")
 
 OUT_OF_FOOD = pygame.USEREVENT + 13
-out_of_food_sound = pygame.mixer.Sound("sounds/out_of_food.wav")
+out_of_food_sound = pygame.mixer.Sound(base_path_sounds+"out_of_food.wav")
 
 DIG = pygame.USEREVENT + 14
 # dig_sound = pygame.mixer.Sound("sounds/dig.wav")
-dig_sound = pygame.mixer.Sound("sounds/till1.ogg")
+dig_sound = pygame.mixer.Sound(base_path_sounds+"till1.ogg")
 
 
 def sound_manager(pygame, event: pygame.event.Event):

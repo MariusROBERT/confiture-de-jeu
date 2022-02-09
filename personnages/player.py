@@ -20,7 +20,7 @@ class Player(Animated):
         self._current_animation = "walk"
 
         self.potatoe_mini = load_image(
-            "./images/player/autre/potatoemini.png", (20, 20))
+            "/player/autre/potatoemini.png", (20, 20))
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (20, 20)
