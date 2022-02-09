@@ -22,6 +22,7 @@ class Fries:
         self.direction = []
         self.__alive = True
         self.angle = fries_angle
+        self.age = 25
 
     @property
     def movement_vector(self) -> tuple:
@@ -29,7 +30,8 @@ class Fries:
 
     @property
     def damage(self) -> int:
-        return self.__damage
+        print("damage", self.__damage)
+        return self.__damage + (self.age/1.7)
 
     @damage.setter
     def damage(self, value: int):
@@ -43,8 +45,21 @@ class Fries:
     def hitbox(self) -> pygame.Rect:
         return pygame.Rect(self.coords, HITBOX_FRIES)
 
+    @property
+    def age(self) -> int:
+        return self.__age
+
+    @age.setter
+    def age(self, value: int):
+        if value < 0:
+            value = 0
+        self.__age = value
+
     def kill(self):
         self.__alive = False
+
+    def tick_update_100(self, elements):
+        self.age -= 1
 
     def update(self, elements: dict):
         self.coords = self.coords[0] + \
