@@ -3,7 +3,7 @@ FPS = 60
 SHOW_HITBOX = False
 PROB_ZOMBIE_SPAWN = 0.08
 ZOMBIE_SPAWN = 1
-DATAPACK = "base"
+DATAPACK = "minecraft"
 
 
 # Terrain
