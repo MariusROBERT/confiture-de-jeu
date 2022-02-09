@@ -4,7 +4,9 @@ pygame.init()
 
 # EVENT DE 10 A 20 reservés
 COLLECT_POTATOE = pygame.USEREVENT + 10
-collect_sound = pygame.mixer.Sound("sounds/collect.wav")
+# collect_sound = pygame.mixer.Sound("sounds/collect.wav")
+collect_sound = pygame.mixer.Sound("sounds/grass1.ogg")
+
 
 DEAD_ZOMBIE = pygame.USEREVENT + 11
 dead_sound = pygame.mixer.Sound("sounds/dead_zombie3.wav")
@@ -16,7 +18,8 @@ OUT_OF_FOOD = pygame.USEREVENT + 13
 out_of_food_sound = pygame.mixer.Sound("sounds/out_of_food.wav")
 
 DIG = pygame.USEREVENT + 14
-dig_sound = pygame.mixer.Sound("sounds/dig.wav")
+# dig_sound = pygame.mixer.Sound("sounds/dig.wav")
+dig_sound = pygame.mixer.Sound("sounds/till1.ogg")
 
 
 def sound_manager(pygame, event: pygame.event.Event):

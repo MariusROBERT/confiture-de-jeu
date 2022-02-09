@@ -1,5 +1,4 @@
 import random
-from tkinter import W
 import pygame
 from lib.lib import load_animation, load_image
 
