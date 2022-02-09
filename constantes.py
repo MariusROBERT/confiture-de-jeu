@@ -8,7 +8,7 @@ FPS = 60
 SHOW_HITBOX = config["debug"]
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 120
-NIGHT_DURATION = 50
+NIGHT_DURATION = 10
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
@@ -70,3 +70,9 @@ NO_DIRECT_SHOT = False
 SPAWN_DELAY = 320
 # If True, the tea time algorithm will be disabled
 # tea time allow to shoot anticipating zombie movement
+
+
+# NIGHT
+
+BABY_ZOMBIE_SPAWN_CHANCE = 0.4
+BABY_ZOMBIE_SIZE = SIZE_ZOMBIE // 1.3
