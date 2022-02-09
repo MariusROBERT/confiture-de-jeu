@@ -56,6 +56,7 @@ class Zombie(Animated):
             self.__health = 0
             self.dead = True
             self.current_animation = "dead"
+
             queue_event(py_sounds.DEAD_ZOMBIE)
         else:
             self.__health = hp
