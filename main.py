@@ -17,6 +17,7 @@ from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
 import py_sounds
 from menu import *
+
 pygame.init()
 
 screen = pygame.display.set_mode(SIZE)
@@ -40,7 +41,6 @@ elements = {
     "fx_manager": [fx_manager]
 }
 score_surface = pygame.Surface((30, 20))
-
 
 # elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
 
@@ -132,6 +132,7 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
     display_score(screen)
+
 
 # dddmain_menu(screen, clock)*
 
