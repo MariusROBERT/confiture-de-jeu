@@ -1,6 +1,6 @@
 from json import loads
 
-with open("constantes.json") as f:
+with open("config.json") as f:
     constantes = loads(f.read())
 
 # General
