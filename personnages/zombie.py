@@ -157,7 +157,7 @@ class Zombie(Animated):
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:
             for i in elements["fries"]:
                 if i.hitbox.colliderect(self.hitbox_degats):
-                    self.is_attacked(self.damage)
+                    self.is_attacked(i.damage)
                     elements["fries"].remove(i)
 
         # Direction du zombie
