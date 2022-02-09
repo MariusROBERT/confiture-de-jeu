@@ -1,10 +1,14 @@
+from json import loads
+
+with open("constantes.json") as f:
+    constantes = loads(f.read())
+
 # General
 FPS = 60
-SHOW_HITBOX = False
+SHOW_HITBOX = constantes["debug"]
 PROB_ZOMBIE_SPAWN = 0.08
 ZOMBIE_SPAWN = 1
-DATAPACK = "minecraft"
-
+DATAPACK = constantes["datapack"]
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
