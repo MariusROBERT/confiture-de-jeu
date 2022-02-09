@@ -5,12 +5,14 @@ from lib.lib import *
 
 
 class Fries:
-    def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = FRIES_SIZE):
+    def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = FRIES_SIZE, intersection_box=None):
         self.coords = coords
         self.size = size
         self.__damage = FRIES_DAMAGE
+        self.__intersection_box = intersection_box
         self.__movement_vector = movement_vector
-        sprite = load_image("frite.png", size)
+        sprite = pygame.image.load("./images/frite.png")
+        sprite = pygame.transform.scale(sprite, size)
         fries_angle = get_angle_between_vectors((0, 1), movement_vector)
         if movement_vector[0] < 0:
             fries_angle = 180 - fries_angle
@@ -46,8 +48,8 @@ class Fries:
         self.__alive = False
 
     def update(self, elements: dict):
-        self.coords = self.coords[0] + self.movement_vector[0] * \
-            FRIES_SPEED, self.coords[1] + self.movement_vector[1]*FRIES_SPEED
+        self.coords = self.coords[0] + \
+            self.movement_vector[0], self.coords[1] + self.movement_vector[1]
         self.__alive = self.__alive and 0 < self.coords[0] < WIDTH and 0 < self.coords[1] < HEIGHT
 
     def display(self, screen):
@@ -55,3 +57,6 @@ class Fries:
                     (self.coords[0] - self.sprite.get_width() / 2, self.coords[1] - self.sprite.get_height() / 2))
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
+            if self.__intersection_box is not None:
+                pygame.draw.rect(screen, (0, 255, 0),
+                                 self.__intersection_box, 1)

@@ -27,13 +27,6 @@ def get_vector_angle(v1: tuple) -> int:
     return math.degrees(math.atan2(v1[1], v1[0]))
 
 
-def vector_from_speed_angle(speed: int, angle: int) -> tuple:
-    tan_teta = math.tan(math.radians(angle))
-    vector_y = (speed * tan_teta) / (1 + tan_teta)
-    vector_x = speed - vector_y
-    return vector_x, vector_y
-
-
 def rot_center(image, angle, x, y):
     rotated_image = pygame.transform.rotate(image, angle)
     new_rect = rotated_image.get_rect(
@@ -115,8 +108,20 @@ def vector_to_target_tea_time_algorithm(
         if holly_tea == 0:
             # interception not possible
             return None
-        u = (moving_object_coords[0] -
-             interceptor_origin_coords[0]) / holly_tea
-        v = (moving_object_coords[1] -
-             interceptor_origin_coords[1]) / holly_tea
-        return (u, v)
+        u = (moving_object_coords[0] - interceptor_origin_coords[0]
+             ) / holly_tea + moving_object_vector[0]
+        v = (moving_object_coords[1] - interceptor_origin_coords[1]
+             ) / holly_tea + moving_object_vector[1]
+        return (u, v), holly_tea
+
+
+def np_to_tuple(a):
+    try:
+        return tuple(np_to_tuple(i) for i in a)
+    except TypeError:
+        return a
+
+
+def normalize_vector(vector: tuple) -> tuple:
+    norm = math.sqrt(vector[0]**2 + vector[1]**2)
+    return vector[0]/norm, vector[1]/norm
