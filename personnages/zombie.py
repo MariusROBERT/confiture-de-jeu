@@ -3,7 +3,8 @@ import pygame
 from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
-from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
+    DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from lib.animated import Animated
 import numpy
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
@@ -69,7 +70,7 @@ class Zombie(Animated):
     @time_since_dead.setter
     def time_since_dead(self, value: int) -> None:
         self._time_since_dead = value
-        if (self._time_since_dead) > DEAD_BODY_LIFESPAN:
+        if self._time_since_dead > DEAD_BODY_LIFESPAN:
             self.alive = False
 
     @property
@@ -82,7 +83,7 @@ class Zombie(Animated):
 
     @property
     def center_coords(self) -> tuple[int, int]:
-        return (self.coords[0] + self.size[0] // 2, self.coords[1] + self.size[1] // 2)
+        return self.coords[0] + self.size[0] // 2, self.coords[1] + self.size[1] // 2
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
@@ -91,7 +92,7 @@ class Zombie(Animated):
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
         health_bar_y = coords[1] - self.health_bar_size[1] - \
-            DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+                       DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
         health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 
@@ -112,9 +113,6 @@ class Zombie(Animated):
 
     def is_attacked(self, damage: int) -> None:
         self.health -= damage
-
-    def attack(self, target) -> None:
-        target.is_attacked(self.__damage)
 
     def tick_update(self, elements: tuple) -> None:
         if self.dead:
@@ -150,11 +148,10 @@ class Zombie(Animated):
         if self.dead:
             return
 
-        olds = self.coords
-        # Dirrection du player
-        direction = get_direction(
-            self.coords, get_target(self.coords, elements["player"][0].coords))
-        produit = abs(direction[0]) + abs(direction[1])
+        # Direction du player
+        # direction = get_direction(
+        #     self.coords, get_target(self.coords, elements["player"][0].coords))
+        # produit = abs(direction[0]) + abs(direction[1])
 
         # Si le zombie est en colision avec une frite
         if self.hitbox_degats.collidelist([element.hitbox for element in elements["fries"]]) != -1:

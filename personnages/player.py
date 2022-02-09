@@ -96,7 +96,7 @@ class Player(Animated):
         else:
             self.current_animation = self._paused_animation
 
-    def add_direction(self, direction: str) -> None:
+    def add_direction(self, direction: str) -> bool:
         if direction == "up":
             if not "down" in self.direction and not "up" in self.direction:
                 self.direction.append("up")

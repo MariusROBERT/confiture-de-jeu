@@ -80,7 +80,7 @@ class Terrain:
 
                     screen.blit(image, (i, j))
 
-                if (i, j) in [x.get_pos_pousse() for x in self.potatoes]:
+                if (i, j) in [x.pos_pousse for x in self.potatoes]:
                     screen.blit(self.pousse, (i, j))
 
                 if SHOW_HITBOX:
