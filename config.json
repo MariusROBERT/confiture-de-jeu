@@ -3,5 +3,5 @@
   "debug":false,
   "pig_health":0,
   "zombie_at_start":1,
-  "zombie_spawn_rate":0
+  "zombie_spawn_rate":0.08
 }
