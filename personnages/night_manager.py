@@ -33,7 +33,7 @@ class Night_manager:
 
         if self.is_night:
             maxadd = 1
-            add = (self.night_count // 20)
+            add = (self.night_count / 15)
             if add > maxadd:
                 add = maxadd
                 print("max difficulty prob spwan")
@@ -45,7 +45,7 @@ class Night_manager:
     def speed_zombies(self):
         if self.is_night:
             maxadd = (PLAYER_SPEED - (1.5 + 1.3)) - 0.5
-            add = (self.night_count // 20)
+            add = (self.night_count / 15)
             if add > maxadd:
                 add = maxadd
                 print("max difficluty speed")
