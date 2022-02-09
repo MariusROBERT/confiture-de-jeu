@@ -33,6 +33,9 @@ dig_sound = get_sound("dig")
 
 hurt_sound = get_sound("hurt")
 
+PLAYER_DEAD_EVENT = pygame.USEREVENT + 15
+player_dead_sound = get_sound("player_dead")
+
 def sound_manager(pygame, event: pygame.event.Event):
     try:
         if event.type == COLLECT_POTATOE:
@@ -48,6 +51,8 @@ def sound_manager(pygame, event: pygame.event.Event):
         elif event.type == DAMAGE_EVENT:
             hurt_sound.play().set_volume(0.3)
             # print("DAMAGE_EVENT")
+        elif event.type == PLAYER_DEAD_EVENT:
+            player_dead_sound.play().set_volume(3)
 
     except Exception as e:
-        print(e)
+        print("{} : {}".format(event.type, e))

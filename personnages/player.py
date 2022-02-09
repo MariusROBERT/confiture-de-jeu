@@ -8,6 +8,7 @@ from lib.player import dir_to_angle
 from personnages.autre_element.fx_manager import DAMAGE_EVENT
 from .autre_element.health_bar import HealthBar
 import py_sounds
+from py_sounds import PLAYER_DEAD_EVENT
 
 directions = ["up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
@@ -50,12 +51,15 @@ class Player(Animated):
     @health.setter
     def health(self, hp) -> None:
 
-        if hp < self.__health:
+        if hp < self.__health and self.__health > 0:
             queue_event(DAMAGE_EVENT)
-        if hp <= 0:
+        if hp <= 0:# and self.__alive:
+            # TODO: faire que le son de mort se joue qu'une fois
             self.__health = 0
             self.__alive = False
             self.current_animation = "dead"
+            queue_event(PLAYER_DEAD_EVENT)
+
         elif hp >= PLAYER_MAX_HP:
             self.__health = PLAYER_MAX_HP
         else:
