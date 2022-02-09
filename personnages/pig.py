@@ -97,23 +97,27 @@ class Pig(Animated):
 
     def get_fries(self):
         intersection_box = None
+        fries_vector = None
         if self.target and self.target.alive and self.health > 0:
-            fries_vector, t = vector_to_target_tea_time_algorithm(
-                self.target.center_coords,
-                self.target.latest_movement_vector,
-                self.center_coords,
-                FRIES_SPEED
-            )
-            intersection_coords = (
-                self.target.center_coords[0] +
-                self.target.latest_movement_vector[0] * t,
-                self.target.center_coords[1] + self.target.latest_movement_vector[1] * t)
-            size = (20, 20)
-            intersection_box = pygame.Rect(
-                intersection_coords[0] - size[0]//2,
-                intersection_coords[1] - size[1]//2,
-                size[0],
-                size[1])
+            try:
+                fries_vector, t = vector_to_target_tea_time_algorithm(
+                    self.target.center_coords,
+                    self.target.latest_movement_vector,
+                    self.center_coords,
+                    FRIES_SPEED
+                )
+                intersection_coords = (
+                    self.target.center_coords[0] +
+                    self.target.latest_movement_vector[0] * t,
+                    self.target.center_coords[1] + self.target.latest_movement_vector[1] * t)
+                size = (20, 20)
+                intersection_box = pygame.Rect(
+                    intersection_coords[0] - size[0]//2,
+                    intersection_coords[1] - size[1]//2,
+                    size[0],
+                    size[1])
+            except TypeError:
+                pass
             if fries_vector is None or OVERRIDE_TEA_TIME_ALGORITHM:
                 if NO_DIRECT_SHOT:
                     return []
