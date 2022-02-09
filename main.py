@@ -15,6 +15,8 @@ from personnages.autre_element.fries import Fries
 import py_sounds
 from menu import *
 pygame.init()
+from datetime import datetime, timedelta
+import time
 
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
@@ -45,11 +47,19 @@ pygame.time.set_timer(SPAWNFRIES, FREQUENCY_SHOT)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
-
+counter=0
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
+def score(screen, text, size=20, color=(43,43,43), font="Arial"):
+    text=str(text)
+    print("text1:",text)
+    font=pygame.font.SysFont(font,size)
+    text=font.render(text,True,color)
+    print("text2:",text)
+    screen.blit(text,(650,10))
+    print("text3:",text)
 
 def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
@@ -73,6 +83,13 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
+        if player.alive==True : 
+            global counter
+            tt=datetime.fromtimestamp(counter)
+            time2=tt.strftime("%M:%S")
+            score(screen,time2)
+            print(time2)
+            counter+=1
 
     # 500 miliseconds
     if event.type == SPAWNFRIES:
@@ -107,7 +124,7 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
 
-#dddmain_menu(screen, clock)
+#dddmain_menu(screen, clock)*
 
 
 while 1:

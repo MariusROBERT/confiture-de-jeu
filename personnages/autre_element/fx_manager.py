@@ -13,7 +13,7 @@ DAMAGE_DURATION = 8
 
 class Fx_manager:
     def __init__(self):
-        self.damage_screen = load_image("red4.png", (WIDTH, HEIGHT))
+        self.damage_screen = load_image("red.png", (WIDTH, HEIGHT))
         self.damage_screen_old = 0
         self.damage_screen_on = False
 

@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH
+from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries
@@ -23,7 +23,7 @@ import py_sounds
 
 
 class Pig(Animated):
-    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health = DEFAULT_PIG_HEALTH):
+    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health = PIG_MAX_HEALTH, health = DEFAULT_PIG_HEALTH):
         super().__init__("pig", size)
         self.coords = (x, y)
 
@@ -34,12 +34,12 @@ class Pig(Animated):
             (
                 self.coords[0] - oversize + 2,  # 2 fix due to texture offset
                 self.coords[1] - (DEFAULT_HEALTH_BAR_BOTTOM_MARGIN + health_bar_size[1])),
-            value=50,
+            value=DEFAULT_PIG_HEALTH,
             size=health_bar_size,
             border_size=2,
             color=(203, 219, 11))
 
-        self.__health = 50
+        self.__health = DEFAULT_PIG_HEALTH
         self.__hitbox = pygame.Rect(self.coords, self.size)
         self.__max_health = max_health
         feed_space = 20
