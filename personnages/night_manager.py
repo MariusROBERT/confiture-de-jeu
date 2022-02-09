@@ -12,6 +12,8 @@ class Night_manager:
         self.night_duration = NIGHT_DURATION
         self._timer_night = 0
 
+        self.night_count = 0
+
     @property
     def timer_night(self):
         return self._timer_night
@@ -21,20 +23,22 @@ class Night_manager:
         self._timer_night = value
         if self._timer_night >= self.night_duration:
             self.is_night = not self.is_night
+            if self.is_night:
+                self.night_count += 1
             self._timer_night = 0
             queue_event(CHANGE_NIGHT)
 
     @property
     def prob_zombie_spawn(self):
         if self.is_night:
-            return PROB_ZOMBIE_SPAWN * 1.5
+            return PROB_ZOMBIE_SPAWN * 1.4
 
         return PROB_ZOMBIE_SPAWN
 
     @property
     def speed_zombies(self):
         if self.is_night:
-            return (random() * 1.5) + 3
+            return (random() * 1.5) + 1.3 + (self.night_count / 6)
 
         return(random() * 1.5) + 0.8
 
