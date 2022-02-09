@@ -22,7 +22,7 @@ import py_sounds
 
 
 class Pig(Animated):
-    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health = PIG_MAX_HEALTH, health = DEFAULT_PIG_HEALTH):
+    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health=PIG_MAX_HEALTH, health=DEFAULT_PIG_HEALTH):
         super().__init__("pig", size)
         self.coords = (x, y)
 
@@ -128,7 +128,7 @@ class Pig(Animated):
                 normalized_vector = vector_to_target / \
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
-            self.health -= AUTO_DAMAGE_SPEED
+            # self.health -= AUTO_DAMAGE_SPEED
             return [Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
         else:
             return []
