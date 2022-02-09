@@ -117,7 +117,6 @@ class Pig(Animated):
             if fries_vector is None or OVERRIDE_TEA_TIME_ALGORITHM:
                 if NO_DIRECT_SHOT:
                     return []
-                print("Falling back")
                 vector_to_target = np.array((
                     self.target.coords[0] - self.coords[0],
                     self.target.coords[1] - self.coords[1]))
@@ -125,12 +124,14 @@ class Pig(Animated):
                 normalized_vector = vector_to_target / \
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
+            self.health -= AUTO_DAMAGE_SPEED
             return [Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
         else:
             return []
 
     def tick_update(self):
-        self.health -= AUTO_DAMAGE_SPEED
+        #self.health -= AUTO_DAMAGE_SPEED
+        pass
 
     def tick_update_2(self, elements) -> None:
         self.current_frame += 1
