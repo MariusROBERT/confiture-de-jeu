@@ -11,6 +11,8 @@ ZOMBIE_SPAWN = 1
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 150
 
+NIGHT_DURATION = 3
+
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
 AGE_MAX_TROU = 16
@@ -66,5 +68,6 @@ FRIES_SIZE = (6, 40)
 FRIES_SPEED = 10
 OVERRIDE_TEA_TIME_ALGORITHM = False
 NO_DIRECT_SHOT = False
+SPAWN_DELAY = 320
 # If True, the tea time algorithm will be disabled
 # tea time allow to shoot anticipating zombie movement

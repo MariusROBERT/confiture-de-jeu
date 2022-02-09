@@ -1,11 +1,14 @@
+import time
+from datetime import datetime, timedelta
 from random import random
 from re import M
-from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, WIDTH, TOURS, CASE_SIZE
+from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, SPAWN_DELAY, WIDTH, TOURS, CASE_SIZE
 from constantes import FPS, HEIGHT, SIZE, WIDTH
 from constantes import ZOMBIE_SPAWN
 import pygame
 import sys
 from personnages.autre_element.fx_manager import Fx_manager
+from personnages.night_manager import Night_manager
 from personnages.pig import Pig
 from personnages.golden_pig import GoldenPig
 from personnages.player import Player
@@ -15,8 +18,6 @@ from personnages.autre_element.fries import Fries
 import py_sounds
 from menu import *
 pygame.init()
-from datetime import datetime, timedelta
-import time
 
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
@@ -26,6 +27,7 @@ player = Player()
 terrain = Terrain()
 
 fx_manager = Fx_manager()
+night_manager = Night_manager()
 
 elements = {
     "terrain": [terrain],
@@ -37,29 +39,33 @@ elements = {
 
 }
 
+
 # elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
 
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
 
-TICKEVENT500 = pygame.USEREVENT + 2
-pygame.time.set_timer(TICKEVENT500, 370)
+FIREFRIE = pygame.USEREVENT + 2
+pygame.time.set_timer(FIREFRIE, SPAWN_DELAY)
 
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
-counter=0
+counter = 0
+
 
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
-def score(screen, text, size=20, color=(43,43,43), font="Arial"):
-    text=str(text)
-    print("text1:",text)
-    font=pygame.font.SysFont(font,size)
-    text=font.render(text,True,color)
-    print("text2:",text)
-    screen.blit(text,(650,10))
-    print("text3:",text)
+
+def score(screen, text, size=20, color=(43, 43, 43), font="Arial"):
+    text = str(text)
+    print("text1:", text)
+    font = pygame.font.SysFont(font, size)
+    text = font.render(text, True, color)
+    print("text2:", text)
+    screen.blit(text, (650, 10))
+    print("text3:", text)
+
 
 def event_loop(event: pygame.event.Event):
     if event.type == pygame.QUIT:
@@ -73,6 +79,7 @@ def event_loop(event: pygame.event.Event):
     # Every seconds
     if event.type == TICKEVENT:
         terrain.tick_update()
+        night_manager.tick_update(elements)
         for frite in elements["fries"]:
             if not frite.alive:
                 elements["fries"].remove(frite)
@@ -83,16 +90,16 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
-        if player.alive==True : 
+        if player.alive == True:
             global counter
-            tt=datetime.fromtimestamp(counter)
-            time2=tt.strftime("%M:%S")
-            score(screen,time2)
+            tt = datetime.fromtimestamp(counter)
+            time2 = tt.strftime("%M:%S")
+            score(screen, time2)
             print(time2)
-            counter+=1
+            counter += 1
 
     # 500 miliseconds
-    if event.type == TICKEVENT500:
+    if event.type == FIREFRIE:
         for pig in elements["pigs"]:
             new_fries = pig.get_fries()
             for fries in new_fries:
@@ -109,8 +116,9 @@ def event_loop(event: pygame.event.Event):
         for zombie in elements["zombies"]:
             zombie.tick_update_100(elements)
 
-        if random() < PROB_ZOMBIE_SPAWN:
-            elements["zombies"].append(Zombie(speed=random() * 1.5 + 0.8))
+        if random() < night_manager.prob_zombie_spawn:
+            elements["zombies"].append(
+                Zombie(speed=night_manager.prob_zombie_spawn))
 
 
 def logic_loop():
@@ -124,7 +132,7 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
 
-#dddmain_menu(screen, clock)*
+# dddmain_menu(screen, clock)*
 
 
 while 1:

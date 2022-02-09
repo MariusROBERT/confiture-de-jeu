@@ -6,6 +6,7 @@ from lib.lib import load_image
 # EVENT DE 20 A 30 reservés
 
 DAMAGE_EVENT = pygame.USEREVENT + 20
+CHANGE_NIGHT = pygame.USEREVENT + 21
 
 
 DAMAGE_DURATION = 8
@@ -25,6 +26,8 @@ class Fx_manager:
     def event_manager(self, event: pygame.event.Event):
         if event.type == DAMAGE_EVENT:
             self.damage_screen_on = True
+        elif event.type == CHANGE_NIGHT:
+            self.nuit_screen_on = not self.nuit_screen_on
 
     def tick_update_100(self, elements):
         if self.damage_screen_on:
@@ -47,3 +50,6 @@ class Fx_manager:
                            special_flags=pygame.BLEND_RGBA_MULT)
 
             screen.blit(dm_screen, (0, 0))
+
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))
