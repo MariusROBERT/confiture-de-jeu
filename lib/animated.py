@@ -1,3 +1,4 @@
+from constantes import DATAPACK
 from lib.lib import load_animation
 import os
 import pygame
@@ -7,10 +8,11 @@ class Animated:
     def __init__(self, name: str, size: tuple):
         self._animation = {}
 
-        animations_names = os.listdir("./images/{}/" .format(name))
+        animations_names = os.listdir(
+            "datapacks/{}/images/{}/" .format(DATAPACK, name))
         for animation_name in animations_names:
             self._animation[animation_name] = load_animation(
-                f"./images/{name}/{animation_name}", size
+                f"{name}/{animation_name}", size
             )
 
         self._current_frame = 0
