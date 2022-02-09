@@ -5,18 +5,10 @@ with open("config.json") as f:
 
 # General
 FPS = 60
-<<<<<<< HEAD
-SHOW_HITBOX = False
-PROB_ZOMBIE_SPAWN = 0.08
-ZOMBIE_SPAWN = 1
-DATAPACK = "base"
-
-=======
 SHOW_HITBOX = config["debug"]
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 120
 NIGHT_DURATION = 30
->>>>>>> 1c4d81cea14c514f4b91cd6b684e6b68b928be13
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720

@@ -136,11 +136,9 @@ def display_loop():
     display_score(screen)
 
 
-<<<<<<< HEAD
 user_events = [
     TICKEVENT10,
     TICKEVENT100,
-    TICKEVENT500,
     TICKEVENT
 ]
 
@@ -157,17 +155,3 @@ if code == "Play":
 
         clock.tick(FPS)
         pygame.display.flip()
-=======
-# dddmain_menu(screen, clock)*
-
-
-while 1:
-    clear_screen(screen)
-    for event in pygame.event.get():
-        event_loop(event)
-    logic_loop()
-    display_loop()
-
-    clock.tick(FPS)
-    pygame.display.flip()
->>>>>>> 1c4d81cea14c514f4b91cd6b684e6b68b928be13
