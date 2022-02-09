@@ -6,8 +6,8 @@ with open("config.json") as f:
 # General
 FPS = 60
 SHOW_HITBOX = config["debug"]
-PROB_ZOMBIE_SPAWN = config["zombie_spawn_rate"]
-ZOMBIE_SPAWN = config["zombie_at_start"]
+PROB_ZOMBIE_SPAWN = 0.08
+ZOMBIE_SPAWN = 1
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 150
 
@@ -37,7 +37,7 @@ POS_TOUR_4 = (round(((NB_ELEM_X // 2) + (NB_ELEM_X // 6)) * CASE_SIZE),
 TOURS = [POS_TOUR_1, POS_TOUR_2, POS_TOUR_3, POS_TOUR_4]
 
 AUTO_DAMAGE_SPEED = 0.5
-DEFAULT_PIG_HEALTH = config["pig_health"]
+DEFAULT_PIG_HEALTH = 30
 PIG_MAX_HEALTH = 100
 # Player
 SIZE_PLAYER = CASE_SIZE * 1.1
