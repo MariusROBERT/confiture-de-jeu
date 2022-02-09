@@ -1,7 +1,7 @@
 {
   "datapack":"minecraft",
   "debug":false,
-  "pigs_health":100,
-  "zombie_at_start":1,
-  "zombie_spawn_rate":0.08
+  "pig_health":0,
+  "zombie_at_start":0,
+  "zombie_spawn_rate":0
 }
