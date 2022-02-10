@@ -1,5 +1,5 @@
 import pygame
-from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from constantes import POINTS_PER_ZOMBIE_HIT
 from lib.lib import circle_surf, load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
