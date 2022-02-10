@@ -1,7 +1,7 @@
 import pygame
 from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from constantes import POINTS_PER_ZOMBIE_HIT
-from lib.lib import load_animation, load_image
+from lib.lib import circle_surf, load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING
 from managers.sound_manager import COLLECT_POTATOE
@@ -114,7 +114,7 @@ class Fx_manager:
     def update(self, elements):
         pass
 
-    def display(self, screen: pygame.Surface):
+    def display(self, screen: pygame.Surface, elements):
 
         if self.damage_screen_on:
 
@@ -128,3 +128,10 @@ class Fx_manager:
 
         if self.nuit_screen_on:
             screen.blit(self.nuit_screen, (0, 0))
+
+        player = elements["player"][0]
+        radius = player.size[0] * 5
+
+        if self.nuit_screen_on:
+            screen.blit(circle_surf(radius, (20, 20, 60)),
+                        (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
