@@ -3,7 +3,7 @@ from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from constantes import POINTS_PER_ZOMBIE_HIT
 from lib.lib import load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
-from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE
+from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING
 from managers.sound_manager import COLLECT_POTATOE
 
 # EVENT DE 20 A 30 reservés
@@ -19,6 +19,11 @@ SIZE_BLOOD = (SIZE_ZOMBIE, SIZE_ZOMBIE)
 BLOOD_ANIMATION = load_animation(
     "particle/blood", SIZE_BLOOD)
 
+SIZE_DUST = (SIZE_PLAYER, SIZE_PLAYER)
+DUST_ANIMATION = load_animation(
+    "particle/dust", SIZE_BLOOD)
+
+
 font = pygame.font.SysFont("Arial", 20)
 DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT),
                                      True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
@@ -26,11 +31,17 @@ DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT),
 
 
 class Particle:
-    def __init__(self, animation, coords):
+    def __init__(self, animation, coords, lifespan=None):
         self.animation = animation
         self.coords = coords
         self.on = True
         self._frame_number = 0
+        self.old = 0
+
+        if lifespan is not None:
+            self.lifespan = lifespan
+        else:
+            self.lifespan = len(animation)
 
     @property
     def frame_number(self):
@@ -38,10 +49,14 @@ class Particle:
 
     @frame_number.setter
     def frame_number(self, value):
+        self.old += 1
         if value >= len(self.animation):
-            self.on = False
+            self._frame_number = len(self.animation) - 1
         else:
             self._frame_number = value
+
+        if self.old > self.lifespan:
+            self.on = False
 
     @property
     def frame(self):
@@ -79,6 +94,8 @@ class Fx_manager:
 
             self.particles.append(Particle(
                 DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
+        # if event.type == PLAYER_WALKING:  ( deplacé dans terrain)
+        #     self.particles.append(Particle(DUST_ANIMATION, event.coords))
 
     def tick_update_50(self, elements):
 
