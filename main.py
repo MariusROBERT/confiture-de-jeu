@@ -62,10 +62,13 @@ user_events = [
     TICKEVENT
 ]
 # FPS STUFF
+
+
 def update_fps():
     fps = str(int(clock.get_fps()))
     fps_text = font.render(fps, 1, pygame.Color("coral"))
     return fps_text
+
 
 def init_game():
     player = Player()
@@ -90,35 +93,42 @@ def init_game():
     return elements, night_manager, score_surface
 
 #code = main_menu(screen, clock, user_events)
-#ininiting all startup element
+# ininiting all startup element
 #elements = init_game()
+
+
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
+
 
 def add_score(points):
     global score_surface, score
     score += POINTS_PER_ZOMBIE_HIT
     score_surface = refresh_score("SCORE : {}".format(score))
 
+
 def refresh_score(score):
     font = pygame.font.SysFont("Arial", 20)
     text = font.render(score, True, (255, 255, 255))
     return text
 
+
 def display_score(screen):
     screen.blit(score_surface, (650, 10))
+
 
 def event_loop(event: pygame.event.Event, elements, night_manager, score_surface):
     player = elements["player"][0]
     terrain = elements["terrain"][0]
     fx_manager = elements["fx_manager"][0]
-    
+
     if event.type == pygame.QUIT:
         sys.exit()
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
 
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
+    sound_manager.sound_base(pygame)
     fx_manager.event_manager(event, elements)
     terrain.event_manager(event, elements)
 
@@ -187,27 +197,32 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
         fx_manager.tick_update_50(elements)
         terrain.tick_update_50(elements)
 
+
 def logic_loop(elements):
     for key in elements.keys():
         for element in elements[key]:
             element.update(elements)
 
+
 def display_loop(elements):
     for key in elements.keys():
         for element in elements[key]:
-            element.display(screen)
+            if key != "fx_manager":
+                element.display(screen)
+            else:
+                element.display(screen, elements)
     display_score(screen)
     screen.blit(update_fps(), (10, 0))
 
 
 #worker_main_menu = Thread(target=main_menu)
 
-#worker_main_menu.start()
+# worker_main_menu.start()
 elements, night_manager, score_surface = init_game()
-#worker_main_menu.join()
+# worker_main_menu.join()
 r_code = main_menu()
 if True:
-    
+
     while 1:
         clear_screen(screen)
         for event in pygame.event.get():

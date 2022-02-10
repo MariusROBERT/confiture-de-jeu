@@ -7,7 +7,7 @@ with open("config.json") as f:
 FPS = 60
 SHOW_HITBOX = config["debug"]
 DATAPACK = config["datapack"]
-OPACITY_NIGHT = 120
+OPACITY_NIGHT = 180
 NIGHT_DURATION = 30
 POINTS_PER_ZOMBIE_HIT = 5
 POINTS_PER_ZOMBIE_DEAD = 10

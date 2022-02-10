@@ -1,9 +1,9 @@
 import pygame
-from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
-from constantes import POINTS_PER_ZOMBIE_DEAD
-from lib.lib import load_animation, load_image
+from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
+from constantes import POINTS_PER_ZOMBIE_HIT
+from lib.lib import circle_surf, load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
-from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING
+from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.sound_manager import COLLECT_POTATOE
 
 # EVENT DE 20 A 30 reservés
@@ -70,7 +70,7 @@ class Fx_manager:
         self.damage_screen_old = 0
         self.damage_screen_on = False
 
-        #self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
+        # self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
         self.nuit_screen = pygame.Surface((WIDTH, HEIGHT))
         self.nuit_screen.fill((0, 0, 0))
         self.nuit_screen.set_alpha(OPACITY_NIGHT)
@@ -85,9 +85,9 @@ class Fx_manager:
             self.damage_screen_on = True
         elif event.type == CHANGE_NIGHT:
             self.nuit_screen_on = not self.nuit_screen_on
-        elif event.type == "never":
-            pos = (elements["player"][0].center_coords[0] -
-                   SIZE_EXPLOSION[0] / 2, elements["player"][0].center_coords[1] - SIZE_EXPLOSION[1] / 2)
+        elif event.type == USE_ZONE_DAMAGE:
+            pos = (event.center_coords[0] - SIZE_EXPLOSION[0]/2,
+                   event.center_coords[1] - SIZE_EXPLOSION[1]/2)
             self.particles.append(
                 Particle(EXPLOSION_ANIMATION, pos))
         elif event.type == DAMAGED_ZOMBIE:
@@ -116,7 +116,7 @@ class Fx_manager:
     def update(self, elements):
         pass
 
-    def display(self, screen: pygame.Surface):
+    def display(self, screen: pygame.Surface, elements):
 
         if self.damage_screen_on:
 
@@ -130,3 +130,10 @@ class Fx_manager:
 
         if self.nuit_screen_on:
             screen.blit(self.nuit_screen, (0, 0))
+
+        player = elements["player"][0]
+        radius = player.size[0] * 5
+
+        if self.nuit_screen_on:
+            screen.blit(circle_surf(radius, (20, 20, 60)),
+                        (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)

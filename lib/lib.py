@@ -262,3 +262,10 @@ def create_transparent_animation(image: pygame.Surface):
                      special_flags=pygame.BLEND_RGBA_MULT)
         result.append(t_image.convert_alpha())
     return result
+
+
+def circle_surf(radius, color):
+    surf = pygame.Surface((radius * 2, radius * 2))
+    pygame.draw.circle(surf, color, (radius, radius), radius)
+    surf.set_colorkey((0, 0, 0))
+    return surf
