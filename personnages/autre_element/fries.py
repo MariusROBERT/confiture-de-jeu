@@ -110,7 +110,7 @@ class Frissile(Fries):
             else:
                 vector = vector_to_target(self.__target.center_coords, self.coords, self.speed)
             self.__old_vector = self.movement_vector
-            #vector = intermediate_vector(self.__old_vector, vector,max_angle=10 ,norm=self.speed)
+            vector = intermediate_vector(self.__old_vector, vector,max_angle=30 ,norm=self.speed)
             self._movement_vector = vector
             angle = g_angle((0, 1),self._movement_vector)
             if vector[0] < 0:
