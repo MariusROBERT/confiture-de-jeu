@@ -114,6 +114,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
 
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
     fx_manager.event_manager(event, elements)
+    terrain.event_manager(event, elements)
 
     # Every seconds
     if event.type == TICKEVENT:
@@ -171,6 +172,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
 
     if event.type == TICKEVENT50:
         fx_manager.tick_update_50(elements)
+        terrain.tick_update_50(elements)
 
 def logic_loop(elements):
     for key in elements.keys():
