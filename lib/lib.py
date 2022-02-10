@@ -212,3 +212,13 @@ def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = N
 
 def distance_between(coord1: tuple, coords2: tuple) -> float:
     return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)
+
+
+def create_transparent_animation(image: pygame.Surface):
+    result = []
+    for i in range(0, 256):
+        t_image = image.copy()
+        t_image.fill((255, 255, 255, i),
+                     special_flags=pygame.BLEND_RGBA_MULT)
+        result.append(t_image)
+    return result

@@ -38,8 +38,8 @@ class Fries:
 
     @property
     def damage(self) -> int:
-        print("damage", self.__damage)
-        return self.__damage + (self.age/1.7)
+        value = self.__damage + (self.age/1.7)
+        return value
 
     @damage.setter
     def damage(self, value: int):
