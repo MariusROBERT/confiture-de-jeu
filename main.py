@@ -2,7 +2,7 @@ import time
 from datetime import datetime, timedelta
 from random import random
 from re import M
-from constantes import PROB_ZOMBIE_SPAWN, SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT
+from constantes import PROB_ZOMBIE_SPAWN, SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT, POINTS_PER_ZOMBIE_DEAD
 from constantes import FPS, HEIGHT, SIZE, WIDTH, CASE_SIZE
 from constantes import ZOMBIE_SPAWN
 import pygame
@@ -17,7 +17,7 @@ from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
 import managers.sound_manager as sound_manager
-from managers.events_const import DAMAGED_ZOMBIE
+from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE
 from menu import *
 
 pygame.init()
@@ -66,10 +66,14 @@ pygame.time.set_timer(TICKEVENT10, 5)
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
+def add_score(points):
+    global score_surface, score
+    score += POINTS_PER_ZOMBIE_HIT
+    score_surface = refresh_score("SCORE : {}".format(score))
 
-def refresh_score(time):
+def refresh_score(score):
     font = pygame.font.SysFont("Arial", 20)
-    text = font.render(time, True, (255, 255, 255))
+    text = font.render(score, True, (255, 255, 255))
     return text
 
 
@@ -100,17 +104,22 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
-        # if player.alive:
+        """
+        if player.alive:
             global counter
-        #     tt = datetime.fromtimestamp(counter)
-        #     time = tt.strftime("%M:%S")
-        #     global score_surface
-        #     score_surface = refresh_score(time)
-        #     counter += 1
+            tt = datetime.fromtimestamp(counter)
+            time = tt.strftime("%M:%S")
+            global score_surface
+            score_surface = refresh_score(time)
+            counter += 1
+        """
     if event.type == DAMAGED_ZOMBIE:
-        global score_surface, score
-        score += POINTS_PER_ZOMBIE_HIT
-        score_surface = refresh_score(str(score))
+        # Update score when a zombie is hit
+        add_score(POINTS_PER_ZOMBIE_HIT)
+
+    if event.type == DEAD_ZOMBIE:
+        # Update score when a zombie is dead
+        add_score(POINTS_PER_ZOMBIE_DEAD)
 
     if event.type == FIREFRIE:
         for pig in elements["pigs"]:

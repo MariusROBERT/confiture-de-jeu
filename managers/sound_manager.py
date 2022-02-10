@@ -1,7 +1,7 @@
 import pygame
 from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, PLAYER_DEAD_EVENT
 from managers.fx_manager import DAMAGE_EVENT
-from constantes import DATAPACK
+from constantes import DATAPACK, SHOW_HITBOX
 
 pygame.init()
 
@@ -53,5 +53,6 @@ def sound_manager(pygame, event: pygame.event.Event):
             player_dead_sound.play().set_volume(3)
 
     except Exception as e:
-        #print("{} : {}".format(event.type, e))
+        if SHOW_HITBOX:
+            print("{} : {}".format(event.type, e))
         pass
