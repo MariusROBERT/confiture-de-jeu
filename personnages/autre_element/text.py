@@ -46,11 +46,12 @@ class Text ():
     def font(self):
         return load_font(self.__font_path, self.__size)
     
-    def tick_event_100(self):
+    def tick_update_100(self):
         self.__curent_frame_counter += 1
         if self.__curent_frame_counter >= self.__nb_frame:
             self.__curent_frame_counter = 0
-
+        
+        
     
     def update(self, elements):
         pass
