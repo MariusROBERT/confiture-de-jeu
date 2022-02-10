@@ -3,12 +3,12 @@ import numpy as np
 import math
 import os
 
-from constantes import DATAPACK, SHOW_HITBOX
+from constantes import DATAPACK, DEBUG_MODE
 
 
 def load_image(path: str, size: tuple) -> pygame.Surface:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
-    if SHOW_HITBOX:
+    if DEBUG_MODE:
         print("loading image:", path2)
     return pygame.transform.scale(pygame.image.load(path2).convert_alpha(), size)
 
@@ -18,7 +18,7 @@ def load_animation(path: str, size: tuple) -> list:
     folder_content = sorted(os.listdir(path2))
     filtered_folder_content = list(
         filter(lambda x: x.endswith(".png"), folder_content))
-    if SHOW_HITBOX:
+    if DEBUG_MODE:
        print(filtered_folder_content)
 
     # image format = image:number:.png
@@ -198,7 +198,7 @@ def g_angle(v1, v2):
             math.acos(
                 cos))
     except ValueError:
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             print(cos)
         raise ValueError
 

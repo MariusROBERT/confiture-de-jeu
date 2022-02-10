@@ -75,13 +75,13 @@ def init_game(health_bar):
     # patate=Potatoe()
     terrain = Terrain()
     health_bar(10)
-    if SHOW_HITBOX:
+    if DEBUG_MODE:
         print("loaded terrain")
     fx_manager = Fx_manager((health_bar, 40))
-    if SHOW_HITBOX:
+    if DEBUG_MODE:
         print("loaded fx_manager")
     night_manager = Night_manager()
-    if SHOW_HITBOX:
+    if DEBUG_MODE:
         print("loaded night_manager")
     health_bar(20)
 

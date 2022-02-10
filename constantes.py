@@ -5,7 +5,7 @@ with open("config.json") as f:
 
 # General
 FPS = 60
-SHOW_HITBOX = config["debug"]
+DEBUG_MODE = config["debug"]
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 150
 NIGHT_DURATION = 30

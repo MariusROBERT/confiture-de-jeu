@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import load_image
-from constantes import FRISSILE_BUFF_DURATION,AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
+from constantes import FRISSILE_BUFF_DURATION,AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, DEBUG_MODE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
 from managers.events_const import FEEDED, OUT_OF_FOOD
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
@@ -94,7 +94,7 @@ class Pig(Animated):
         return self.__hitbox_feed
 
     def feed(self, nourish_value: int = 20, food=PotatoesCode.POTATO_DEFAULT) -> None:
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             print("feed :" + str(food))
         self.health += nourish_value
         if self.health > 0:
@@ -172,6 +172,6 @@ class Pig(Animated):
     def display(self, screen: pygame.Surface) -> None:
         self.health_bar.display(screen)
         screen.blit(self.sprite, self.coords)
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
             pygame.draw.rect(screen, (255, 0, 0), self.__hitbox_feed, 1)

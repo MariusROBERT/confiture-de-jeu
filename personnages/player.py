@@ -2,7 +2,7 @@ from re import M
 import pygame
 import os
 from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, \
-    SHOW_HITBOX, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
+    DEBUG_MODE, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
@@ -25,7 +25,7 @@ def init_mini_potatoes_images():
     for i in range(4):
         mini_potatoes_images.append(load_image(
             "/player/autre/potatoemini{}.png".format(i), (20, 20)))
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             print(i)
 
 
@@ -159,7 +159,7 @@ class Player(Animated):
                     self.inventory_potatoes.append(found)
 
             elif found == PotatoesCode.POTATO_ZONE_DAMAGE.value:
-                if SHOW_HITBOX:
+                if DEBUG_MODE:
                     print("wesh")
                 if len(self.inventory_power_ups) < 3:
                     self.inventory_power_ups.append(found)
@@ -287,7 +287,7 @@ class Player(Animated):
             center=self.sprite.get_rect(topleft=self.coords).center)
         screen.blit(rotated_image, new_rect)
 
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
         i = 0
         for potato_code in self.inventory_potatoes:
@@ -410,7 +410,7 @@ class AutoPlayer(Player):
             angle = g_angle(self.moving_vector, (0, 1))
             if self.moving_vector[0] <= 0:
                 angle = -angle
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             rect = pygame.Rect(self.center_coords[0] + self.moving_vector[0]
                                * 50, self.center_coords[1] + self.moving_vector[1]*50, 20, 20)
             pygame.draw.rect(screen, (0, 0, 255), rect, 1)

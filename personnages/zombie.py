@@ -8,7 +8,7 @@ from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFA
     DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from lib.animated import Animated
 import numpy
-from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
+from constantes import DEBUG_MODE, WIDTH, HEIGHT, CASE_SIZE, TOURS
 from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
 import managers.sound_manager as sound_manager
 
@@ -145,7 +145,7 @@ class Zombie(Animated):
 
         if not self.dead:
             self.__health_bar.display(screen)
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_degats, 1)
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox_collision, 1)
 

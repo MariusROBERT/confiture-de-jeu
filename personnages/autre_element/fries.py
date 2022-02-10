@@ -1,5 +1,5 @@
 import pygame
-from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, SHOW_HITBOX
+from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, DEBUG_MODE
 from constantes import FRIES_SIZE, FRIES_DAMAGE, HITBOX_FRIES, FRIES_SPEED
 from lib.lib import *
 
@@ -85,7 +85,7 @@ class Fries:
             sprite = pygame.transform.rotate(sprite, angle)
         screen.blit(sprite,
                     (self.coords[0] - self.sprite.get_width() / 2, self.coords[1] - self.sprite.get_height() / 2))
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
             if self._intersection_box is not None:
                 pygame.draw.rect(screen, (0, 255, 0),
@@ -118,13 +118,13 @@ class Frissile(Fries):
             self.angle = angle
             self.sprite = FRISSILE_IMAGE
         elif elements is not None:
-            if SHOW_HITBOX:
+            if DEBUG_MODE:
                 print("Changing target")
             self.__target = nearest_zombie(elements["zombies"], self.center_coords)
             self.tick_update_100(None)
     def display(self, screen : pygame.Surface):
         super().display(screen, angle=self.angle)
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             intersection_coords = (
                     self.center_coords[0] +
                     self.__old_vector[0] * self.speed,
