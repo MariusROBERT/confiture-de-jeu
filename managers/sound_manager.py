@@ -1,5 +1,5 @@
 import pygame
-from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, PLAYER_DEAD_EVENT
+from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, PLAYER_DEAD_EVENT, CHANGE_NIGHT
 from managers.fx_manager import DAMAGE_EVENT
 from constantes import DATAPACK, SHOW_HITBOX
 
@@ -27,13 +27,26 @@ dig_sound = get_sound("dig")
 hurt_sound = get_sound("hurt")
 player_dead_sound = get_sound("player_dead")
 base_sound = get_sound("base")
+base_sound_night=get_sound("base_night")
 
 i=1
-def sound_base(pygame):
+def sound_base(pygame, event:pygame.event.Event):
     global i
     if i ==1:
-        base_sound.play().set_volume(0.1)
+        base_sound.play(-1).set_volume(0.1)
         i = 2
+        print("jour")
+    if event.type==CHANGE_NIGHT :
+        if i==2:
+            base_sound.stop()
+            base_sound_night.play().set_volume(0.1)
+            i+=1
+            print("night if")
+        else :
+            base_sound_night.stop()
+            base_sound.play(-1).set_volume(0.1)
+            i=2
+            print("night else")
 
 def sound_manager(pygame, event: pygame.event.Event):
     try:
