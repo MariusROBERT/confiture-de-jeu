@@ -1,3 +1,4 @@
+from tkinter import E
 import pygame, sys
 from pygame.locals import *
 from lib.lib import *
@@ -21,7 +22,7 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                     sys.exit()
                 if event.key == pygame.K_RETURN:
                     return "Play"
-            if event.type == FAST_TICK:
+            if event.type == user_events[1]:
                 for key in elements.keys():
                     for element in elements[key]:
                         try:
@@ -37,7 +38,15 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                             pass
                         except TypeError:
                             element.tick_update(elements)
-
+            if event.type == FAST_TICK:
+                for key in elements.keys():
+                    for element in elements[key]:
+                        try:
+                            element.tick_update_fast()
+                        except AttributeError:
+                            pass
+                        except TypeError:
+                            element.tick_update_fast(elements)
 def menu_display_loop(screen : pygame.display, elements):
     for key in elements.keys():
         for element in elements[key]:
