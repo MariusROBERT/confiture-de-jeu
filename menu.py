@@ -8,6 +8,7 @@ from constantes import WIDTH, HEIGHT, FPS, SIZE
 from personnages.terrain import Terrain
 from personnages.player import AutoPlayer
 from personnages.zombie import Zombie
+import managers.sound_manager as sound_manager
 
 pygame.init()
 
@@ -95,6 +96,7 @@ def init_menu_elements():
     menu_elements["fries"] = []
     menu_elements["pigs"] = []
     menu_elements["zombies"] = [Zombie() for i in range(3)]
+    sound_manager.sound_menu(pygame)
     main_title = Text(
         (WIDTH//2, 100),
         "FRIES NIGHT AT PIGGIES",
