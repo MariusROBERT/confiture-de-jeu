@@ -25,7 +25,8 @@ def init_mini_potatoes_images():
     for i in range(4):
         mini_potatoes_images.append(load_image(
             "/player/autre/potatoemini{}.png".format(i), (20, 20)))
-        print(i)
+        if SHOW_HITBOX:
+            print(i)
 
 
 class Player(Animated):
@@ -158,7 +159,8 @@ class Player(Animated):
                     self.inventory_potatoes.append(found)
 
             elif found == PotatoesCode.POTATO_ZONE_DAMAGE.value:
-                print("wesh")
+                if SHOW_HITBOX:
+                    print("wesh")
                 if len(self.inventory_power_ups) < 3:
                     self.inventory_power_ups.append(found)
 

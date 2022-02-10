@@ -94,7 +94,8 @@ class Pig(Animated):
         return self.__hitbox_feed
 
     def feed(self, nourish_value: int = 20, food=PotatoesCode.POTATO_DEFAULT) -> None:
-        print("feed :" + str(food))
+        if SHOW_HITBOX:
+            print("feed :" + str(food))
         self.health += nourish_value
         if self.health > 0:
             self._current_animation = "fire"

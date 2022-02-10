@@ -43,18 +43,21 @@ def sound_base(pygame, event: pygame.event.Event):
     if i == 1:
         base_sound.play(-1).set_volume(0.3)
         i = 2
-        print("jour")
+        if SHOW_HITBOX:
+            print("jour")
     if event.type == CHANGE_NIGHT:
         if i == 2:
             base_sound.stop()
             base_sound_night.play().set_volume(0.3)
             i += 1
-            print("night if")
+            if SHOW_HITBOX:
+                print("night if")
         else:
             base_sound_night.stop()
             base_sound.play(-1).set_volume(0.3)
             i = 2
-            print("night else")
+            if SHOW_HITBOX:
+                print("night else")
 
 
 def sound_menu(pygame):

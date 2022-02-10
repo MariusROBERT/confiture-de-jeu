@@ -2,6 +2,7 @@ from random import random
 import pygame
 
 from constantes import BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SPAWN_CHANCE, NIGHT_DURATION, PLAYER_SPEED, PROB_ZOMBIE_SPAWN, SIZE_ZOMBIE
+from constantes import SHOW_HITBOX
 from lib.lib import queue_event
 from managers.fx_manager import CHANGE_NIGHT
 
@@ -36,7 +37,8 @@ class Night_manager:
             add = (self.night_count / 25)
             if add > maxadd:
                 add = maxadd
-                print("max difficulty prob spwan")
+                if SHOW_HITBOX:
+                    print("max difficulty prob spwan")
             value = PROB_ZOMBIE_SPAWN * 1.4 + add
 
         return value
@@ -48,7 +50,8 @@ class Night_manager:
             add = (self.night_count / 25)
             if add > maxadd:
                 add = maxadd
-                print("max difficluty speed")
+                if SHOW_HITBOX:
+                    print("max difficluty speed")
             return (random() * 1.5) + 1.3 + (self.night_count / 6)
 
         return(random() * 1.5) + 0.7

@@ -118,7 +118,8 @@ class Frissile(Fries):
             self.angle = angle
             self.sprite = FRISSILE_IMAGE
         elif elements is not None:
-            print("Changing target")
+            if SHOW_HITBOX:
+                print("Changing target")
             self.__target = nearest_zombie(elements["zombies"], self.center_coords)
             self.tick_update_100(None)
     def display(self, screen : pygame.Surface):
