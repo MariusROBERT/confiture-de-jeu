@@ -2,8 +2,8 @@ import time
 from datetime import datetime, timedelta
 from random import random
 from re import M
-from constantes import HEIGHT, PROB_ZOMBIE_SPAWN, SIZE, SPAWN_DELAY, WIDTH, TOURS, CASE_SIZE
-from constantes import FPS, HEIGHT, SIZE, WIDTH
+from constantes import PROB_ZOMBIE_SPAWN, SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT
+from constantes import FPS, HEIGHT, SIZE, WIDTH, CASE_SIZE
 from constantes import ZOMBIE_SPAWN
 import pygame
 
@@ -109,7 +109,7 @@ def event_loop(event: pygame.event.Event):
         #     counter += 1
     if event.type == DAMAGED_ZOMBIE:
         global score_surface, score
-        score += 5
+        score += POINTS_PER_ZOMBIE_HIT
         score_surface = refresh_score(str(score))
 
     if event.type == FIREFRIE:

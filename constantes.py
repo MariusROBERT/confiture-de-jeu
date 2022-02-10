@@ -9,6 +9,7 @@ SHOW_HITBOX = config["debug"]
 DATAPACK = config["datapack"]
 OPACITY_NIGHT = 120
 NIGHT_DURATION = 30
+POINTS_PER_ZOMBIE_HIT = 5
 
 # Terrain
 SIZE = WIDTH, HEIGHT = 1280, 720
