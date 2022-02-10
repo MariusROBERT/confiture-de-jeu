@@ -28,10 +28,12 @@ hurt_sound = get_sound("hurt")
 player_dead_sound = get_sound("player_dead")
 base_sound = get_sound("base")
 base_sound_night=get_sound("base_night")
+menu_sound = get_sound("menu")
 
 i=1
 def sound_base(pygame, event:pygame.event.Event):
     global i
+    menu_sound.stop()
     if i ==1:
         base_sound.play(-1).set_volume(0.1)
         i = 2
@@ -47,6 +49,9 @@ def sound_base(pygame, event:pygame.event.Event):
             base_sound.play(-1).set_volume(0.1)
             i=2
             print("night else")
+
+def sound_menu(pygame):
+    menu_sound.play(-1)
 
 def sound_manager(pygame, event: pygame.event.Event):
     try:
