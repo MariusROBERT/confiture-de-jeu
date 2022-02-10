@@ -197,6 +197,8 @@ def logic_loop(elements):
         for key in elements.keys():
             for element in elements[key]:
                 element.update(elements)
+    else:
+        elements["player"][0].update(elements)
 
 
 def display_loop(elements):
