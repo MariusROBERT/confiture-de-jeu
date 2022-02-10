@@ -7,16 +7,26 @@ from lib.lib import load_image
 
 default_pousse = None
 lockheed_martin_image = None
+power_up = None
+
 
 def init_terrain_textures():
     global default_pousse
     default_pousse = load_image("terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
     global lockheed_martin_image
     lockheed_martin_image = default_pousse
+    global power_up
+    power_up = load_image("player/autre/power_up.png", (CASE_SIZE, CASE_SIZE))
     #lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
 
+
+BASE_POTATOE = 0
+POTATO_LOCKHEED_MARTIN = 1
+POTATO_ZONE_DAMAGE = 2
+
+
 class Potatoes:
-    def __init__(self):
+    def __init__(self, type=BASE_POTATOE):
 
         self.__x_pousse = random.randint(0, NB_ELEM_X)
         self.__y_pousse = random.randint(0, NB_ELEM_Y)
@@ -42,6 +52,9 @@ class Potatoes:
         self.lifespan = POTATO_LIFESPAN
         if default_pousse is None:
             init_terrain_textures()
+
+        self.type = type
+
     @property
     def alive(self):
         return random.randint(0, self.lifespan - 7) + self.age < self.lifespan
@@ -68,7 +81,7 @@ class Potatoes:
     @property
     def coords(self) -> tuple:
         return self.pos_pousse
-    
+
     def get_pos_pousse(self):
         return self.__pos_pousse
 
@@ -82,13 +95,10 @@ class Potatoes:
         return pos_patate
 
     def display(self, screen):
-        
-        screen.blit(default_pousse, self.pos_pousse)
 
-class PotatoesLockheedMartin(Potatoes):
-    def __init__(self):
-        super().__init__()
-    
-    def display(self, screen):
-        
-        screen.blit(lockheed_martin_image, self.pos_pousse)
+        if self.type == POTATO_LOCKHEED_MARTIN:
+            screen.blit(lockheed_martin_image, self.pos_pousse)
+        elif self.type == BASE_POTATOE:
+            screen.blit(default_pousse, self.pos_pousse)
+        elif self.type == POTATO_ZONE_DAMAGE:
+            screen.blit(power_up, self.pos_pousse)
