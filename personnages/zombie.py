@@ -56,13 +56,14 @@ class Zombie(Animated):
     def health(self, hp) -> None:
         if hp < self.health:
             queue_event(DAMAGED_ZOMBIE, {
-                        "center_coords": self.center_coords, "coords": self.coords})
+                "center_coords": self.center_coords, "coords": self.coords})
         if hp <= 0:
             self.__health = 0
             self.dead = True
             self.current_animation = "dead"
 
-            queue_event(DEAD_ZOMBIE)
+            queue_event(DEAD_ZOMBIE,
+                        {"center_coords": self.center_coords, "coords": self.coords})
         else:
             self.__health = hp
         self.__health_bar.health = self.__health
@@ -96,7 +97,7 @@ class Zombie(Animated):
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2
         health_bar_y = coords[1] - self.health_bar_size[1] - \
-            DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
+                       DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
         health_bar_coords = (health_bar_x, health_bar_y)
         self.__health_bar.move_to(health_bar_coords)
 
@@ -180,8 +181,7 @@ class Zombie(Animated):
             direction = (direction[0] / produit, direction[1] / produit)
         else:
             direction = (0, 0)
-        
-        
+
         self.__latest_movement_vector = movement_vector
         self.coords = (self.coords[0] + movement_vector[0],
                        self.coords[1] + movement_vector[1])

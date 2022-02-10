@@ -3,8 +3,7 @@ import pygame
 from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import PLAYER_WALKING
 from managers.fx_manager import DUST_ANIMATION, Particle
-
-from personnages.potatoes import Potatoes
+from personnages.potatoes import Potatoes, PotatoesLockheedMartin
 from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
@@ -13,8 +12,6 @@ class Terrain:
 
         self.base_terrains = load_animation(
             "terrain/sol", (CASE_SIZE, CASE_SIZE))
-        self.pousse = load_image(
-            "terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
         trous_images = load_animation(
             "terrain/trou", (CASE_SIZE, CASE_SIZE))
 
@@ -24,9 +21,11 @@ class Terrain:
         self.potatoes = []
         self.trous = []
         self.particles = []
-
+        self.super_fertility = 0.1
         self.nbcase = (NB_ELEM_X + 1) * (NB_ELEM_Y + 1)
-
+        self.__possible_potatoes = [
+            PotatoesLockheedMartin
+        ]
         self.terrain_texture_index = [random.randint(
             0, len(self.base_terrains) - 1) for i in range(self.nbcase+100)]
 
@@ -41,6 +40,8 @@ class Terrain:
 
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
+            if random.randint(0,1) <= self.super_fertility:
+                self.potatoes.append(random.choice(self.__possible_potatoes)())
             self.potatoes.append(Potatoes())
 
         for potato in self.potatoes:
@@ -95,8 +96,8 @@ class Terrain:
 
                     screen.blit(image[transparence], (i, j))
 
-                if (i, j) in [x.pos_pousse for x in self.potatoes]:
-                    screen.blit(self.pousse, (i, j))
+                for x in self.potatoes:
+                    x.display(screen)
 
                 if SHOW_HITBOX:
                     if (i, j) in [x.get_pos_patate() for x in self.potatoes]:

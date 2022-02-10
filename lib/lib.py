@@ -9,7 +9,7 @@ from constantes import DATAPACK
 def load_image(path: str, size: tuple) -> pygame.Surface:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
     print("loading image:", path2)
-    return pygame.transform.scale(pygame.image.load(path2), size)
+    return pygame.transform.scale(pygame.image.load(path2).convert_alpha(), size)
 
 
 def load_animation(path: str, size: tuple) -> list:

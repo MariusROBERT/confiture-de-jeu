@@ -25,8 +25,8 @@ DUST_ANIMATION = load_animation(
 
 
 font = pygame.font.SysFont("Arial", 20)
-DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT),
-                                     True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
+DEAD_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_DEAD),
+                                  True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
 # TODO: Faire marcher la transparence
 
 
@@ -70,9 +70,10 @@ class Fx_manager:
         self.damage_screen_old = 0
         self.damage_screen_on = False
 
-        self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
-        self.nuit_screen.fill((255, 255, 255, OPACITY_NIGHT),
-                              special_flags=pygame.BLEND_RGBA_MULT)
+        #self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
+        self.nuit_screen = pygame.Surface((WIDTH, HEIGHT))
+        self.nuit_screen.fill((0, 0, 0))
+        self.nuit_screen.set_alpha(OPACITY_NIGHT)
         self.nuit_screen_on = False
 
         # Explosion
@@ -92,8 +93,9 @@ class Fx_manager:
         elif event.type == DAMAGED_ZOMBIE:
             self.particles.append(Particle(BLOOD_ANIMATION, event.coords))
 
+        elif event.type == DEAD_ZOMBIE:
             self.particles.append(Particle(
-                DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
+                DEAD_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
         # if event.type == PLAYER_WALKING:  ( deplacé dans terrain)
         #     self.particles.append(Particle(DUST_ANIMATION, event.coords))
 
