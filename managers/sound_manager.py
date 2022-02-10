@@ -5,9 +5,10 @@ from constantes import DATAPACK, SHOW_HITBOX, NB_ELEM_X, NB_ELEM_Y, SIZE
 
 pygame.init()
 
-game_over_size=(100, 20)
+game_over_size = (100, 20)
 #gameover_surface=pygame.Surface((NB_ELEM_X/2)-game_over_size[0], (NB_ELEM_Y/2)-game_over_size[1])
-screen=pygame.display.set_mode(SIZE)
+screen = pygame.display.set_mode(SIZE)
+
 
 def get_sound(sound_name: str) -> pygame.mixer.Sound:
     try:
@@ -30,36 +31,40 @@ dig_sound = get_sound("dig")
 hurt_sound = get_sound("hurt")
 player_dead_sound = get_sound("player_dead")
 base_sound = get_sound("base")
-base_sound_night=get_sound("base_night")
+base_sound_night = get_sound("base_night")
 menu_sound = get_sound("menu")
 
-i=1
-def sound_base(pygame, event:pygame.event.Event):
+i = 1
+
+
+def sound_base(pygame, event: pygame.event.Event):
     global i
     menu_sound.stop()
-    if i ==1:
+    if i == 1:
         base_sound.play(-1).set_volume(0.3)
         i = 2
         print("jour")
-    if event.type==CHANGE_NIGHT :
-        if i==2:
+    if event.type == CHANGE_NIGHT:
+        if i == 2:
             base_sound.stop()
             base_sound_night.play().set_volume(0.3)
-            i+=1
+            i += 1
             print("night if")
-        else :
+        else:
             base_sound_night.stop()
             base_sound.play(-1).set_volume(0.3)
-            i=2
+            i = 2
             print("night else")
+
 
 def sound_menu(pygame):
     menu_sound.play(-1)
 
+
 def sound_manager(pygame, event: pygame.event.Event):
     try:
         if event.type == COLLECT_POTATOE:
-            collect_sound.play()
+            collect_sound.play().set_volume(0.4)
         elif event.type == DEAD_ZOMBIE:
             dead_sound.play().set_volume(0.09)
         elif event.type == FEEDED:
@@ -71,7 +76,7 @@ def sound_manager(pygame, event: pygame.event.Event):
         elif event.type == DAMAGE_EVENT:
             hurt_sound.play().set_volume(0.4)
             # print("DAMAGE_EVENT")
-        #elif event.type == PLAYER_DEAD_EVENT:
+        # elif event.type == PLAYER_DEAD_EVENT:
          #   player_dead_sound.play().set_volume(2)
 
     except Exception as e:
@@ -79,8 +84,9 @@ def sound_manager(pygame, event: pygame.event.Event):
             print("{} : {}".format(event.type, e))
         pass
 
+
 def player_dead(pygame, event: pygame.event.Event):
     player_dead_sound.play()
-    font=pygame.font.SysFont("Arial", 20)
-    text=font.render("GAME OVER", True, (255, 0, 0))
-    screen.blit(text, (100,20))
+    font = pygame.font.SysFont("Arial", 20)
+    text = font.render("GAME OVER", True, (255, 0, 0))
+    screen.blit(text, (100, 20))
