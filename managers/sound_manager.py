@@ -20,17 +20,11 @@ def get_sound(sound_name: str) -> pygame.mixer.Sound:
 base_path_sounds = "./datapacks/" + DATAPACK + "/sounds/"
 # EVENT DE 10 A 20 reservés
 collect_sound = get_sound("collect")
-
 dead_sound = get_sound("dead_zombie")
-
 feed_sound = get_sound("feeded")
-
 out_of_food_sound = get_sound("out_of_food")
-
 dig_sound = get_sound("dig")
-
 hurt_sound = get_sound("hurt")
-
 player_dead_sound = get_sound("player_dead")
 
 
