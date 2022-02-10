@@ -1,23 +1,25 @@
 import pygame
 from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
+from constantes import POINTS_PER_ZOMBIE_HIT
 from lib.lib import load_animation, load_image
 from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE
 from managers.sound_manager import COLLECT_POTATOE
-
 
 # EVENT DE 20 A 30 reservés
 
 
 DAMAGE_DURATION = 8
 
-
-SIZE_EXPLOSION = (SIZE_PLAYER*3, SIZE_PLAYER*3)
+SIZE_EXPLOSION = (SIZE_PLAYER * 3, SIZE_PLAYER * 3)
 EXPLOSION_ANIMATION = load_animation(
-    "particle/explosion",  SIZE_EXPLOSION)
+    "particle/explosion", SIZE_EXPLOSION)
 
 SIZE_BLOOD = (SIZE_ZOMBIE, SIZE_ZOMBIE)
 BLOOD_ANIMATION = load_animation(
-    "particle/blood",  SIZE_BLOOD)
+    "particle/blood", SIZE_BLOOD)
+
+font = pygame.font.SysFont("Arial", 20)
+DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT), True, "red") for i in range(3)]
 
 
 class Particle:
@@ -65,11 +67,13 @@ class Fx_manager:
             self.nuit_screen_on = not self.nuit_screen_on
         elif event.type == "never":
             pos = (elements["player"][0].center_coords[0] -
-                   SIZE_EXPLOSION[0]/2, elements["player"][0].center_coords[1] - SIZE_EXPLOSION[1]/2)
+                   SIZE_EXPLOSION[0] / 2, elements["player"][0].center_coords[1] - SIZE_EXPLOSION[1] / 2)
             self.particles.append(
                 Particle(EXPLOSION_ANIMATION, pos))
         elif event.type == DAMAGED_ZOMBIE:
             self.particles.append(Particle(BLOOD_ANIMATION, event.coords))
+
+            self.particles.append(Particle(DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
 
     def tick_update_50(self, elements):
 
