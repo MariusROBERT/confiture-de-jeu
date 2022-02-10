@@ -9,13 +9,8 @@ import pygame
 
 import sys
 
-
-
-
-
 from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_DEAD_EVENT
 from multiprocessing import Process, Pool
-
 
 pygame.init()
 
@@ -62,6 +57,8 @@ user_events = [
     TICKEVENT100,
     TICKEVENT
 ]
+
+
 # FPS STUFF
 
 
@@ -101,9 +98,10 @@ def init_game(health_bar):
     health_bar(10)
     return elements, night_manager, score_surface
 
-#code = main_menu(screen, clock, user_events)
+
+# code = main_menu(screen, clock, user_events)
 # ininiting all startup element
-#elements = init_game()
+# elements = init_game()
 
 
 def clear_screen(screen: pygame.Surface):
@@ -183,7 +181,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     if event.type == TICKEVENT100:
         player.tick_update_100(elements)
         fx_manager.tick_update_100(elements)
-        
+
         for pig in elements["pigs"]:
             pig.tick_update_100(elements)
 
@@ -200,15 +198,17 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
         fx_manager.tick_update_50(elements)
         terrain.tick_update_50(elements)
 
-    if event.type==PLAYER_DEAD_EVENT:
-        sound_manager.player_dead(pygame,event)
-        
+    if event.type == PLAYER_DEAD_EVENT:
+        sound_manager.player_dead(pygame, event)
 
 
 def logic_loop(elements):
-    for key in elements.keys():
-        for element in elements[key]:
-            element.update(elements)
+    if elements["player"][0].alive:
+        for key in elements.keys():
+            for element in elements[key]:
+                element.update(elements)
+    else:
+        elements["player"][0].update(elements)
 
 
 def display_loop(elements):
@@ -218,11 +218,27 @@ def display_loop(elements):
                 element.display(screen)
             else:
                 element.display(screen, elements)
+
+    if not elements["player"][0].alive:
+        # Décommenter pour mettre un écran noir en fond
+        # screen.fill((0, 0, 0))
+        game_over = pygame.font.SysFont("Arial", 90).render("Game Over", True,
+                                                            pygame.Color(255, 255, 255))
+        affichage_score = pygame.font.SysFont("Arial", 30).render("Score final : {}".format(score), True,
+                                                                  pygame.Color(255, 255, 255))
+        # TODO: Use Datapack's font
+        pos_game_over = (WIDTH / 2 - game_over.get_width() / 2,
+                         HEIGHT / 2 - (game_over.get_height() + affichage_score.get_height() + 10) / 2)
+        screen.blit(game_over, pos_game_over)
+        screen.blit(affichage_score, (
+            pos_game_over[0] + game_over.get_width() / 2 - affichage_score.get_width() / 2,
+            pos_game_over[1] + game_over.get_height() + 10))
+
     display_score(screen)
     screen.blit(update_fps(), (10, 0))
 
 
-#worker_main_menu = Thread(target=main_menu)
+# worker_main_menu = Thread(target=main_menu)
 
 # worker_main_menu.start()
 img = load_image("loading_bg.jpg", SIZE)
