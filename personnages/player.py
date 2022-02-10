@@ -243,62 +243,118 @@ class Player(Animated):
 
         self.__health_bar.display(screen)
 
+MODE_Z_ESCAPE = 0
+MODE_POTATOES = 1
+MODE_MIDDLE = 3
 
 class AutoPlayer(Player):
-    def __init__(self, coords : tuple = (0,0), max_angle : int = 10):
+    def __init__(self, coords : tuple = (0,0), max_angle : int = 0.004):
         super().__init__()
         self.__nearest_zombie = None
         self.__nearest_potatoe = None
         self.__max_angle = max_angle
         self.__moving_vector = (1,1)
+        self.__wanted_moving_vector = (1,1)
+        self.__vision = 250
+        self.__safe_distance = 100
+        self.__mode = MODE_MIDDLE
         self.update_moving_vector()
-        self.__safe_distance = 200
     @property
     def speed(self):
-        return 6
+        return 5
     @property
     def moving_vector(self):
         return self.__moving_vector
-    
-    def update_moving_vector(self):
-        old_vector = self.__moving_vector
+    def update_mode(self):
+        
+
         if self.__nearest_zombie is None or \
             self.__nearest_zombie.health <= 0 or \
             distance_between(self.__nearest_zombie.coords, self.coords) > self.__safe_distance:
             
-            target_coords = (WIDTH/2, HEIGHT/2)
             if self.__nearest_potatoe is not None:
-                target_coords = self.__nearest_potatoe.coords
-            v = vector_to_target(target_coords,self.center_coords ,self.speed)
-            self.__moving_vector = v
-       
+                self.__mode = MODE_POTATOES
+                
+            else:
+                self.__mode = MODE_MIDDLE            
         else:
-            # Runnaway from the nearest zombie
-            to_zombie_vector = vector_to_target(self.__nearest_zombie.center_coords, self.center_coords, self.speed)
-            np_array = np.array(to_zombie_vector)
-            away_from_zombie_array = np_array * -1
-            self.__moving_vector = np_to_tuple(away_from_zombie_array)
+            self.__mode = MODE_Z_ESCAPE
         
-        self.__moving_vector = intermediate_vector(old_vector, self.__moving_vector, max_angle=self.__max_angle)
         
+    def update_moving_vector(self):
+        old_vector = self.__moving_vector
+        correction_vector = self.__moving_vector
+        
+        if correction_vector[0]*50 + self.coords[0] +self.size[0] >= WIDTH \
+        or correction_vector[0]*50 + self.coords[0] <= 0 \
+        or correction_vector[1]*50 + self.coords[1] + self.size[1] >= HEIGHT \
+        or correction_vector[1]*50 + self.coords[1] <= 0:
+            self.__mode == MODE_MIDDLE
+        
+        new_vector = None
+        if self.__mode == MODE_Z_ESCAPE :
+            if self.__nearest_zombie is None or self.__nearest_zombie.health <= 0:
+                self.update_mode()
+                self.update_moving_vector()
+            else:
+                new_vector = vector_to_target(self.__nearest_zombie.coords, self.coords, -self.speed)
+        elif self.__mode == MODE_POTATOES:
+            if self.__nearest_potatoe is None:
+                self.update_mode()
+                self.update_moving_vector()
+            else:
+                target_coords = (
+                    self.__nearest_potatoe.coords[0] + CASE_SIZE /2,
+                    self.__nearest_potatoe.coords[1] + CASE_SIZE /2)
+                new_vector = vector_to_target(target_coords, self.center_coords, self.speed)
+
+        else:
+            target_coords = (WIDTH/2, HEIGHT/2)
+            new_vector = vector_to_target(target_coords,self.center_coords ,self.speed)
+        self.__wanted_moving_vector = new_vector
+        self.__moving_vector = intermediate_vector(old_vector, new_vector, max_angle=self.__max_angle, norm=self.speed)
+        
+        
+        
+    
+    
+    
     def update(self, elements):
+        terrain = elements["terrain"][0]
+        
+        if (self.__nearest_zombie is None or \
+           distance_between(self.center_coords, self.__nearest_zombie.coords) > self.__safe_distance) and \
+            self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords, self.center_coords) < CASE_SIZE:
+            self.dig(terrain)
+
+        super().update(elements)
+        
+        self.coords = (self.coords[0] + self.moving_vector[0], self.coords[1] + self.moving_vector[1])
+        
+    def tick_update_100(self, elements):
         terrain = elements["terrain"][0]
         self.__nearest_zombie = nearest_zombie(elements["zombies"], self.center_coords)
         self.__nearest_potatoe = nearest_zombie(terrain.potatoes, self.center_coords)
-        if (self.__nearest_zombie is None or \
-           distance_between(self.center_coords, self.__nearest_zombie.center_coords) > self.__safe_distance) and \
-            self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords, self.center_coords) < CASE_SIZE:
-            self.dig(terrain)
-           
-        self.coords = (self.coords[0] + self.moving_vector[0], self.coords[1] + self.moving_vector[1])
-        super().update(elements)
-    
-    def tick_update_100(self, elements):
-        super().tick_update_100(elements)
+        
         self.update_moving_vector()
+        super().tick_update_100(elements)
+        
+        
+        
         
     def display(self, screen):
         angle = g_angle(self.moving_vector, (0, 1))
         if self.moving_vector[0] <= 0:
             angle = -angle
+        if SHOW_HITBOX:
+            rect = pygame.Rect(self.center_coords[0] + self.moving_vector[0]*50, self.center_coords[1] + self.moving_vector[1]*50, 20,20)
+            pygame.draw.rect(screen, (0, 0, 255),rect , 1)
+            rect = pygame.Rect(self.center_coords[0] + self.__wanted_moving_vector[0]*50, self.center_coords[1] + self.__wanted_moving_vector[1]*50, 15,15)
+            pygame.draw.rect(screen, (0, 255, 255),rect , 1)
         super().display(screen, angle)
+    
+    
+    def tick_update(self, elements):
+        terrain = elements["terrain"][0]
+        self.update_mode()
+    

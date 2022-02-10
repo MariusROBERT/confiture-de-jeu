@@ -1,6 +1,6 @@
 import string
 import pygame
-from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector
+from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector, vector_to_target
 from lib.zombie import get_direction, get_target, randomCoords
 from .autre_element.health_bar import HealthBar
 from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
@@ -165,8 +165,9 @@ class Zombie(Animated):
         direction = get_direction(
             self.coords, get_target(self.coords, elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
-
+        direction = vector_to_target(elements["player"][0].center_coords, self.center_coords, self.speed)
         self.angle = get_angle_between_vectors(direction, (0, 1))
+        movement_vector = direction
         if direction[0] < 0:
             self.angle = - self.angle
         self.angle -= 90
@@ -175,10 +176,8 @@ class Zombie(Animated):
             direction = (direction[0] / produit, direction[1] / produit)
         else:
             direction = (0, 0)
-        direction = numpy.array(direction)
-        normalized_vector = normalize_vector(direction)
-        movement_vector = np_to_tuple(
-            numpy.array(normalized_vector) * self.speed)
+        
+        
         self.__latest_movement_vector = movement_vector
         self.coords = (self.coords[0] + movement_vector[0],
                        self.coords[1] + movement_vector[1])
