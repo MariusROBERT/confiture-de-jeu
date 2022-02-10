@@ -20,8 +20,10 @@ BLOOD_ANIMATION = load_animation(
     "particle/blood", SIZE_BLOOD)
 
 font = pygame.font.SysFont("Arial", 20)
-DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT), True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
+DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT),
+                                     True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
 # TODO: Faire marcher la transparence
+
 
 class Particle:
     def __init__(self, animation, coords):
@@ -75,7 +77,8 @@ class Fx_manager:
         elif event.type == DAMAGED_ZOMBIE:
             self.particles.append(Particle(BLOOD_ANIMATION, event.coords))
 
-            self.particles.append(Particle(DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
+            self.particles.append(Particle(
+                DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
 
     def tick_update_50(self, elements):
 
@@ -95,8 +98,6 @@ class Fx_manager:
         pass
 
     def display(self, screen: pygame.Surface):
-        if self.nuit_screen_on:
-            screen.blit(self.nuit_screen, (0, 0))
 
         if self.damage_screen_on:
 
@@ -107,3 +108,6 @@ class Fx_manager:
 
         for particle in self.particles:
             screen.blit(particle.frame, particle.coords)
+
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))

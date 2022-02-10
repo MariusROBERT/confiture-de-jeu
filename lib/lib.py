@@ -26,6 +26,7 @@ def load_animation(path: str, size: tuple) -> list:
 
     return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
+
 def angle_from_coordinates(x1: int, y1: int, x2: int, y2: int) -> int:
     """
     Calculate the angle between two coordinates
@@ -144,7 +145,7 @@ def np_to_tuple(a):
 def normalize_vector(vector: tuple) -> tuple:
     norm = math.sqrt(vector[0]**2 + vector[1]**2)
     if norm == 0:
-        return 0,0
+        return 0, 0
     return vector[0]/norm, vector[1]/norm
 
 
@@ -198,15 +199,17 @@ def g_angle(v1, v2):
         print(cos)
         raise ValueError
 
-def vector_from_angle_magnitude(angle : int, magnitude : float) -> tuple:
+
+def vector_from_angle_magnitude(angle: int, magnitude: float) -> tuple:
     u = np.cos(np.radians(angle))
     v = np.sin(np.radians(angle))
-    
+
     arr = np.array((u, v))*magnitude
 
     return np_to_tuple(arr)
 
-def rotate_vector( vector, angle):
+
+def rotate_vector(vector, angle):
     """Rotate the vector by the given angle in degrees"""
     x = vector[0]
     y = vector[1]
@@ -214,12 +217,12 @@ def rotate_vector( vector, angle):
     cos = math.cos(rad)
     sin = math.sin(rad)
     return (x * cos - y * sin, x * sin + y * cos)
-    
-def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int = None):
-    
-    
-    angle = get_angle_between_vectors((0,1), v1)
-    init_angle_2 = get_angle_between_vectors((0,1), v2)
+
+
+def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = None):
+
+    angle = get_angle_between_vectors((0, 1), v1)
+    init_angle_2 = get_angle_between_vectors((0, 1), v2)
     init_angle = angle
     init_tilt = init_angle_2 - init_angle
     tilt = init_tilt
@@ -228,27 +231,26 @@ def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int
     if tilt < 0:
         if tilt < -max_angle:
             tilt = -max_angle
-        
+
     else:
         if tilt > max_angle:
             tilt = max_angle
-    
+
     angle += tilt
-    
-    
-    
+
     init_tilt = round(init_tilt, 2)
     tilt = round(tilt, 2)
     init_angle = round(init_angle, 2)
     angle = round(angle, 2)
     #v3 = vector_from_angle_magnitude(angle, norm)
     v3 = rotate_vector(v1, init_tilt)
-    effective_angle = round(get_angle_between_vectors((0,1), v3), 2)
+    effective_angle = round(get_angle_between_vectors((0, 1), v3), 2)
     #print("ANG init_tilt:{}  tilt:{} init_angle_2:{} init_angle:{} -> angle:{} -> effective_angle:{}".format(init_tilt, tilt, init_angle_2, init_angle, angle, effective_angle) )
-    
+
     return v3[0], v3[1]
 
-def distance_between(coord1 : tuple, coords2:tuple) -> float:
+
+def distance_between(coord1: tuple, coords2: tuple) -> float:
     return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)
 
 
@@ -258,5 +260,5 @@ def create_transparent_animation(image: pygame.Surface):
         t_image = image.copy()
         t_image.fill((255, 255, 255, i),
                      special_flags=pygame.BLEND_RGBA_MULT)
-        result.append(t_image)
+        result.append(t_image.convert_alpha())
     return result
