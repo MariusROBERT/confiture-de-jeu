@@ -5,13 +5,41 @@ from lib.lib import *
 pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
 from personnages.autre_element.text import Text
-from constantes import WIDTH, HEIGHT, FPS
+from constantes import WIDTH, HEIGHT, FPS, SIZE
 from personnages.terrain import Terrain
 from personnages.player import AutoPlayer
 from personnages.zombie import Zombie
+
+pygame.init()
+
+screen = pygame.display.set_mode(SIZE, 0, 32)
+
+clock = pygame.time.Clock()
+font = pygame.font.SysFont("Arial", 18)
+
+
+TICKEVENT = pygame.USEREVENT + 1
+pygame.time.set_timer(TICKEVENT, 1000)
+
+TICKEVENT100 = pygame.USEREVENT + 3
+pygame.time.set_timer(TICKEVENT100, 100)
+
+TICKEVENT50 = pygame.USEREVENT + 3
+pygame.time.set_timer(TICKEVENT50, 50)
+
+TICKEVENT10 = pygame.USEREVENT + 4
+pygame.time.set_timer(TICKEVENT10, 5)
+
+user_events = [
+    TICKEVENT10,
+    TICKEVENT100,
+    TICKEVENT
+]
+
+
 FAST_TICK = pygame.USEREVENT + 5
 pygame.time.set_timer(FAST_TICK, 20)
-def menu_event_loop(screen : pygame.display, clock, elements, user_events):
+def menu_event_loop(screen2 : pygame.display, clock, elements, user_events):
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 if event.type == pygame.quit():
@@ -26,9 +54,12 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                 for key in elements.keys():
                     for element in elements[key]:
                         try:
-                            element.tick_update_100(elements)
+                            element.tick_update_100()
+                            
                         except AttributeError:
                             pass
+                        except TypeError:
+                            element.tick_update_100(elements)
             if event.type == user_events[len(user_events) - 1]:
                 for key in elements.keys():
                     for element in elements[key]:
@@ -47,10 +78,10 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                             pass
                         except TypeError:
                             element.tick_update_fast(elements)
-def menu_display_loop(screen : pygame.display, elements):
+def menu_display_loop(screen2 : pygame.display, elements):
     for key in elements.keys():
         for element in elements[key]:
-            element.display(screen)
+            element.display(screen2)
 def init_menu_elements():
     menu_elements = {}
     terrain = Terrain()
@@ -82,16 +113,15 @@ def menu_logic_loop(elements):
             element.update(elements)
     
         
-def main_menu(screen : pygame.display, clock, user_events):
+def main_menu(screen2 : pygame.display = screen, clock = clock, user_events =user_events):
     pygame.font.init()
-    
     menu_elements = init_menu_elements()
     code = None
     while code is None:
-        screen.fill((70, 166, 0))
-        code = menu_event_loop(screen, clock, menu_elements, user_events)
+        screen2.fill((70, 166, 0))
+        code = menu_event_loop(screen2, clock, menu_elements, user_events)
         menu_logic_loop(menu_elements)
-        menu_display_loop(screen, menu_elements)
+        menu_display_loop(screen2, menu_elements)
         clock.tick(60)
         pygame.display.flip()
     return code
