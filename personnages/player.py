@@ -235,7 +235,7 @@ class Player(Animated):
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
 
-    def display(self, screen, angle=None) -> None:
+    def display(self, screen, angle=None, night=False) -> None:
         if angle is None:
             angle = dir_to_angle(self.direction)
 

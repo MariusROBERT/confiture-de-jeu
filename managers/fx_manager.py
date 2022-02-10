@@ -1,7 +1,7 @@
 import pygame
-from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from constantes import POINTS_PER_ZOMBIE_HIT
-from lib.lib import load_animation, load_image
+from lib.lib import circle_surf, load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING
 from managers.sound_manager import COLLECT_POTATOE
@@ -25,8 +25,8 @@ DUST_ANIMATION = load_animation(
 
 
 font = pygame.font.SysFont("Arial", 20)
-DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT),
-                                     True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
+DEAD_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_DEAD),
+                                  True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
 # TODO: Faire marcher la transparence
 
 
@@ -93,8 +93,9 @@ class Fx_manager:
         elif event.type == DAMAGED_ZOMBIE:
             self.particles.append(Particle(BLOOD_ANIMATION, event.coords))
 
+        elif event.type == DEAD_ZOMBIE:
             self.particles.append(Particle(
-                DAMAGED_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
+                DEAD_ZOMBIE_POINTS, (event.coords[0], event.coords[1] - SIZE_ZOMBIE / 2)))
         # if event.type == PLAYER_WALKING:  ( deplacé dans terrain)
         #     self.particles.append(Particle(DUST_ANIMATION, event.coords))
 
@@ -115,7 +116,7 @@ class Fx_manager:
     def update(self, elements):
         pass
 
-    def display(self, screen: pygame.Surface):
+    def display(self, screen: pygame.Surface, elements):
 
         if self.damage_screen_on:
 
@@ -129,3 +130,10 @@ class Fx_manager:
 
         if self.nuit_screen_on:
             screen.blit(self.nuit_screen, (0, 0))
+
+        player = elements["player"][0]
+        radius = player.size[0] * 5
+
+        if self.nuit_screen_on:
+            screen.blit(circle_surf(radius, (20, 20, 60)),
+                        (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
