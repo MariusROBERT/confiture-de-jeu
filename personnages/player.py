@@ -80,7 +80,7 @@ class Player(Animated):
             self.__health = hp
 
         self._health_bar.health = self.__health
-
+        self._health_bar.update()
     @property
     def latest_movement_vector(self):
         return self._latest_movement_vector
@@ -175,8 +175,7 @@ class Player(Animated):
                     if len(self.inventory_potatoes) > 0:
                         for pig in elements["pigs"]:
                             if pig.hitbox_feed.colliderect(self.hitbox):
-                                pig.feed()
-                                self.inventory_potatoes.pop()
+                                pig.feed(food=self.inventory_potatoes.pop())
                                 feeded = True
                                 break
 

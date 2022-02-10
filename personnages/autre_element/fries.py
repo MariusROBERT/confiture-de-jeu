@@ -4,13 +4,13 @@ from constantes import FRIES_SIZE, FRIES_DAMAGE, HITBOX_FRIES, FRIES_SPEED
 from lib.lib import *
 
 FRITE_IMAGE = load_image("frite.png", FRIES_SIZE)
-
+FRISSILE_IMAGE = load_image("frite.png", (FRIES_SIZE[0]*1.4, FRIES_SIZE[1]*1.4))
 
 class Fries:
     def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = FRIES_SIZE, intersection_box=None):
         self.coords = coords
         self.size = size
-        self.__damage = FRIES_DAMAGE
+        self._damage = FRIES_DAMAGE
         self._intersection_box = intersection_box
         self._movement_vector = movement_vector
 
@@ -41,12 +41,12 @@ class Fries:
 
     @property
     def damage(self) -> int:
-        value = self.__damage + (self.age/1.7)
+        value = self._damage + (self.age/1.7)
         return value
 
     @damage.setter
     def damage(self, value: int):
-        self.__damage = value
+        self._damage = value
 
     @property
     def alive(self) -> bool:
@@ -96,24 +96,46 @@ class Frissile(Fries):
         super().__init__(coords, movement_vector, size, intersection_box)
         self.__target = target
         self.tick_update_100(None)
+        self.__old_vector = (1,1)
     @property
     def speed(self):
-        return FRIES_SPEED / 2
+        return FRIES_SPEED / 4
     
     def tick_update_100(self, elements):
         if self.__target is not None and self.__target.health > 0:
             pack = vector_to_target_tea_time_algorithm(self.__target.center_coords, self.__target.latest_movement_vector, self.center_coords,self.speed)
             vector = None
-            if pack is not None:
+            if pack is not None and False:
                 vector = pack[0]
             else:
                 vector = vector_to_target(self.__target.center_coords, self.coords, self.speed)
+            self.__old_vector = self.movement_vector
+            #vector = intermediate_vector(self.__old_vector, vector,max_angle=10 ,norm=self.speed)
             self._movement_vector = vector
             angle = g_angle((0, 1),self._movement_vector)
             if vector[0] < 0:
                 angle = 180 - angle
             self.angle = angle
-            self.sprite = FRITE_IMAGE
+            self.sprite = FRISSILE_IMAGE
+        elif elements is not None:
+            print("Changing target")
+            self.__target = nearest_zombie(elements["zombies"], self.center_coords)
+            self.tick_update_100(None)
     def display(self, screen : pygame.Surface):
         super().display(screen, angle=self.angle)
-        
+        if SHOW_HITBOX:
+            intersection_coords = (
+                    self.center_coords[0] +
+                    self.__old_vector[0] * self.speed,
+                    self.center_coords[1] + self.__old_vector[1] * self.speed)
+            size = (20, 20)
+            intersection_box = pygame.Rect(
+                    intersection_coords[0] - size[0]//2,
+                    intersection_coords[1] - size[1]//2,
+                    size[0],
+                    size[1])
+            pygame.draw.rect(screen, (255, 0, 255), intersection_box, 1)
+
+    @property
+    def damage(self) -> int:
+        return super().damage * 1.3
