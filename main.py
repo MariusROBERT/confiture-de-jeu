@@ -100,17 +100,19 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
-        # if player.alive:
+        """
+        if player.alive:
             global counter
-        #     tt = datetime.fromtimestamp(counter)
-        #     time = tt.strftime("%M:%S")
-        #     global score_surface
-        #     score_surface = refresh_score(time)
-        #     counter += 1
+            tt = datetime.fromtimestamp(counter)
+            time = tt.strftime("%M:%S")
+            global score_surface
+            score_surface = refresh_score(time)
+            counter += 1
+        """
     if event.type == DAMAGED_ZOMBIE:
         global score_surface, score
         score += POINTS_PER_ZOMBIE_HIT
-        score_surface = refresh_score(str(score))
+        score_surface = refresh_score("SCORE : {}".format(score))
 
     if event.type == FIREFRIE:
         for pig in elements["pigs"]:
