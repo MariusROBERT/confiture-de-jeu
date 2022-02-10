@@ -70,9 +70,10 @@ class Fx_manager:
         self.damage_screen_old = 0
         self.damage_screen_on = False
 
-        self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
-        self.nuit_screen.fill((255, 255, 255, OPACITY_NIGHT),
-                              special_flags=pygame.BLEND_RGBA_MULT)
+        #self.nuit_screen = load_image("nuit.png", (WIDTH, HEIGHT))
+        self.nuit_screen = pygame.Surface((WIDTH, HEIGHT))
+        self.nuit_screen.fill((0, 0, 0))
+        self.nuit_screen.set_alpha(OPACITY_NIGHT)
         self.nuit_screen_on = False
 
         # Explosion
