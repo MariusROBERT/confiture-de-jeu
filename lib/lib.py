@@ -12,12 +12,18 @@ def load_image(path: str, size: tuple) -> pygame.Surface:
     return pygame.transform.scale(pygame.image.load(path2), size)
 
 
-
 def load_animation(path: str, size: tuple) -> list:
     path2 = "./datapacks/" + DATAPACK + "/images/" + path
     folder_content = sorted(os.listdir(path2))
     filtered_folder_content = list(
         filter(lambda x: x.endswith(".png"), folder_content))
+    print(filtered_folder_content)
+
+    # image format = image:number:.png
+    if len(filtered_folder_content) >= 9:
+        filtered_folder_content.sort(
+            key=lambda x: int(x.split(".")[0].split(":")[1]))
+
     return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
 def angle_from_coordinates(x1: int, y1: int, x2: int, y2: int) -> int:
@@ -60,8 +66,8 @@ def nearest_zombie(zombies: 'Zombie', coords: tuple) -> 'Zombie':
     return nearest
 
 
-def queue_event(id: int):
-    pygame.event.post(pygame.event.Event(id))
+def queue_event(id: int, data: dict = {}):
+    pygame.event.post(pygame.event.Event(id, data))
 
 
 def quadratic_equation_roots(a: int, b: int, c: int) -> tuple:
@@ -127,6 +133,7 @@ def vector_to_target_tea_time_algorithm(
              ) / holly_tea + moving_object_vector[1]
         return (u, v), holly_tea
 
+
 def np_to_tuple(a):
     try:
         return tuple(np_to_tuple(i) for i in a)
@@ -140,9 +147,11 @@ def normalize_vector(vector: tuple) -> tuple:
         return 0,0
     return vector[0]/norm, vector[1]/norm
 
+
 def load_font(path: str, size: int) -> pygame.font.Font:
     path2 = "./datapacks/" + DATAPACK + "/fonts/" + path
     return pygame.font.Font(path2, size)
+
 
 def vector_to_target(
         moving_object_coords: tuple,
@@ -167,12 +176,13 @@ def vector_to_target(
     return np_to_tuple(normed_array)
 
 
-
 def dotproduct(v1, v2):
-  return sum((a*b) for a, b in zip(v1, v2))
+    return sum((a*b) for a, b in zip(v1, v2))
+
 
 def length(v):
-  return math.sqrt(dotproduct(v, v))
+    return math.sqrt(dotproduct(v, v))
+
 
 def g_angle(v1, v2):
     cos = dotproduct(v1, v2) / (length(v1) * length(v2))
@@ -182,8 +192,8 @@ def g_angle(v1, v2):
         cos = -0.9999999999999999
     try:
         return math.degrees(
-        math.acos(
-            cos))
+            math.acos(
+                cos))
     except ValueError:
         print(cos)
         raise ValueError
@@ -241,3 +251,12 @@ def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int
 def distance_between(coord1 : tuple, coords2:tuple) -> float:
     return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)
 
+
+def create_transparent_animation(image: pygame.Surface):
+    result = []
+    for i in range(0, 256):
+        t_image = image.copy()
+        t_image.fill((255, 255, 255, i),
+                     special_flags=pygame.BLEND_RGBA_MULT)
+        result.append(t_image)
+    return result

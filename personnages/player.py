@@ -6,19 +6,23 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
-from personnages.autre_element.fx_manager import DAMAGE_EVENT
+from managers.events_const import COLLECT_POTATOE, DIG
+from managers.fx_manager import DAMAGE_EVENT
+from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
-import py_sounds
-from py_sounds import PLAYER_DEAD_EVENT
-import numpy as np
-directions = ["up", "down", "left", "right"]
-keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
+import managers.sound_manager as sound_manager
+from managers.sound_manager import PLAYER_DEAD_EVENT
+
+directions = ["up", "down", "left", "right", "up", "down", "left", "right"]
+keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
+        pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
 
 
 class Player(Animated):
     def __init__(self):
         super().__init__("player", (SIZE_PLAYER, SIZE_PLAYER))
-        self.inventory = []
+        self.inventory_potatoes = []
+        self.inventory_power_ups = []
 
         self._current_animation = "walk"
 
@@ -54,7 +58,7 @@ class Player(Animated):
 
         if hp < self.__health and self.__health > 0:
             queue_event(DAMAGE_EVENT)
-        if hp <= 0:# and self.__alive:
+        if hp <= 0:  # and self.__alive:
             # TODO: faire que le son de mort se joue qu'une fois
             self.__health = 0
             self.__alive = False
@@ -122,15 +126,18 @@ class Player(Animated):
                 self.direction.append("right")
                 return True
         return False
-    def dig(self, terrain):
+
+    def dig(self, terrain: Terrain):
         self.digging = True
-        queue_event(py_sounds.DIG)
-        if terrain.harvrest(self.center_coords) and len(self.inventory) < 5:
-            self.inventory.append("potatoe")
-            queue_event(py_sounds.COLLECT_POTATOE)
+        queue_event(DIG)
+        found = terrain.harvrest(self.center_coords)
+        if found == "potato" and len(self.inventory_potatoes) < 5:
+            self.inventory_potatoes.append("potatoe")
+            queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
-            if len(self.inventory) == 5:
+            if len(self.inventory_potatoes) == 5:
                 self.health += 5
+
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
             if event.key in keys:
@@ -148,11 +155,11 @@ class Player(Animated):
                 # Si il est a proximitée d'un pig
                 feeded = False
                 if self.hitbox.collidelist([element.hitbox_feed for element in elements["pigs"]]) != -1:
-                    if len(self.inventory) > 0:
+                    if len(self.inventory_potatoes) > 0:
                         for pig in elements["pigs"]:
                             if pig.hitbox_feed.colliderect(self.hitbox):
                                 pig.feed()
-                                self.inventory.pop()
+                                self.inventory_potatoes.pop()
                                 feeded = True
                                 break
 
@@ -161,7 +168,7 @@ class Player(Animated):
                     self.dig(elements["terrain"][0])
 
         elif event.type == pygame.KEYUP:
-            for i in range(4):
+            for i in range(len(directions)):
                 if event.key == keys[i]:
                     if directions[i] in self.direction:
                         self.direction.remove(directions[i])
@@ -225,19 +232,19 @@ class Player(Animated):
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
 
-    def display(self, screen, angle = None) -> None:
+    def display(self, screen, angle=None) -> None:
         if angle is None:
             angle = dir_to_angle(self.direction)
-            
+
         rotated_image = pygame.transform.rotate(self.sprite, angle)
         new_rect = rotated_image.get_rect(
             center=self.sprite.get_rect(topleft=self.coords).center)
         screen.blit(rotated_image, new_rect)
-        
+
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
 
-        for i in range(len(self.inventory)):
+        for i in range(len(self.inventory_potatoes)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 
@@ -248,7 +255,7 @@ MODE_POTATOES = 1
 MODE_MIDDLE = 3
 
 class AutoPlayer(Player):
-    def __init__(self, coords : tuple = (0,0), max_angle : int = 0.004):
+    def __init__(self, coords: tuple = (0, 0), max_angle: int = 10):
         super().__init__()
         self.__nearest_zombie = None
         self.__nearest_potatoe = None

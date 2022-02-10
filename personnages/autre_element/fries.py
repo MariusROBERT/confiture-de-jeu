@@ -3,6 +3,8 @@ from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, SHOW_HITBOX
 from constantes import FRIES_SIZE, FRIES_DAMAGE, HITBOX_FRIES, FRIES_SPEED
 from lib.lib import *
 
+FRITE_IMAGE = load_image("frite.png", FRIES_SIZE)
+
 
 class Fries:
     def __init__(self, coords: tuple, movement_vector: tuple = (1, 0), size: tuple = FRIES_SIZE, intersection_box=None):
@@ -11,10 +13,16 @@ class Fries:
         self.__damage = FRIES_DAMAGE
         self.__intersection_box = intersection_box
         self.__movement_vector = movement_vector
-        sprite = load_image("frite.png", size)
+
+        if size == FRIES_SIZE:
+            sprite = FRITE_IMAGE
+        else:
+            sprite = load_image("frite.png", size)
+
         fries_angle = get_angle_between_vectors((0, 1), movement_vector)
         if movement_vector[0] < 0:
             fries_angle = 180 - fries_angle
+
         self.sprite, rect = rot_center(
             sprite, fries_angle, self.coords[0], self.coords[1])
         self.__hitbox = self.sprite.get_rect(center=rect.center)
@@ -30,8 +38,8 @@ class Fries:
 
     @property
     def damage(self) -> int:
-        print("damage", self.__damage)
-        return self.__damage + (self.age/1.7)
+        value = self.__damage + (self.age/1.7)
+        return value
 
     @damage.setter
     def damage(self, value: int):

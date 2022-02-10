@@ -4,18 +4,24 @@ import os
 import pygame
 
 
+loaded_animations = {}
+
+
 class Animated:
     def __init__(self, name: str, size: tuple):
         self._animation = {}
-
-        animations_names = os.listdir(
-            "datapacks/{}/images/{}/" .format(DATAPACK, name))
-        filtered_folder_content = [
-            animation for animation in animations_names if animation != ".DS_Store"]
-        for animation_name in filtered_folder_content:
-            self._animation[animation_name] = load_animation(
-                f"{name}/{animation_name}", size
-            )
+        if not name in loaded_animations.keys():
+            animations_names = os.listdir(
+                "datapacks/{}/images/{}/" .format(DATAPACK, name))
+            filtered_folder_content = [
+                animation for animation in animations_names if animation != ".DS_Store"]
+            for animation_name in filtered_folder_content:
+                self._animation[animation_name] = load_animation(
+                    f"{name}/{animation_name}", size
+                )
+            loaded_animations[name] = self._animation
+        else:
+            self._animation = loaded_animations[name]
 
         self._current_frame = 0
 

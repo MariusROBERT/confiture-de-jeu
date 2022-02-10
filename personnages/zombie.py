@@ -2,6 +2,7 @@ import string
 import pygame
 from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector, vector_to_target
 from lib.zombie import get_direction, get_target, randomCoords
+from managers.events_const import DEAD_ZOMBIE, DAMAGED_ZOMBIE
 from .autre_element.health_bar import HealthBar
 from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
     DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
@@ -9,7 +10,7 @@ from lib.animated import Animated
 import numpy
 from constantes import SHOW_HITBOX, WIDTH, HEIGHT, CASE_SIZE, TOURS
 from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
-import py_sounds
+import managers.sound_manager as sound_manager
 
 
 class Zombie(Animated):
@@ -53,12 +54,14 @@ class Zombie(Animated):
 
     @health.setter
     def health(self, hp) -> None:
+        if hp < self.health:
+            queue_event(DAMAGED_ZOMBIE, {"coords": self.center_coords})
         if hp <= 0:
             self.__health = 0
             self.dead = True
             self.current_animation = "dead"
 
-            queue_event(py_sounds.DEAD_ZOMBIE)
+            queue_event(DEAD_ZOMBIE)
         else:
             self.__health = hp
         self.__health_bar.health = self.__health
@@ -87,7 +90,7 @@ class Zombie(Animated):
 
     @coords.setter
     def coords(self, coords: tuple[int, int]) -> None:
-        #Revert to old method of latest_movement_vector
+        # Revert to old method of latest_movement_vector
         self.__coords = coords
         center_x = coords[0] + self.size[0] / 2
         health_bar_x = center_x - self.health_bar_size[0] / 2

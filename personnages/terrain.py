@@ -1,6 +1,6 @@
 import random
 import pygame
-from lib.lib import load_animation, load_image
+from lib.lib import create_transparent_animation, load_animation, load_image
 
 from personnages.potatoes import Potatoes
 from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
@@ -13,8 +13,11 @@ class Terrain:
             "terrain/sol", (CASE_SIZE, CASE_SIZE))
         self.pousse = load_image(
             "terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
-        self.trous_images = load_animation(
+        trous_images = load_animation(
             "terrain/trou", (CASE_SIZE, CASE_SIZE))
+
+        self.trous_images_t = [
+            create_transparent_animation(x) for x in trous_images]
 
         self.potatoes = []
         self.trous = []
@@ -50,15 +53,15 @@ class Terrain:
         coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
                       coords[1] // CASE_SIZE * CASE_SIZE)
         self.trous.append(
-            {"coords": coordsbase, "old": 0, "imgIndex": random.randint(1, len(self.trous_images))})
+            {"coords": coordsbase, "old": 0, "imgIndex": random.randint(1, len(self.trous_images_t))})
         for patate in self.potatoes:
             pos_patate = patate.get_pos_patate()
             if coords[0] - CASE_SIZE < pos_patate[0] < coords[0] + CASE_SIZE:
                 if coords[1] - CASE_SIZE < pos_patate[1] < coords[1] + CASE_SIZE:
                     self.potatoes.remove(patate)
-                    return True
+                    return "potato"
 
-        return False
+        return "rien"
 
     def update(self, elements) -> None:
         pass
@@ -74,14 +77,10 @@ class Terrain:
                     filter(lambda x: x["coords"] == (i, j), self.trous))
                 if len(trou) > 0:
                     indexImage = trou[0]["imgIndex"] - 1
-                    # ( A optimiser !!! ) (( si besoin mdr ))
-                    image = self.trous_images[indexImage].copy()
-
+                    image = self.trous_images_t[indexImage]
                     transparence = 255 - (trou[0]["old"] * 255 // AGE_MAX_TROU)
-                    image.fill((255, 255, 255, transparence),
-                               special_flags=pygame.BLEND_RGBA_MULT)
 
-                    screen.blit(image, (i, j))
+                    screen.blit(image[transparence], (i, j))
 
                 if (i, j) in [x.pos_pousse for x in self.potatoes]:
                     screen.blit(self.pousse, (i, j))
