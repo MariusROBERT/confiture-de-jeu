@@ -241,10 +241,10 @@ def display_loop(elements):
 # worker_main_menu = Thread(target=main_menu)
 
 # worker_main_menu.start()
-img = load_image("loading_bg.jpg", SIZE)
-screen.blit(img, (0,0))
-text = Text((WIDTH / 2, HEIGHT / 2 - 80), "Preparation du Ketchup", size=20, centerd_around_coords=True)
-size = (WIDTH - 400 , 40)
+
+screen.fill((0, 0, 0))
+text = Text((WIDTH / 2, HEIGHT / 2 - 80), "Preparation du Ketchup", size=20, color=(255,255,255), centerd_around_coords=True)
+size = (WIDTH - 400 , 50)
 health = HealthBar((200, HEIGHT / 2 + 40),size=size, color=(255,30,30), value=0)
 text.display(screen)
 health.display(screen)
