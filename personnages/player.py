@@ -8,6 +8,7 @@ from lib.lib import *
 from lib.player import dir_to_angle
 from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
+from personnages.potatoes import BASE_POTATOE, POTATO_LOCKHEED_MARTIN, POTATO_ZONE_DAMAGE
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
 import managers.sound_manager as sound_manager
@@ -28,6 +29,7 @@ class Player(Animated):
 
         self.potatoe_mini = load_image(
             "/player/autre/potatoemini.png", (20, 20))
+        self.power_up_image = load_image("player/autre/power_up.png", (20, 20))
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (WIDTH / 2, HEIGHT / 2)
@@ -40,7 +42,7 @@ class Player(Animated):
         self.time_since_dig = 0
         self._digging = False
         self._paused_animation = ""
-        self._latest_movement_vector = (0,0)
+        self._latest_movement_vector = (0, 0)
         self.time_since_move = 0
         self.__old_angle = 0
         hp = PLAYER_MAX_HP
@@ -71,12 +73,11 @@ class Player(Animated):
             self.__health = hp
 
         self._health_bar.health = self.__health
-    
+
     @property
     def latest_movement_vector(self):
         return self._latest_movement_vector
-    
-    
+
     @property
     def alive(self) -> bool:
         return self.__alive
@@ -136,12 +137,16 @@ class Player(Animated):
         self.digging = True
         queue_event(DIG)
         found = terrain.harvrest(self.center_coords)
-        if found == "potato" and len(self.inventory_potatoes) < 5:
-            self.inventory_potatoes.append("potatoe")
+        if found >= 0 and len(self.inventory_potatoes) < 5:
+
             queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
-            if len(self.inventory_potatoes) == 5:
-                self.health += 5
+            if found in [BASE_POTATOE, POTATO_LOCKHEED_MARTIN]:
+                self.inventory_potatoes.append(found)
+                if len(self.inventory_potatoes) == 5:
+                    self.health += 5
+            elif found == POTATO_ZONE_DAMAGE:
+                self.inventory_power_ups.append(found)
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
@@ -251,7 +256,9 @@ class Player(Animated):
             self.coords = (self.coords[0], BORDER_SIZE)
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
-        self._latest_movement_vector = self.coords[0]-old_coords[0], self.coords[1]-old_coords[1]
+        self._latest_movement_vector = self.coords[0] - \
+            old_coords[0], self.coords[1]-old_coords[1]
+
     def display(self, screen, angle=None, night=False) -> None:
         if angle is None:
             angle = dir_to_angle(self.direction)
@@ -267,6 +274,10 @@ class Player(Animated):
         for i in range(len(self.inventory_potatoes)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
+
+        for i in range(len(self.inventory_power_ups)):
+            screen.blit(
+                self.power_up_image, (self.coords[0] + i * 20, self.coords[1] - (20 * 2) - 5))
 
         self._health_bar.display(screen)
 
@@ -297,7 +308,7 @@ class AutoPlayer(Player):
     @ property
     def moving_vector(self):
         return self.__moving_vector
-    
+
     def update_mode(self):
 
         if self.__nearest_zombie is None or \
