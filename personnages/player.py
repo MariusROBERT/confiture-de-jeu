@@ -63,11 +63,12 @@ class Player(Animated):
 
     @health.setter
     def health(self, hp) -> None:
-
+        if not self.alive:
+            self.current_animation = "dead"
+            return
         if hp < self.__health and self.__health > 0:
             queue_event(DAMAGE_EVENT)
         if hp <= 0:  # and self.__alive:
-            # TODO: faire que le son de mort se joue qu'une fois
             self.__health = 0
             self.__alive = False
             self.current_animation = "dead"
@@ -151,7 +152,7 @@ class Player(Animated):
                 if len(self.inventory_potatoes) == 5:
                     self.health += 5
             else:
-                if (len(self.inventory_power_ups) < 3):
+                if len(self.inventory_power_ups) < 3:
                     self.inventory_power_ups.append(found)
 
     def move(self, event: pygame.event.Event, elements) -> None:
