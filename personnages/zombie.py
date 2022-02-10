@@ -1,6 +1,6 @@
 import string
 import pygame
-from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector, vector_to_target
+from lib.lib import g_angle, np_to_tuple, queue_event, normalize_vector, vector_to_target
 from lib.zombie import get_direction, get_target, randomCoords
 from managers.events_const import DEAD_ZOMBIE, DAMAGED_ZOMBIE
 from .autre_element.health_bar import HealthBar
@@ -169,7 +169,7 @@ class Zombie(Animated):
             self.coords, get_target(self.coords, elements["player"][0].coords))
         produit = abs(direction[0]) + abs(direction[1])
         direction = vector_to_target(elements["player"][0].center_coords, self.center_coords, self.speed)
-        self.angle = get_angle_between_vectors(direction, (0, 1))
+        self.angle = g_angle(direction, (0, 1))
         movement_vector = direction
         if direction[0] < 0:
             self.angle = - self.angle

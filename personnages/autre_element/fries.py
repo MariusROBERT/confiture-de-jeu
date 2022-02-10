@@ -19,7 +19,7 @@ class Fries:
         else:
             sprite = load_image("frite.png", size)
 
-        fries_angle = get_angle_between_vectors((0, 1), movement_vector)
+        fries_angle = g_angle((0, 1), movement_vector)
         if movement_vector[0] < 0:
             fries_angle = 180 - fries_angle
 
