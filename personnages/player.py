@@ -6,7 +6,7 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
-from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING
+from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
@@ -166,6 +166,18 @@ class Player(Animated):
                 # si il est dans la hitbox d'une potatoe
                 if not feeded:
                     self.dig(elements["terrain"][0])
+            if event.key == pygame.K_b:
+                queue_event(USE_ZONE_DAMAGE, {
+                            "center_coords": self.center_coords})
+                for zombie in elements["zombies"]:
+                    size_zone_damage = SIZE_PLAYER * 2
+                    zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
+                                              self.center_coords[1] -
+                                              size_zone_damage,
+                                              size_zone_damage * 2 + 1, size_zone_damage * 2 + 1)
+
+                    if zone_damage.colliderect(zombie.hitbox_degats):
+                        zombie.health = -1
 
         elif event.type == pygame.KEYUP:
             for i in range(len(directions)):
@@ -273,11 +285,11 @@ class AutoPlayer(Player):
         self._health_bar.hide()
         self.update_moving_vector()
 
-    @property
+    @ property
     def speed(self):
         return 10
 
-    @property
+    @ property
     def moving_vector(self):
         return self.__moving_vector
 
