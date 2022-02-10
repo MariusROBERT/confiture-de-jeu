@@ -4,16 +4,20 @@ from random import randrange
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 from constantes import POTATO_LIFESPAN
 from lib.lib import load_image
-
+import enum
 default_pousse = None
 lockheed_martin_image = None
+
+class PotatoesCode(enum.Enum):
+    POTATO_DEFAULT = 0
+    POTATO_LOCKHEED_MARTIN = 1
 
 def init_terrain_textures():
     global default_pousse
     default_pousse = load_image("terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
     global lockheed_martin_image
-    lockheed_martin_image = default_pousse
-    #lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
+    #lockheed_martin_image = default_pousse
+    lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
 
 class Potatoes:
     def __init__(self):
@@ -64,7 +68,9 @@ class Potatoes:
     @property
     def pos_patate(self):
         return self.__pos_patate
-
+    @property
+    def code(self) -> int:
+        return PotatoesCode.POTATO_DEFAULT
     @property
     def coords(self) -> tuple:
         return self.pos_pousse
@@ -84,11 +90,13 @@ class Potatoes:
     def display(self, screen):
         
         screen.blit(default_pousse, self.pos_pousse)
-
+    
 class PotatoesLockheedMartin(Potatoes):
     def __init__(self):
         super().__init__()
-    
+    @property
+    def code(self) -> int:
+        return PotatoesCode.POTATO_LOCKHEED_MARTIN
     def display(self, screen):
         
         screen.blit(lockheed_martin_image, self.pos_pousse)

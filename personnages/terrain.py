@@ -72,7 +72,7 @@ class Terrain:
     def potatoes_hitbox(self) -> list:
         pos_patates = [x.get_pos_patate() for x in self.potatoes]
 
-    def harvrest(self, coords: tuple) -> bool:
+    def harvrest(self, coords: tuple) -> str:
         coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
                       coords[1] // CASE_SIZE * CASE_SIZE)
         self.trous.append(
@@ -82,9 +82,9 @@ class Terrain:
             if coords[0] - CASE_SIZE < pos_patate[0] < coords[0] + CASE_SIZE:
                 if coords[1] - CASE_SIZE < pos_patate[1] < coords[1] + CASE_SIZE:
                     self.potatoes.remove(patate)
-                    return "potato"
+                    return patate.code
 
-        return "rien"
+        return None
 
     def event_manager(self, event: pygame.event.Event, elements):
         if event.type == PLAYER_WALKING:

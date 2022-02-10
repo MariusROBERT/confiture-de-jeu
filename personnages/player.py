@@ -16,7 +16,14 @@ from managers.sound_manager import PLAYER_DEAD_EVENT
 directions = ["up", "down", "left", "right", "up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
         pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
+mini_potatoes_images = []
 
+def init_mini_potatoes_images():
+    global mini_potatoes_images
+    for i in range(2):
+        mini_potatoes_images.append(load_image(
+            "/player/autre/potatoemini{}.png".format(i), (20, 20)))
+        
 
 class Player(Animated):
     def __init__(self):
@@ -26,9 +33,7 @@ class Player(Animated):
 
         self._current_animation = "walk"
 
-        self.potatoe_mini = load_image(
-            "/player/autre/potatoemini.png", (20, 20))
-
+        init_mini_potatoes_images()
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (WIDTH / 2, HEIGHT / 2)
 
@@ -136,8 +141,8 @@ class Player(Animated):
         self.digging = True
         queue_event(DIG)
         found = terrain.harvrest(self.center_coords)
-        if found == "potato" and len(self.inventory_potatoes) < 5:
-            self.inventory_potatoes.append("potatoe")
+        if found is not None and len(self.inventory_potatoes) < 5:
+            self.inventory_potatoes.append(found)
             queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
             if len(self.inventory_potatoes) == 5:
@@ -263,11 +268,11 @@ class Player(Animated):
 
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
-
-        for i in range(len(self.inventory_potatoes)):
-            screen.blit(
-                self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
-
+        i = 0
+        for potato_code in self.inventory_potatoes:
+            screen.blit(mini_potatoes_images[potato_code.value], (self.coords[0] + i * 20, self.coords[1] - 20))
+            i+=1
+            print(potato_code.value)
         self._health_bar.display(screen)
 
 
