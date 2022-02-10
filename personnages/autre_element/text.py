@@ -18,7 +18,7 @@ class Text ():
         self.__floating_effect = floating_effect
         self.__curent_frame_counter = 0
         self.__max_grow = max_grow
-        self.__nb_frame = 1000
+        self.__nb_frame = 50
         self.__font_path = font_path
         self.__size = size
         self.__curent_dimensions = (0,0)
