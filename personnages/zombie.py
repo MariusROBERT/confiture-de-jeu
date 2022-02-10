@@ -55,7 +55,8 @@ class Zombie(Animated):
     @health.setter
     def health(self, hp) -> None:
         if hp < self.health:
-            queue_event(DAMAGED_ZOMBIE, {"coords": self.center_coords})
+            queue_event(DAMAGED_ZOMBIE, {
+                        "center_coords": self.center_coords, "coords": self.coords})
         if hp <= 0:
             self.__health = 0
             self.dead = True

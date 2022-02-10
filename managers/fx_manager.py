@@ -59,7 +59,6 @@ class Fx_manager:
         self.particles = []
 
     def event_manager(self, event: pygame.event.Event, elements):
-
         if event.type == DAMAGE_EVENT:
             # return
             self.damage_screen_on = True
@@ -91,6 +90,9 @@ class Fx_manager:
         pass
 
     def display(self, screen: pygame.Surface):
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))
+
         if self.damage_screen_on:
 
             transparence = 255 - \
