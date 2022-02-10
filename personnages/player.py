@@ -12,8 +12,9 @@ from .autre_element.health_bar import HealthBar
 import managers.sound_manager as sound_manager
 from managers.sound_manager import PLAYER_DEAD_EVENT
 
-directions = ["up", "down", "left", "right"]
-keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d]
+directions = ["up", "down", "left", "right", "up", "down", "left", "right"]
+keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
+        pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
 
 
 class Player(Animated):
@@ -172,7 +173,7 @@ class Player(Animated):
                     self.dig(elements["terrain"][0])
 
         elif event.type == pygame.KEYUP:
-            for i in range(4):
+            for i in range(len(directions)):
                 if event.key == keys[i]:
                     if directions[i] in self.direction:
                         self.direction.remove(directions[i])
