@@ -67,9 +67,9 @@ def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
 
-def refresh_score(time):
+def refresh_score(score):
     font = pygame.font.SysFont("Arial", 20)
-    text = font.render(time, True, (255, 255, 255))
+    text = font.render(score, True, (255, 255, 255))
     return text
 
 
