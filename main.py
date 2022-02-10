@@ -128,6 +128,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
         player.move(event, elements)
 
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
+    sound_manager.sound_base(pygame)
     fx_manager.event_manager(event, elements)
     terrain.event_manager(event, elements)
 

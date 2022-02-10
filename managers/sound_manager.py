@@ -26,12 +26,19 @@ out_of_food_sound = get_sound("out_of_food")
 dig_sound = get_sound("dig")
 hurt_sound = get_sound("hurt")
 player_dead_sound = get_sound("player_dead")
+base_sound = get_sound("base")
 
+i=1
+def sound_base(pygame):
+    global i
+    if i ==1:
+        base_sound.play().set_volume(0.1)
+        i = 2
 
 def sound_manager(pygame, event: pygame.event.Event):
     try:
         if event.type == COLLECT_POTATOE:
-            collect_sound.play().set_volume(0.3)
+            collect_sound.play()
         elif event.type == DEAD_ZOMBIE:
             dead_sound.play().set_volume(0.06)
         elif event.type == FEEDED:
@@ -50,3 +57,5 @@ def sound_manager(pygame, event: pygame.event.Event):
         if SHOW_HITBOX:
             print("{} : {}".format(event.type, e))
         pass
+
+
