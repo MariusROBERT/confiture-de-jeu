@@ -6,7 +6,7 @@ from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, D
 from managers.events_const import FEEDED, OUT_OF_FOOD
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
-from .autre_element.fries import Fries
+from .autre_element.fries import Fries, Frissile
 import numpy as np
 import managers.sound_manager as sound_manager
 
@@ -130,7 +130,7 @@ class Pig(Animated):
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
             self.health -= AUTO_DAMAGE_SPEED
-            return [Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
+            return [Frissile(self.center_coords, fries_vector, intersection_box=intersection_box, target=self.target)]
         else:
             return []
 

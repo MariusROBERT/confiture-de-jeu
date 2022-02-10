@@ -132,8 +132,8 @@ class Zombie(Animated):
             image = self.sprite
             transparence = 255 - (self.time_since_dead *
                                   255 // DEAD_BODY_LIFESPAN)
-            image.fill((255, 255, 255, transparence),
-                       special_flags=pygame.BLEND_RGBA_MULT)
+            #image.fill((255, 255, 255, transparence),
+            #           special_flags=pygame.BLEND_RGBA_MULT)
             screen.blit(image, self.__coords)
         else:
 

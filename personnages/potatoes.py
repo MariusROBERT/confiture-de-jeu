@@ -12,7 +12,8 @@ def init_terrain_textures():
     global default_pousse
     default_pousse = load_image("terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
     global lockheed_martin_image
-    lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
+    lockheed_martin_image = default_pousse
+    #lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
 
 class Potatoes:
     def __init__(self):
