@@ -8,7 +8,7 @@ from lib.lib import *
 from lib.player import dir_to_angle
 from managers.events_const import COLLECT_POTATOE, DIG, INVALID_ACTION, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
-from personnages.potatoes import PotatoesCode
+from personnages.potatoes import POTATO_ZONE_DAMAGE, PotatoesCode
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
 import managers.sound_manager as sound_manager
@@ -19,12 +19,14 @@ keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
         pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
 mini_potatoes_images = []
 
+
 def init_mini_potatoes_images():
     global mini_potatoes_images
     for i in range(3):
         mini_potatoes_images.append(load_image(
             "/player/autre/potatoemini{}.png".format(i), (20, 20)))
         print(i)
+
 
 class Player(Animated):
     def __init__(self):
@@ -81,6 +83,7 @@ class Player(Animated):
 
         self._health_bar.health = self.__health
         self._health_bar.update()
+
     @property
     def latest_movement_vector(self):
         return self._latest_movement_vector
@@ -144,14 +147,18 @@ class Player(Animated):
         self.digging = True
         queue_event(DIG)
         found = terrain.harvrest(self.center_coords)
-        if found is not None and len(self.inventory_potatoes) < 5:
-            self.inventory_potatoes.append(found)
+        if found >= 0 and len(self.inventory_potatoes) < 5:
+            # self.inventory_potatoes.append(found)
             queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
-            if found != PotatoesCode.POTATO_ZONE_DAMAGE:
-                if len(self.inventory_potatoes) == 5:
+            if found != PotatoesCode.POTATO_ZONE_DAMAGE.value:
+                if len(self.inventory_potatoes) >= 5:
                     self.health += 5
-            else:
+                else:
+                    self.inventory_potatoes.append(found)
+
+            elif found == PotatoesCode.POTATO_ZONE_DAMAGE.value:
+                print("wesh")
                 if len(self.inventory_power_ups) < 3:
                     self.inventory_power_ups.append(found)
 
@@ -282,9 +289,14 @@ class Player(Animated):
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
         i = 0
         for potato_code in self.inventory_potatoes:
-            screen.blit(mini_potatoes_images[potato_code], (self.coords[0] + i * 20, self.coords[1] - 20))
-            i+=1
-            
+            screen.blit(mini_potatoes_images[potato_code],
+                        (self.coords[0] + i * 20, self.coords[1] - 20))
+            i += 1
+
+        for i in range(len(self.inventory_power_ups)):
+            screen.blit(
+                mini_potatoes_images[PotatoesCode.POTATO_ZONE_DAMAGE.value], (self.coords[0] + i * 20, self.coords[1] - (20 * 2) - 5))
+
         self._health_bar.display(screen)
 
 
@@ -361,11 +373,11 @@ class AutoPlayer(Player):
             target_coords = (WIDTH/2, HEIGHT/2)
             new_vector = vector_to_target(
                 target_coords, self.center_coords, self.speed)
-       
+
         if new_vector is None:
-            new_vector = (0.0000001,0.00000001)
+            new_vector = (0.0000001, 0.00000001)
         self.__wanted_moving_vector = new_vector
-        #self.__moving_vector = new_vector
+        # self.__moving_vector = new_vector
         self.__moving_vector = intermediate_vector(
             old_vector, new_vector, max_angle=self.__max_angle, norm=self.speed)
 
@@ -380,16 +392,16 @@ class AutoPlayer(Player):
             elements["zombies"], self.center_coords)
         self.__nearest_potatoe = nearest_zombie(
             terrain.potatoes, self.center_coords)
-        
+
         if self.__moving_vector is not None:
             self.coords = (self.coords[0] + self.moving_vector[0],
-                        self.coords[1] + self.moving_vector[1])
+                           self.coords[1] + self.moving_vector[1])
         terrain = elements["terrain"][0]
-        
-        
+
     def tick_update_100(self, elements):
         super().tick_update_100(elements)
         self.update_moving_vector()
+
     def display(self, screen):
         angle = 0
         if self.__moving_vector is not None:
@@ -411,4 +423,3 @@ class AutoPlayer(Player):
 
     def tick_update_fast(self, elements):
         terrain = elements["terrain"][0]
-        

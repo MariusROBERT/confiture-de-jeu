@@ -55,9 +55,8 @@ class Terrain:
                     self.potatoes.append(
                         Potatoes(
                             PotatoesCode.POTATO_LOCKHEED_MARTIN))
-                else:
-                    self.potatoes.append(
-                        Potatoes(PotatoesCode.POTATO_ZONE_DAMAGE))
+            if random.random() <= 0.08:
+                self.potatoes.append(Potatoes(PotatoesCode.POTATO_ZONE_DAMAGE))
             self.potatoes.append(Potatoes())
 
         for potato in self.potatoes:
@@ -87,7 +86,7 @@ class Terrain:
                     self.potatoes.remove(patate)
                     return patate.code
 
-        return None
+        return -1
 
     def event_manager(self, event: pygame.event.Event, elements):
         if event.type == PLAYER_WALKING:

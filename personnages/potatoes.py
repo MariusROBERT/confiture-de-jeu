@@ -7,23 +7,31 @@ from lib.lib import load_image
 import enum
 
 
+POTATO_ZONE_DAMAGE = 2
+
 
 class PotatoesCode(enum.Enum):
     POTATO_DEFAULT = 0
     POTATO_LOCKHEED_MARTIN = 1
-    POTATO_ZONE_DAMAGE = 2
+    POTATO_ZONE_DAMAGE = POTATO_ZONE_DAMAGE
+
+
 default_pousse = None
 lockheed_martin_image = None
 power_up = None
 potatoes_textures = []
+
+
 def init_terrain_textures():
     global default_pousse
     default_pousse = load_image("terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
     global lockheed_martin_image
     #lockheed_martin_image = default_pousse
-    lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
+    lockheed_martin_image = load_image(
+        "terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
     global power_up
-    power_up = load_image("player/autre/potatoemini2.png", (CASE_SIZE, CASE_SIZE))
+    power_up = load_image("player/autre/potatoemini2.png",
+                          (CASE_SIZE, CASE_SIZE))
     #lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
     global potatoes_textures
     potatoes_textures = [
@@ -31,6 +39,7 @@ def init_terrain_textures():
         lockheed_martin_image,
         power_up
     ]
+
 
 class Potatoes:
     def __init__(self, code=PotatoesCode.POTATO_DEFAULT):
@@ -84,9 +93,11 @@ class Potatoes:
     @property
     def pos_patate(self):
         return self.__pos_patate
+
     @property
     def code(self) -> int:
         return self.__code.value
+
     @property
     def coords(self) -> tuple:
         return self.pos_pousse
@@ -104,6 +115,5 @@ class Potatoes:
         return pos_patate
 
     def display(self, screen):
-        
+
         screen.blit(potatoes_textures[self.code], self.pos_pousse)
-    
