@@ -28,6 +28,7 @@ class HealthBar:
         
         self.color = color
         self.colored_rect = None
+        self.__hide = False
         self.move_to(coords)
         self.update()
         self.__auto_hide = auto_hide
@@ -63,7 +64,11 @@ class HealthBar:
         self.update()
         
     def display(self, screen : pygame.Surface):
-        if not (self.__auto_hide and self.health == 100):
+        if not (self.__auto_hide and self.health == 100) and not self.__hide:
             pygame.draw.rect(screen, (0,0,0), self.main_rect)
             pygame.draw.rect(screen, self.color, self.colored_rect)
 
+    def hide(self):
+        self.__hide = True
+    def show(self):
+        self.__hide = False
