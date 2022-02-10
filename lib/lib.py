@@ -26,16 +26,20 @@ def load_animation(path: str, size: tuple) -> list:
 
     return [load_image(f"{path}/{file}", size) for file in filtered_folder_content]
 
+def angle_from_coordinates(x1: int, y1: int, x2: int, y2: int) -> int:
+    """
+    Calculate the angle between two coordinates
+    :param x1: x coordinate of the first point
+    :param y1: y coordinate of the first point
+    :param x2: x coordinate of the second point
+    :param y2: y coordinate of the second point
+    :return: angle in degrees
+    """
+    return math.degrees(math.atan2(y2 - y1, x2 - x1))
+
 
 def get_angle_between_vectors(v1: tuple, v2: tuple) -> float:
-    dot_product = np.dot(v1, v2)
-    cos = dot_product / (np.linalg.norm(v2) * np.linalg.norm(v1))
-    if cos >= 1.0:
-        cos = 1.0
-    elif cos <= -1.0:
-        cos = -1.0
-    angle = np.arccos(cos)
-    return math.degrees(angle)
+    return angle_from_coordinates(v1[0], v1[1], v2[0], v2[1])
 
 
 def get_vector_angle(v1: tuple) -> float:
@@ -139,6 +143,8 @@ def np_to_tuple(a):
 
 def normalize_vector(vector: tuple) -> tuple:
     norm = math.sqrt(vector[0]**2 + vector[1]**2)
+    if norm == 0:
+        return 0,0
     return vector[0]/norm, vector[1]/norm
 
 
@@ -163,6 +169,7 @@ def vector_to_target(
     """
     raw_vector = (moving_object_coords[0] - interceptor_origin_coords[0],
                   moving_object_coords[1] - interceptor_origin_coords[1])
+
     normalized_vector = normalize_vector(raw_vector)
     np_array = np.array(normalized_vector)
     normed_array = np_array * interceptor_vector_norm
@@ -191,24 +198,65 @@ def g_angle(v1, v2):
         print(cos)
         raise ValueError
 
+def vector_from_angle_magnitude(angle : int, magnitude : float) -> tuple:
+    u = np.cos(np.radians(angle))
+    v = np.sin(np.radians(angle))
+    
+    arr = np.array((u, v))*magnitude
 
-def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = None):
-    angle = get_angle_between_vectors(v1, v2)
-    angle = angle
-    if angle <= 180:
-        if angle > max_angle:
-            angle = max_angle
+    return np_to_tuple(arr)
+
+def rotate_vector( vector, angle):
+    """Rotate the vector by the given angle in degrees"""
+    x = vector[0]
+    y = vector[1]
+    rad = math.radians(angle)
+    cos = math.cos(rad)
+    sin = math.sin(rad)
+    return (x * cos - y * sin, x * sin + y * cos)
+    
+def intermediate_vector(v1 : tuple, v2 : tuple, max_angle : int = 90, norm : int = None):
+    
+    
+    angle = get_angle_between_vectors((0,1), v1)
+    init_angle_2 = get_angle_between_vectors((0,1), v2)
+    init_angle = angle
+    init_tilt = init_angle_2 - init_angle
+    tilt = init_tilt
+    if norm is None:
+        norm = np.linalg.norm(v1)
+    if tilt < 0:
+        if tilt < -max_angle:
+            tilt = -max_angle
+        
     else:
-        if angle > 360 - max_angle:
-            angle = 360 - max_angle
-    rad_angle = math.radians(angle)
-    cs = math.cos(rad_angle)
-    sn = math.sin(rad_angle)
-    u = v1[0] * cs - v1[1] * sn
-    v = v1[0] * sn + v1[1] * cs
-    v3 = np.array(normalize_vector((u, v))) * 3
-    return np_to_tuple(v3)
+        if tilt > max_angle:
+            tilt = max_angle
+    
+    angle += tilt
+    
+    
+    
+    init_tilt = round(init_tilt, 2)
+    tilt = round(tilt, 2)
+    init_angle = round(init_angle, 2)
+    angle = round(angle, 2)
+    #v3 = vector_from_angle_magnitude(angle, norm)
+    v3 = rotate_vector(v1, init_tilt)
+    effective_angle = round(get_angle_between_vectors((0,1), v3), 2)
+    #print("ANG init_tilt:{}  tilt:{} init_angle_2:{} init_angle:{} -> angle:{} -> effective_angle:{}".format(init_tilt, tilt, init_angle_2, init_angle, angle, effective_angle) )
+    
+    return v3[0], v3[1]
 
-
-def distance_between(coord1: tuple, coords2: tuple) -> float:
+def distance_between(coord1 : tuple, coords2:tuple) -> float:
     return math.sqrt((coord1[0] - coords2[0])**2 + (coord1[1] - coords2[1])**2)
+
+
+def create_transparent_animation(image: pygame.Surface):
+    result = []
+    for i in range(0, 256):
+        t_image = image.copy()
+        t_image.fill((255, 255, 255, i),
+                     special_flags=pygame.BLEND_RGBA_MULT)
+        result.append(t_image)
+    return result

@@ -2,6 +2,7 @@ import pygame
 from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from constantes import POINTS_PER_ZOMBIE_HIT
 from lib.lib import load_animation, load_image
+from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE
 from managers.sound_manager import COLLECT_POTATOE
 
@@ -47,7 +48,8 @@ class Particle:
 
 class Fx_manager:
     def __init__(self):
-        self.damage_screen = load_image("red.png", (WIDTH, HEIGHT))
+        self.damage_screen = create_transparent_animation(
+            load_image("red.png", (WIDTH, HEIGHT)))
         self.damage_screen_old = 0
         self.damage_screen_on = False
 
@@ -60,8 +62,8 @@ class Fx_manager:
         self.particles = []
 
     def event_manager(self, event: pygame.event.Event, elements):
-
         if event.type == DAMAGE_EVENT:
+            # return
             self.damage_screen_on = True
         elif event.type == CHANGE_NIGHT:
             self.nuit_screen_on = not self.nuit_screen_on
@@ -93,19 +95,15 @@ class Fx_manager:
         pass
 
     def display(self, screen: pygame.Surface):
+        if self.nuit_screen_on:
+            screen.blit(self.nuit_screen, (0, 0))
+
         if self.damage_screen_on:
-            # ( A optimiser !!! ) (( si besoin mdr ))
-            # dm_screen = self.damage_screen.copy()
 
-            # transparence = 255 - \
-            #     (self.damage_screen_old * 255 // DAMAGE_DURATION)
-            # dm_screen.fill((255, 255, 255, transparence),
-            #                special_flags=pygame.BLEND_RGBA_MULT)
+            transparence = 255 - \
+                (self.damage_screen_old * 255 // DAMAGE_DURATION)
 
-            self.damage_screen.fill((255, 255, 255, 100),
-                                    special_flags=pygame.BLEND_RGBA_MULT)
-
-            screen.blit(self.damage_screen, (0, 0))
+            screen.blit(self.damage_screen[transparence], (0, 0))
 
         for particle in self.particles:
             screen.blit(particle.frame, particle.coords)

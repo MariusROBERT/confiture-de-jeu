@@ -25,6 +25,16 @@ pygame.init()
 screen = pygame.display.set_mode(SIZE)
 clock = pygame.time.Clock()
 
+# FPS STUFF
+font = pygame.font.SysFont("Arial", 18)
+
+
+def update_fps():
+    fps = str(int(clock.get_fps()))
+    fps_text = font.render(fps, 1, pygame.Color("coral"))
+    return fps_text
+
+
 player = Player()
 # patate=Potatoe()
 terrain = Terrain()
@@ -66,10 +76,12 @@ pygame.time.set_timer(TICKEVENT10, 5)
 def clear_screen(screen: pygame.Surface):
     screen.fill((70, 166, 0))
 
+
 def add_score(points):
     global score_surface, score
     score += POINTS_PER_ZOMBIE_HIT
     score_surface = refresh_score("SCORE : {}".format(score))
+
 
 def refresh_score(score):
     font = pygame.font.SysFont("Arial", 20)
@@ -159,6 +171,7 @@ def display_loop():
         for element in elements[key]:
             element.display(screen)
     display_score(screen)
+    screen.blit(update_fps(), (10, 0))
 
 
 user_events = [

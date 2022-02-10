@@ -19,7 +19,7 @@ class Fries:
         else:
             sprite = load_image("frite.png", size)
 
-        fries_angle = get_angle_between_vectors((0, 1), movement_vector)
+        fries_angle = g_angle((0, 1), movement_vector)
         if movement_vector[0] < 0:
             fries_angle = 180 - fries_angle
 
@@ -38,8 +38,8 @@ class Fries:
 
     @property
     def damage(self) -> int:
-        print("damage", self.__damage)
-        return self.__damage + (self.age/1.7)
+        value = self.__damage + (self.age/1.7)
+        return value
 
     @damage.setter
     def damage(self, value: int):

@@ -3,14 +3,14 @@ import pygame
 
 class HealthBar:
 
-    def __init__(self,
-                 coords: tuple,
-                 max: int = 100,
-                 value: int = 100,
-                 size: tuple = (100, 20),
-                 color: tuple = (0, 255, 0),
-                 border_size: int = 4,
-                 auto_hide: bool = False):
+    def __init__(self, 
+                 coords : tuple, 
+                 max : int = 100, 
+                 value : int = 100, 
+                 size : tuple = (100, 20), 
+                 color : tuple = (0, 255, 0),
+                 border_size : int = 4,
+                 auto_hide : bool = False):
         """Init HealthBar object
 
         Args:
@@ -25,14 +25,12 @@ class HealthBar:
         self.value = value
         self.size = size
         self.border_size = border_size
-
-        self.main_rect = self.colored_rect_coords = self.colored_rect_max_size = None
+        
         self.color = color
         self.colored_rect = None
         self.move_to(coords)
         self.update()
         self.__auto_hide = auto_hide
-
     @property
     def health(self) -> int:
         return self.value
@@ -44,28 +42,28 @@ class HealthBar:
         elif value < 0:
             value = 0
         self.value = value
-        self.update()
-
+        
+    
     def update(self):
         self.colored_rect = pygame.Rect(
-            self.colored_rect_coords,
-            (self.value / self.max * self.colored_rect_max_size[0], self.colored_rect_max_size[1]))
+            self.colored_rect_coords, 
+            (self.value / self.max * self.colored_rect_max_size[0], self.colored_rect_max_size[1]) )
         self.main_rect = pygame.Rect(self.coords, self.size)
-
     def move_to(self, coords):
-
+        
         self.colored_rect_coords = (
             coords[0] + self.border_size,
             coords[1] + self.border_size
         )
         self.colored_rect_max_size = (
-            self.size[0] - 2 * self.border_size,
-            self.size[1] - 2 * self.border_size
+            self.size[0] - 2*self.border_size,
+            self.size[1] - 2*self.border_size
         )
         self.coords = coords
         self.update()
-
-    def display(self, screen: pygame.Surface):
+        
+    def display(self, screen : pygame.Surface):
         if not (self.__auto_hide and self.health == 100):
-            pygame.draw.rect(screen, (0, 0, 0), self.main_rect)
+            pygame.draw.rect(screen, (0,0,0), self.main_rect)
             pygame.draw.rect(screen, self.color, self.colored_rect)
+

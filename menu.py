@@ -6,8 +6,10 @@ pygame.font.init() # you have to call this at the start,
 from personnages.autre_element.text import Text
 from constantes import WIDTH, HEIGHT, FPS
 from personnages.terrain import Terrain
-
-
+from personnages.player import AutoPlayer
+from personnages.zombie import Zombie
+FAST_TICK = pygame.USEREVENT + 5
+pygame.time.set_timer(FAST_TICK, 20)
 def menu_event_loop(screen : pygame.display, clock, elements, user_events):
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -19,22 +21,37 @@ def menu_event_loop(screen : pygame.display, clock, elements, user_events):
                     sys.exit()
                 if event.key == pygame.K_RETURN:
                     return "Play"
-            if event.type == user_events[0]:
-                for element in elements:
-                    try:
-                        element.tick_event_100()
-                    except AttributeError:
-                        pass   
-            
+            if event.type == FAST_TICK:
+                for key in elements.keys():
+                    for element in elements[key]:
+                        try:
+                            element.tick_update_100(elements)
+                        except AttributeError:
+                            pass
+            if event.type == user_events[len(user_events) - 1]:
+                for key in elements.keys():
+                    for element in elements[key]:
+                        try:
+                            element.tick_update()
+                        except AttributeError:
+                            pass
+                        except TypeError:
+                            element.tick_update(elements)
 
 def menu_display_loop(screen : pygame.display, elements):
-    for element in elements:
-        element.display(screen)
+    for key in elements.keys():
+        for element in elements[key]:
+            element.display(screen)
 def init_menu_elements():
-    menu_elements = []
+    menu_elements = {}
     terrain = Terrain()
-    menu_elements.append(terrain)
-    
+    menu_elements["terrain"] = [terrain]
+    player = AutoPlayer()
+    menu_elements["player"] = [player]
+    menu_elements["text"] = []
+    menu_elements["fries"] = []
+    menu_elements["pigs"] = []
+    menu_elements["zombies"] = [Zombie() for i in range(3)]
     main_title = Text(
         (WIDTH//2, 100),
         "FRIES NIGHT AT PIGGIES",
@@ -43,16 +60,17 @@ def init_menu_elements():
         centerd_around_coords=True,
         floating_effect=True
     )
-    menu_elements.append(main_title)
+    menu_elements["text"].append(main_title)
     
     hint = Text((WIDTH//2, 180),"Appuyez sur Entree pour lancer une partie", "menu.ttf", size=15, centerd_around_coords=True, color=(255, 255,255))
-    menu_elements.append(hint)
+    menu_elements["text"].append(hint)
     
     return menu_elements
 
-def menu_logic_loop(menu_elements):
-    for element in menu_elements:
-        element.update(None)
+def menu_logic_loop(elements):
+    for key in elements.keys():
+        for element in elements[key]:
+            element.update(elements)
     
         
 def main_menu(screen : pygame.display, clock, user_events):
