@@ -34,7 +34,8 @@ elements = {}
 counter = 0
 score = 0
 night_manager = None
-score_surface = None
+score_surface = load_font("menu.ttf", 20).render("SCORE : 50", True, (255, 255, 255))
+screen.blit(score_surface, (screen.get_width() / 2 - score_surface.get_width() / 2, 10))
 r_code = ""
 
 TICKEVENT = pygame.USEREVENT + 1
@@ -64,7 +65,7 @@ user_events = [
 
 def update_fps():
     fps = str(int(clock.get_fps()))
-    fps_text = font.render(fps, 1, pygame.Color("coral"))
+    fps_text = font.render(fps, True, pygame.Color("coral"))
     return fps_text
 
 
@@ -114,7 +115,7 @@ def add_score(points):
 
 
 def refresh_score(score):
-    font = pygame.font.SysFont("Arial", 20)
+    font = load_font("menu.ttf", 15)
     text = font.render(score, True, (255, 255, 255))
     return text
 
@@ -222,19 +223,20 @@ def display_loop(elements):
     if not elements["player"][0].alive:
         # Décommenter pour mettre un écran noir en fond
         # screen.fill((0, 0, 0))
-        game_over = pygame.font.SysFont("Arial", 90).render("Game Over", True,
+        game_over = pygame.font.SysFont("Arial", 100).render("Game Over", True,
                                                             pygame.Color(255, 255, 255))
-        affichage_score = pygame.font.SysFont("Arial", 30).render("Score final : {}".format(score), True,
+        affichage_score = load_font("menu.ttf", 20).render("Score final : {}".format(score), True,
                                                                   pygame.Color(255, 255, 255))
         # TODO: Use Datapack's font
         pos_game_over = (WIDTH / 2 - game_over.get_width() / 2,
-                         HEIGHT / 2 - (game_over.get_height() + affichage_score.get_height() + 10) / 2)
+                         HEIGHT / 2 - (game_over.get_height() + affichage_score.get_height() + 20) / 2)
         screen.blit(game_over, pos_game_over)
         screen.blit(affichage_score, (
             pos_game_over[0] + game_over.get_width() / 2 - affichage_score.get_width() / 2,
-            pos_game_over[1] + game_over.get_height() + 10))
+            pos_game_over[1] + game_over.get_height() + 20))
 
-    display_score(screen)
+    else:
+        display_score(screen)
     screen.blit(update_fps(), (10, 0))
 
 
@@ -262,7 +264,8 @@ def update_bar(value):
 elements, night_manager, score_surface = init_game(update_bar)
 # worker_main_menu.join()
 r_code = main_menu()
-if True:
+
+if __name__ == "__main__":
 
     while 1:
         clear_screen(screen)
