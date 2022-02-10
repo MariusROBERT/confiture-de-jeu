@@ -268,7 +268,7 @@ class AutoPlayer(Player):
         self.update_moving_vector()
     @property
     def speed(self):
-        return 5
+        return 10
     @property
     def moving_vector(self):
         return self.__moving_vector
@@ -339,11 +339,7 @@ class AutoPlayer(Player):
         self.coords = (self.coords[0] + self.moving_vector[0], self.coords[1] + self.moving_vector[1])
         
     def tick_update_100(self, elements):
-        terrain = elements["terrain"][0]
-        self.__nearest_zombie = nearest_zombie(elements["zombies"], self.center_coords)
-        self.__nearest_potatoe = nearest_zombie(terrain.potatoes, self.center_coords)
         
-        self.update_moving_vector()
         super().tick_update_100(elements)
         
         
@@ -365,3 +361,10 @@ class AutoPlayer(Player):
         terrain = elements["terrain"][0]
         self.update_mode()
     
+    def tick_update_fast(self, elements):
+        terrain = elements["terrain"][0]
+        terrain = elements["terrain"][0]
+        self.__nearest_zombie = nearest_zombie(elements["zombies"], self.center_coords)
+        self.__nearest_potatoe = nearest_zombie(terrain.potatoes, self.center_coords)
+        
+        self.update_moving_vector()
