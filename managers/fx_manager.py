@@ -1,5 +1,5 @@
 import pygame
-from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT, NIGHT_FADER_FRAME
 from constantes import POINTS_PER_ZOMBIE_HIT
 from lib.lib import circle_surf, load_animation, load_image
 from lib.lib import create_transparent_animation, load_animation, load_image
@@ -37,7 +37,7 @@ class Particle:
         self.on = True
         self._frame_number = 0
         self.old = 0
-
+        
         if lifespan is not None:
             self.lifespan = lifespan
         else:
@@ -75,7 +75,8 @@ class Fx_manager:
         self.nuit_screen.fill((0, 0, 0))
         self.nuit_screen.set_alpha(OPACITY_NIGHT)
         self.nuit_screen_on = False
-
+        self.night_fader_index = NIGHT_FADER_FRAME
+        
         # Explosion
         self.particles = []
 
@@ -85,6 +86,7 @@ class Fx_manager:
             self.damage_screen_on = True
         elif event.type == CHANGE_NIGHT:
             self.nuit_screen_on = not self.nuit_screen_on
+            self.night_fader_index = NIGHT_FADER_FRAME
         elif event.type == USE_ZONE_DAMAGE:
             pos = (event.center_coords[0] - SIZE_EXPLOSION[0]/2,
                    event.center_coords[1] - SIZE_EXPLOSION[1]/2)
@@ -105,7 +107,13 @@ class Fx_manager:
             particle.frame_number += 1
             if not particle.on:
                 self.particles.remove(particle)
-
+        if self.night_fader_index > 0:
+            self.night_fader_index -= 1
+            coef = self.night_fader_index / NIGHT_FADER_FRAME
+            if not self.nuit_screen_on:
+                self.nuit_screen.set_alpha(OPACITY_NIGHT*coef)
+            else:
+                self.nuit_screen.set_alpha(OPACITY_NIGHT*(1-coef))
     def tick_update_100(self, elements):
         if self.damage_screen_on:
             self.damage_screen_old += 1
@@ -134,7 +142,7 @@ class Fx_manager:
             intensity = 50
             screen.blit(circle_surf(radius, (intensity, intensity, intensity)),
                         (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
-            screen.blit(self.nuit_screen, (0, 0))
+        screen.blit(self.nuit_screen, (0, 0))
 
         # if self.nuit_screen_on:
         #     screen.blit(circle_surf(radius, (20, 20, 60)),
