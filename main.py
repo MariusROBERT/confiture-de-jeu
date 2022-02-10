@@ -185,12 +185,12 @@ def display_loop(elements):
     screen.blit(update_fps(), (10, 0))
 
 
-worker_main_menu = Thread(target=main_menu)
+#worker_main_menu = Thread(target=main_menu)
 
-worker_main_menu.start()
+#worker_main_menu.start()
 elements, night_manager, score_surface = init_game()
-worker_main_menu.join()
-
+#worker_main_menu.join()
+r_code = main_menu()
 if True:
     
     while 1:
