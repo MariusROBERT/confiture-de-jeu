@@ -4,7 +4,7 @@ from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import PLAYER_WALKING
 from managers.fx_manager import DUST_ANIMATION, Particle
 from personnages.potatoes import Potatoes, PotatoesCode
-from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
+from constantes import SPECIAL_FERTILITY, NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
 def create_terrain_image(size, images):
@@ -36,7 +36,7 @@ class Terrain:
         self.potatoes = []
         self.trous = []
         self.particles = []
-        self.super_fertility = 0.4
+        self.super_fertility = SPECIAL_FERTILITY
         self.nbcase = (NB_ELEM_X + 1) * (NB_ELEM_Y + 1)
 
         for x in range(3):

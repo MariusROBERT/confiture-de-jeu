@@ -4,7 +4,7 @@ from lib.text import rect_size_floating
 class Text ():
     def __init__(self, coords : tuple,
                  text : str = "Sample", 
-                 font_path : str = "default.ttf",
+                 font_path : str = "menu.ttf",
                  size : int = 2000,
                  color : tuple = (0,0,0),
                  centerd_around_coords : bool = False,
