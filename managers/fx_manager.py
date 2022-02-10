@@ -129,11 +129,13 @@ class Fx_manager:
             screen.blit(particle.frame, particle.coords)
 
         if self.nuit_screen_on:
+            player = elements["player"][0]
+            radius = player.size[0] * 5
+            intensity = 50
+            screen.blit(circle_surf(radius, (intensity, intensity, intensity)),
+                        (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
             screen.blit(self.nuit_screen, (0, 0))
 
-        player = elements["player"][0]
-        radius = player.size[0] * 5
-
-        if self.nuit_screen_on:
-            screen.blit(circle_surf(radius, (20, 20, 60)),
-                        (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
+        # if self.nuit_screen_on:
+        #     screen.blit(circle_surf(radius, (20, 20, 60)),
+        #                 (player.center_coords[0] - radius, player.center_coords[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
