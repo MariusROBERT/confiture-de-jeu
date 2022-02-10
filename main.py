@@ -69,10 +69,9 @@ def update_fps():
 
 
 def init_game(health_bar):
-    
     player = Player()
     health_bar(10)
-# patate=Potatoe()
+    # patate=Potatoe()
     terrain = Terrain()
     health_bar(10)
     print("loaded terrain")
@@ -121,7 +120,8 @@ def refresh_score(score):
 
 
 def display_score(screen):
-    screen.blit(score_surface, (650, 10))
+    screen.blit(score_surface,
+                (screen.get_width() / 2 - score_surface.get_width() / 2, 10))
 
 
 def event_loop(event: pygame.event.Event, elements, night_manager, score_surface):
@@ -243,18 +243,21 @@ def display_loop(elements):
 # worker_main_menu.start()
 
 screen.fill((0, 0, 0))
-text = Text((WIDTH / 2, HEIGHT / 2 - 80), "Preparation du Ketchup", size=20, color=(255,255,255), centerd_around_coords=True)
-size = (WIDTH - 400 , 50)
-health = HealthBar((200, HEIGHT / 2 + 40),size=size, color=(255,30,30), value=0)
+text = Text((WIDTH / 2, HEIGHT / 2 - 80), "Preparation du Ketchup", size=20, color=(255, 255, 255),
+            centerd_around_coords=True)
+size = (WIDTH - 400, 50)
+health = HealthBar((200, HEIGHT / 2 + 40), size=size, color=(255, 30, 30), value=0)
 text.display(screen)
 health.display(screen)
 pygame.display.flip()
+
+
 def update_bar(value):
     health.health += value
     health.update()
     health.display(screen)
     pygame.display.flip()
-    
+
 
 elements, night_manager, score_surface = init_game(update_bar)
 # worker_main_menu.join()
