@@ -46,7 +46,7 @@ class Player(Animated):
         hp = PLAYER_MAX_HP
         new_health_bar = HealthBar(
             (50, 10), max=hp, value=hp, color=(159, 3, 1))
-        self.__health_bar = new_health_bar
+        self._health_bar = new_health_bar
         self.__health = hp
 
     @property
@@ -70,7 +70,7 @@ class Player(Animated):
         else:
             self.__health = hp
 
-        self.__health_bar.health = self.__health
+        self._health_bar.health = self.__health
 
     @property
     def alive(self) -> bool:
@@ -248,7 +248,7 @@ class Player(Animated):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 
-        self.__health_bar.display(screen)
+        self._health_bar.display(screen)
 
 MODE_Z_ESCAPE = 0
 MODE_POTATOES = 1
@@ -265,6 +265,7 @@ class AutoPlayer(Player):
         self.__vision = 250
         self.__safe_distance = 100
         self.__mode = MODE_MIDDLE
+        self._health_bar.hide()
         self.update_moving_vector()
     @property
     def speed(self):
