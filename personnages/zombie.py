@@ -2,7 +2,7 @@ import string
 import pygame
 from lib.lib import get_angle_between_vectors, np_to_tuple, queue_event, normalize_vector
 from lib.zombie import get_direction, get_target, randomCoords
-from managers.events_const import DEAD_ZOMBIE
+from managers.events_const import DEAD_ZOMBIE, DAMAGED_ZOMBIE
 from .autre_element.health_bar import HealthBar
 from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
     DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
@@ -54,6 +54,8 @@ class Zombie(Animated):
 
     @health.setter
     def health(self, hp) -> None:
+        if hp < self.health:
+            queue_event(DAMAGED_ZOMBIE)
         if hp <= 0:
             self.__health = 0
             self.dead = True

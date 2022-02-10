@@ -17,6 +17,7 @@ from personnages.zombie import Zombie
 from personnages.terrain import Terrain
 from personnages.autre_element.fries import Fries
 import managers.sound_manager as sound_manager
+from managers.events_const import DAMAGED_ZOMBIE
 from menu import *
 
 pygame.init()
@@ -32,6 +33,7 @@ fx_manager = Fx_manager()
 night_manager = Night_manager()
 
 counter = 0
+score = 0
 
 elements = {
     "terrain": [terrain],
@@ -98,13 +100,17 @@ def event_loop(event: pygame.event.Event):
                 elements["zombies"].remove(zombie)
         for pig in elements["pigs"]:
             pig.tick_update()
-        if player.alive == True:
+        # if player.alive:
             global counter
-            tt = datetime.fromtimestamp(counter)
-            time = tt.strftime("%M:%S")
-            global score_surface
-            score_surface = refresh_score(time)
-            counter += 1
+        #     tt = datetime.fromtimestamp(counter)
+        #     time = tt.strftime("%M:%S")
+        #     global score_surface
+        #     score_surface = refresh_score(time)
+        #     counter += 1
+    if event.type == DAMAGED_ZOMBIE:
+        global score_surface, score
+        score += 5
+        score_surface = refresh_score(str(score))
 
     if event.type == FIREFRIE:
         for pig in elements["pigs"]:
