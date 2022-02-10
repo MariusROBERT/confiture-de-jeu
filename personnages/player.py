@@ -6,7 +6,7 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
-from managers.events_const import COLLECT_POTATOE, DIG
+from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING
 from managers.fx_manager import DAMAGE_EVENT
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
@@ -193,6 +193,9 @@ class Player(Animated):
 
         if len(self.direction) > 0:
             self.time_since_move += 1
+
+        if len(self.direction) > 0:
+            queue_event(PLAYER_WALKING, {"coords": self.coords})
 
     def update(self, elements: dict) -> None:
         # Effectue les deplacement

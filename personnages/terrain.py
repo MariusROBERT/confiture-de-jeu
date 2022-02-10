@@ -1,6 +1,8 @@
 import random
 import pygame
 from lib.lib import create_transparent_animation, load_animation, load_image
+from managers.events_const import PLAYER_WALKING
+from managers.fx_manager import DUST_ANIMATION, Particle
 
 from personnages.potatoes import Potatoes
 from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
@@ -21,6 +23,7 @@ class Terrain:
 
         self.potatoes = []
         self.trous = []
+        self.particles = []
 
         self.nbcase = (NB_ELEM_X + 1) * (NB_ELEM_Y + 1)
 
@@ -29,6 +32,12 @@ class Terrain:
 
         for x in range(3):
             self.potatoes.append(Potatoes())
+
+    def tick_update_50(self, elements) -> None:
+        for particle in self.particles:
+            particle.frame_number += 1
+            if not particle.on:
+                self.particles.remove(particle)
 
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
@@ -63,6 +72,10 @@ class Terrain:
 
         return "rien"
 
+    def event_manager(self, event: pygame.event.Event, elements):
+        if event.type == PLAYER_WALKING:
+            self.particles.append(Particle(DUST_ANIMATION, event.coords, 5))
+
     def update(self, elements) -> None:
         pass
 
@@ -91,3 +104,6 @@ class Terrain:
                         pygame.draw.rect(screen, (255, 0, 0), rect, 1)
 
                 a += 1
+
+        for particle in self.particles:
+            screen.blit(particle.frame, particle.coords)
