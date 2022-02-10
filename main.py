@@ -9,23 +9,28 @@ from constantes import ZOMBIE_SPAWN
 import pygame
 
 import sys
-from managers.fx_manager import Fx_manager
-from managers.night_manager import Night_manager
-from personnages.pig import Pig
-from personnages.golden_pig import GoldenPig
-from personnages.player import Player, AutoPlayer
-from personnages.zombie import Zombie
-from personnages.terrain import Terrain
-from personnages.autre_element.fries import Fries
-import managers.sound_manager as sound_manager
+
+
+
+
+
 from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE
-from menu import *
 from multiprocessing import Process, Pool
 
 
 pygame.init()
 
 screen = pygame.display.set_mode(SIZE)
+from menu import *
+import managers.sound_manager as sound_manager
+from personnages.terrain import Terrain
+from managers.fx_manager import Fx_manager
+from managers.night_manager import Night_manager
+from personnages.pig import Pig
+from personnages.golden_pig import GoldenPig
+from personnages.player import Player, AutoPlayer
+from personnages.zombie import Zombie
+from personnages.autre_element.fries import Fries
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 18)
@@ -81,6 +86,7 @@ def init_game():
     score_surface = pygame.Surface((30, 20))
 
     # elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
+    screen = pygame.display.set_mode(SIZE)
     return elements, night_manager, score_surface
 
 #code = main_menu(screen, clock, user_events)

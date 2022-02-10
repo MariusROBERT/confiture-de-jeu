@@ -3,7 +3,16 @@ import random
 from random import randrange
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 from constantes import POTATO_LIFESPAN
+from lib.lib import load_image
 
+default_pousse = None
+lockheed_martin_image = None
+
+def init_terrain_textures():
+    global default_pousse
+    default_pousse = load_image("terrain/pousse3.png", (CASE_SIZE, CASE_SIZE))
+    global lockheed_martin_image
+    lockheed_martin_image = load_image("terrain/pousse_locheed_martin.png", (CASE_SIZE, CASE_SIZE))
 
 class Potatoes:
     def __init__(self):
@@ -30,7 +39,8 @@ class Potatoes:
 
         self.age = 0
         self.lifespan = POTATO_LIFESPAN
-
+        if default_pousse is None:
+            init_terrain_textures()
     @property
     def alive(self):
         return random.randint(0, self.lifespan - 7) + self.age < self.lifespan
@@ -69,3 +79,15 @@ class Potatoes:
         y_patate = self.y_pousse
         pos_patate = x_patate * CASE_SIZE, y_patate * CASE_SIZE
         return pos_patate
+
+    def display(self, screen):
+        
+        screen.blit(default_pousse, self.pos_pousse)
+
+class PotatoesLockheedMartin(Potatoes):
+    def __init__(self):
+        super().__init__()
+    
+    def display(self, screen):
+        
+        screen.blit(lockheed_martin_image, self.pos_pousse)
