@@ -2,13 +2,14 @@ import pygame
 from pygame.locals import *
 from lib.animated import Animated
 from lib.lib import load_image
-from constantes import AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
+from constantes import FRISSILE_BUFF_DURATION,AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, SHOW_HITBOX, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
 from managers.events_const import FEEDED, OUT_OF_FOOD
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries, Frissile
 import numpy as np
 import managers.sound_manager as sound_manager
+from personnages.potatoes import PotatoesCode
 
 """
                ,-,------,
@@ -48,7 +49,7 @@ class Pig(Animated):
             (self.size[0] + feed_space * 2, self.size[1] + feed_space * 2))
         self.center_coords = (
             self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
-
+        self._lockheed_buff = 0
         self._current_animation = "fire"
         self.target = None
 
@@ -85,18 +86,22 @@ class Pig(Animated):
     def hitbox_feed(self) -> pygame.Rect:
         return self.__hitbox_feed
 
-    def feed(self, nourish_value: int = 20) -> None:
+    def feed(self, nourish_value: int = 20, food=PotatoesCode.POTATO_DEFAULT) -> None:
+        print("feed :" + str(food))
         self.health += nourish_value
         if self.health > 0:
             self._current_animation = "fire"
-
+        if food == PotatoesCode.POTATO_LOCKHEED_MARTIN.value:
+            self.health_bar.color = (0, 100, 206)
+            self._lockheed_buff = FRISSILE_BUFF_DURATION
     def tick_update(self):
         self.health -= 9
 
     def tick_update_100(self, elements) -> None:
         self.current_frame += 1
-
+        
     def get_fries(self):
+        
         intersection_box = None
         fries_vector = None
         if self.target and self.target.alive and self.health > 0:
@@ -130,7 +135,13 @@ class Pig(Animated):
                     np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
             self.health -= AUTO_DAMAGE_SPEED
-            return [Frissile(self.center_coords, fries_vector, intersection_box=intersection_box, target=self.target)]
+            if self._lockheed_buff > 0:
+                self._lockheed_buff -= 1
+                if self._lockheed_buff == 0:
+                    self.health_bar.color = (203, 219, 11)
+                return [Frissile(self.center_coords, fries_vector, intersection_box=intersection_box, target=self.target)]
+            else:
+                return[Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
         else:
             return []
 

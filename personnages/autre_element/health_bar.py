@@ -26,12 +26,21 @@ class HealthBar:
         self.size = size
         self.border_size = border_size
         
-        self.color = color
+        self.__color = color
         self.colored_rect = None
         self.__hide = False
         self.move_to(coords)
         self.update()
         self.__auto_hide = auto_hide
+    @property
+    def color(self):
+        return self.__color
+    
+    @color.setter
+    def color(self, value):
+        self.__color = value
+        self.update()
+    
     @property
     def health(self) -> int:
         return self.value
