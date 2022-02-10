@@ -101,9 +101,10 @@ def init_menu_elements():
         (WIDTH//2, 100),
         "FRIES NIGHT AT PIGGIES",
         "menu.ttf",
-        size=40,
+        size=30,
         centerd_around_coords=True,
-        floating_effect=True
+        floating_effect=True,
+        max_grow = 1.14
     )
     menu_elements["text"].append(main_title)
     
