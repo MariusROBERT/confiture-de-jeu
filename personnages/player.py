@@ -6,8 +6,9 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
-from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING, USE_ZONE_DAMAGE
+from managers.events_const import COLLECT_POTATOE, DIG, INVALID_ACTION, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
+from personnages.potatoes import PotatoesCode
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
 import managers.sound_manager as sound_manager
@@ -20,10 +21,10 @@ mini_potatoes_images = []
 
 def init_mini_potatoes_images():
     global mini_potatoes_images
-    for i in range(2):
+    for i in range(3):
         mini_potatoes_images.append(load_image(
             "/player/autre/potatoemini{}.png".format(i), (20, 20)))
-        
+        print(i)
 
 class Player(Animated):
     def __init__(self):
@@ -33,7 +34,9 @@ class Player(Animated):
 
         self._current_animation = "walk"
 
-        init_mini_potatoes_images()
+        if len(mini_potatoes_images) == 0:
+            init_mini_potatoes_images()
+
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
         self.coords = (WIDTH / 2, HEIGHT / 2)
 
@@ -45,7 +48,7 @@ class Player(Animated):
         self.time_since_dig = 0
         self._digging = False
         self._paused_animation = ""
-        self._latest_movement_vector = (0,0)
+        self._latest_movement_vector = (0, 0)
         self.time_since_move = 0
         self.__old_angle = 0
         hp = PLAYER_MAX_HP
@@ -76,12 +79,11 @@ class Player(Animated):
             self.__health = hp
 
         self._health_bar.health = self.__health
-    
+
     @property
     def latest_movement_vector(self):
         return self._latest_movement_vector
-    
-    
+
     @property
     def alive(self) -> bool:
         return self.__alive
@@ -145,8 +147,12 @@ class Player(Animated):
             self.inventory_potatoes.append(found)
             queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
-            if len(self.inventory_potatoes) == 5:
-                self.health += 5
+            if found != PotatoesCode.POTATO_ZONE_DAMAGE:
+                if len(self.inventory_potatoes) == 5:
+                    self.health += 5
+            else:
+                if (len(self.inventory_power_ups) < 3):
+                    self.inventory_power_ups.append(found)
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
@@ -177,17 +183,21 @@ class Player(Animated):
                 if not feeded:
                     self.dig(elements["terrain"][0])
             if event.key == pygame.K_b:
-                queue_event(USE_ZONE_DAMAGE, {
-                            "center_coords": self.center_coords})
-                for zombie in elements["zombies"]:
-                    size_zone_damage = SIZE_PLAYER * 2
-                    zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
-                                              self.center_coords[1] -
-                                              size_zone_damage,
-                                              size_zone_damage * 2 + 1, size_zone_damage * 2 + 1)
+                if len(self.inventory_power_ups) > 0:
+                    queue_event(USE_ZONE_DAMAGE, {
+                                "center_coords": self.center_coords})
+                    for zombie in elements["zombies"]:
+                        size_zone_damage = SIZE_PLAYER * 2
+                        zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
+                                                  self.center_coords[1] -
+                                                  size_zone_damage,
+                                                  size_zone_damage * 2 + 1, size_zone_damage * 2 + 1)
 
-                    if zone_damage.colliderect(zombie.hitbox_degats):
-                        zombie.health = -1
+                        if zone_damage.colliderect(zombie.hitbox_degats):
+                            zombie.health = -1
+                    self.inventory_power_ups.pop()
+                else:
+                    queue_event(INVALID_ACTION)
 
         elif event.type == pygame.KEYUP:
             for i in range(len(directions)):
@@ -256,7 +266,9 @@ class Player(Animated):
             self.coords = (self.coords[0], BORDER_SIZE)
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
-        self._latest_movement_vector = self.coords[0]-old_coords[0], self.coords[1]-old_coords[1]
+        self._latest_movement_vector = self.coords[0] - \
+            old_coords[0], self.coords[1]-old_coords[1]
+
     def display(self, screen, angle=None, night=False) -> None:
         if angle is None:
             angle = dir_to_angle(self.direction)
@@ -270,9 +282,9 @@ class Player(Animated):
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
         i = 0
         for potato_code in self.inventory_potatoes:
-            screen.blit(mini_potatoes_images[potato_code.value], (self.coords[0] + i * 20, self.coords[1] - 20))
+            screen.blit(mini_potatoes_images[potato_code], (self.coords[0] + i * 20, self.coords[1] - 20))
             i+=1
-            print(potato_code.value)
+            
         self._health_bar.display(screen)
 
 
@@ -302,7 +314,7 @@ class AutoPlayer(Player):
     @ property
     def moving_vector(self):
         return self.__moving_vector
-    
+
     def update_mode(self):
 
         if self.__nearest_zombie is None or \

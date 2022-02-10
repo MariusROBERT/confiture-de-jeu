@@ -3,7 +3,7 @@ import pygame
 from lib.lib import create_transparent_animation, load_animation, load_image
 from managers.events_const import PLAYER_WALKING
 from managers.fx_manager import DUST_ANIMATION, Particle
-from personnages.potatoes import Potatoes, PotatoesLockheedMartin
+from personnages.potatoes import Potatoes, PotatoesCode
 from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
@@ -36,11 +36,8 @@ class Terrain:
         self.potatoes = []
         self.trous = []
         self.particles = []
-        self.super_fertility = 0.1
+        self.super_fertility = 0.4
         self.nbcase = (NB_ELEM_X + 1) * (NB_ELEM_Y + 1)
-        self.__possible_potatoes = [
-            PotatoesLockheedMartin
-        ]
 
         for x in range(3):
             self.potatoes.append(Potatoes())
@@ -53,8 +50,14 @@ class Terrain:
 
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
-            if random.randint(0, 1) <= self.super_fertility:
-                self.potatoes.append(random.choice(self.__possible_potatoes)())
+            if random.random() <= self.super_fertility:
+                if random.random() <= 0.5:
+                    self.potatoes.append(
+                        Potatoes(
+                            PotatoesCode.POTATO_LOCKHEED_MARTIN))
+                else:
+                    self.potatoes.append(
+                        Potatoes(PotatoesCode.POTATO_ZONE_DAMAGE))
             self.potatoes.append(Potatoes())
 
         for potato in self.potatoes:
@@ -68,11 +71,11 @@ class Terrain:
                 self.trous.remove(trou)
                 pass
 
-    @ property
+    @property
     def potatoes_hitbox(self) -> list:
         pos_patates = [x.get_pos_patate() for x in self.potatoes]
 
-    def harvrest(self, coords: tuple) -> str:
+    def harvrest(self, coords: tuple) -> int:
         coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
                       coords[1] // CASE_SIZE * CASE_SIZE)
         self.trous.append(

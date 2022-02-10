@@ -1,5 +1,4 @@
 from threading import Thread
-import time
 from datetime import datetime, timedelta
 from random import random
 from re import M
@@ -14,8 +13,7 @@ import sys
 
 
 
-
-from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE
+from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_DEAD_EVENT
 from multiprocessing import Process, Pool
 
 
@@ -191,6 +189,10 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     if event.type == TICKEVENT50:
         fx_manager.tick_update_50(elements)
         terrain.tick_update_50(elements)
+
+    if event.type==PLAYER_DEAD_EVENT:
+        sound_manager.player_dead(pygame,event)
+        
 
 
 def logic_loop(elements):
