@@ -62,8 +62,8 @@ def nearest_zombie(zombies: 'Zombie', coords: tuple) -> 'Zombie':
     return nearest
 
 
-def queue_event(id: int):
-    pygame.event.post(pygame.event.Event(id))
+def queue_event(id: int, data: dict = {}):
+    pygame.event.post(pygame.event.Event(id, data))
 
 
 def quadratic_equation_roots(a: int, b: int, c: int) -> tuple:
