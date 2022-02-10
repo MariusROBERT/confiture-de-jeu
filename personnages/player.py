@@ -22,7 +22,7 @@ mini_potatoes_images = []
 
 def init_mini_potatoes_images():
     global mini_potatoes_images
-    for i in range(3):
+    for i in range(4):
         mini_potatoes_images.append(load_image(
             "/player/autre/potatoemini{}.png".format(i), (20, 20)))
         print(i)

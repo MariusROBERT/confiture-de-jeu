@@ -14,6 +14,7 @@ class PotatoesCode(enum.Enum):
     POTATO_DEFAULT = 0
     POTATO_LOCKHEED_MARTIN = 1
     POTATO_ZONE_DAMAGE = POTATO_ZONE_DAMAGE
+    POTATO_LIFE_BUFF = 3
 
 
 default_pousse = None
@@ -37,7 +38,8 @@ def init_terrain_textures():
     potatoes_textures = [
         default_pousse,
         lockheed_martin_image,
-        power_up
+        power_up,
+        load_image("terrain/pousse4.png", (CASE_SIZE, CASE_SIZE))
     ]
 
 

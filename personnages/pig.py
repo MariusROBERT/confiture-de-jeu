@@ -50,6 +50,7 @@ class Pig(Animated):
         self.center_coords = (
             self.coords[0] + self.size[0] / 2, self.coords[1] + self.size[1] / 2)
         self._lockheed_buff = 0
+        self._life_buff = 0
         self._current_animation = "fire"
         self.target = None
 
@@ -60,7 +61,7 @@ class Pig(Animated):
     @health.setter
     def health(self, value: int) -> None:
         min_value = -10
-
+        old_health = self.__health
         if value > self.__health:
             queue_event(FEEDED)
         self.__health = value
@@ -72,8 +73,14 @@ class Pig(Animated):
             self.current_animation = "idle"
             queue_event(OUT_OF_FOOD)
 
+        
+        if self._life_buff > 0:
+                self._life_buff -= 1
+                self.__health = old_health
+                if self._life_buff == 0:
+                    self.health_bar.color = (203, 219, 11)
         self.health_bar.health = value
-
+        self.health_bar.update()
     @property
     def aura_frame(self) -> int:
         pass
@@ -94,6 +101,10 @@ class Pig(Animated):
         if food == PotatoesCode.POTATO_LOCKHEED_MARTIN.value:
             self.health_bar.color = (0, 100, 206)
             self._lockheed_buff = FRISSILE_BUFF_DURATION
+        elif food == PotatoesCode.POTATO_LIFE_BUFF.value:
+            self.health_bar.color = (255, 30, 255)
+            self._life_buff = FRISSILE_BUFF_DURATION
+            
     def tick_update(self):
         self.health -= 9
 
