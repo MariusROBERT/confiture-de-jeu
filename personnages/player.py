@@ -293,7 +293,7 @@ MODE_MIDDLE = 3
 
 
 class AutoPlayer(Player):
-    def __init__(self, coords: tuple = (0, 0), max_angle: int = 10):
+    def __init__(self, coords: tuple = (0, 0), max_angle: int = 23):
         super().__init__()
         self.__nearest_zombie = None
         self.__nearest_potatoe = None
@@ -308,7 +308,7 @@ class AutoPlayer(Player):
 
     @ property
     def speed(self):
-        return 10
+        return 5
 
     @ property
     def moving_vector(self):
@@ -336,8 +336,7 @@ class AutoPlayer(Player):
                 or correction_vector[0]*50 + self.coords[0] <= 0 \
                 or correction_vector[1]*50 + self.coords[1] + self.size[1] >= HEIGHT \
                 or correction_vector[1]*50 + self.coords[1] <= 0:
-            self.__mode == MODE_MIDDLE
-
+            self.__mode = MODE_MIDDLE
         new_vector = None
         if self.__mode == MODE_Z_ESCAPE:
             if self.__nearest_zombie is None or self.__nearest_zombie.health <= 0:
@@ -361,7 +360,11 @@ class AutoPlayer(Player):
             target_coords = (WIDTH/2, HEIGHT/2)
             new_vector = vector_to_target(
                 target_coords, self.center_coords, self.speed)
+       
+        if new_vector is None:
+            new_vector = (0.0000001,0.00000001)
         self.__wanted_moving_vector = new_vector
+        #self.__moving_vector = new_vector
         self.__moving_vector = intermediate_vector(
             old_vector, new_vector, max_angle=self.__max_angle, norm=self.speed)
 
@@ -372,19 +375,26 @@ class AutoPlayer(Player):
            distance_between(self.center_coords, self.__nearest_zombie.coords) > self.__safe_distance) and \
                 self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords, self.center_coords) < CASE_SIZE:
             self.dig(terrain)
-
-        super().update(elements)
-
-        self.coords = (self.coords[0] + self.moving_vector[0],
-                       self.coords[1] + self.moving_vector[1])
-
+        self.__nearest_zombie = nearest_zombie(
+            elements["zombies"], self.center_coords)
+        self.__nearest_potatoe = nearest_zombie(
+            terrain.potatoes, self.center_coords)
+        
+        if self.__moving_vector is not None:
+            self.coords = (self.coords[0] + self.moving_vector[0],
+                        self.coords[1] + self.moving_vector[1])
+        terrain = elements["terrain"][0]
+        
+        
     def tick_update_100(self, elements):
         super().tick_update_100(elements)
-
+        self.update_moving_vector()
     def display(self, screen):
-        angle = g_angle(self.moving_vector, (0, 1))
-        if self.moving_vector[0] <= 0:
-            angle = -angle
+        angle = 0
+        if self.__moving_vector is not None:
+            angle = g_angle(self.moving_vector, (0, 1))
+            if self.moving_vector[0] <= 0:
+                angle = -angle
         if SHOW_HITBOX:
             rect = pygame.Rect(self.center_coords[0] + self.moving_vector[0]
                                * 50, self.center_coords[1] + self.moving_vector[1]*50, 20, 20)
@@ -400,10 +410,4 @@ class AutoPlayer(Player):
 
     def tick_update_fast(self, elements):
         terrain = elements["terrain"][0]
-        terrain = elements["terrain"][0]
-        self.__nearest_zombie = nearest_zombie(
-            elements["zombies"], self.center_coords)
-        self.__nearest_potatoe = nearest_zombie(
-            terrain.potatoes, self.center_coords)
-
-        self.update_moving_vector()
+        

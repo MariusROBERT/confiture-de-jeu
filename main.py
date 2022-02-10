@@ -30,6 +30,8 @@ from personnages.golden_pig import GoldenPig
 from personnages.player import Player, AutoPlayer
 from personnages.zombie import Zombie
 from personnages.autre_element.fries import Fries
+from personnages.autre_element.text import Text
+from personnages.autre_element.health_bar import HealthBar
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 18)
@@ -69,13 +71,19 @@ def update_fps():
     return fps_text
 
 
-def init_game():
+def init_game(health_bar):
+    
     player = Player()
+    health_bar(10)
 # patate=Potatoe()
     terrain = Terrain()
-
-    fx_manager = Fx_manager()
+    health_bar(10)
+    print("loaded terrain")
+    fx_manager = Fx_manager((health_bar, 40))
+    print("loaded fx_manager")
     night_manager = Night_manager()
+    print("loaded night_manager")
+    health_bar(20)
 
     elements = {
         "terrain": [terrain],
@@ -85,10 +93,12 @@ def init_game():
         "fries": [],
         "fx_manager": [fx_manager]
     }
+    health_bar(10)
     score_surface = pygame.Surface((30, 20))
 
     # elements["pigs"].append(GoldenPig(1000,200, size=(CASE_SIZE*2, CASE_SIZE*2)))
     screen = pygame.display.set_mode(SIZE)
+    health_bar(10)
     return elements, night_manager, score_surface
 
 #code = main_menu(screen, clock, user_events)
@@ -215,7 +225,22 @@ def display_loop(elements):
 #worker_main_menu = Thread(target=main_menu)
 
 # worker_main_menu.start()
-elements, night_manager, score_surface = init_game()
+img = load_image("loading_bg.jpg", SIZE)
+screen.blit(img, (0,0))
+text = Text((WIDTH / 2, HEIGHT / 2 - 80), "Preparation du Ketchup", size=20, centerd_around_coords=True)
+size = (WIDTH - 400 , 40)
+health = HealthBar((200, HEIGHT / 2 + 40),size=size, color=(255,30,30), value=0)
+text.display(screen)
+health.display(screen)
+pygame.display.flip()
+def update_bar(value):
+    health.health += value
+    health.update()
+    health.display(screen)
+    pygame.display.flip()
+    
+
+elements, night_manager, score_surface = init_game(update_bar)
 # worker_main_menu.join()
 r_code = main_menu()
 if True:

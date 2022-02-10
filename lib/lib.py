@@ -226,25 +226,28 @@ def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = N
     init_angle = angle
     init_tilt = init_angle_2 - init_angle
     tilt = init_tilt
-    if norm is None:
-        norm = np.linalg.norm(v1)
-    if tilt < 0:
+
+    if tilt < 0 :
         if tilt < -max_angle:
             tilt = -max_angle
 
     else:
         if tilt > max_angle:
             tilt = max_angle
-
+    if angle > 180 and angle < 360-max_angle:
+        tilt = -max_angle
+    if abs(init_tilt) < abs(tilt):
+        tilt = init_tilt
     angle += tilt
-
-    init_tilt = round(init_tilt, 2)
-    tilt = round(tilt, 2)
-    init_angle = round(init_angle, 2)
-    angle = round(angle, 2)
+    v3 = rotate_vector(v1, tilt)
+    
+    #init_tilt = round(init_tilt, 2)
+    #tilt = round(tilt, 2)
+    #init_angle = round(init_angle, 2)
+    #angle = round(angle, 2)
     #v3 = vector_from_angle_magnitude(angle, norm)
-    v3 = rotate_vector(v1, init_tilt)
-    effective_angle = round(get_angle_between_vectors((0, 1), v3), 2)
+    
+    #effective_angle = round(get_angle_between_vectors(v1, v3), 2)
     #print("ANG init_tilt:{}  tilt:{} init_angle_2:{} init_angle:{} -> angle:{} -> effective_angle:{}".format(init_tilt, tilt, init_angle_2, init_angle, angle, effective_angle) )
 
     return v3[0], v3[1]

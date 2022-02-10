@@ -64,9 +64,11 @@ class Particle:
 
 
 class Fx_manager:
-    def __init__(self):
+    def __init__(self, progress_bar_pack):
+        progress_bar_pack[0](0.1*progress_bar_pack[1])
         self.damage_screen = create_transparent_animation(
             load_image("red.png", (WIDTH, HEIGHT)))
+        progress_bar_pack[0](0.5*progress_bar_pack[1])
         self.damage_screen_old = 0
         self.damage_screen_on = False
 
@@ -76,7 +78,7 @@ class Fx_manager:
         self.nuit_screen.set_alpha(OPACITY_NIGHT)
         self.nuit_screen_on = False
         self.night_fader_index = NIGHT_FADER_FRAME
-        
+        progress_bar_pack[0](0.4*progress_bar_pack[1])
         # Explosion
         self.particles = []
 
