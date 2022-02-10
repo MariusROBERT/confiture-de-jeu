@@ -45,7 +45,7 @@ pygame.time.set_timer(FIREFRIE, SPAWN_DELAY)
 TICKEVENT100 = pygame.USEREVENT + 3
 pygame.time.set_timer(TICKEVENT100, 100)
 
-TICKEVENT50 = pygame.USEREVENT + 3
+TICKEVENT50 = pygame.USEREVENT + 5
 pygame.time.set_timer(TICKEVENT50, 50)
 
 TICKEVENT10 = pygame.USEREVENT + 4
