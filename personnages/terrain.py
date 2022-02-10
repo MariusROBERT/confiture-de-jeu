@@ -7,11 +7,26 @@ from personnages.potatoes import Potatoes, PotatoesLockheedMartin
 from constantes import NB_ELEM_X, NB_ELEM_Y, SHOW_HITBOX, SIZE, CASE_SIZE, AGE_MAX_TROU, CHANCE_POTATO
 
 
+def create_terrain_image(size, images):
+    base_terrains = load_animation(
+        "terrain/sol", (CASE_SIZE, CASE_SIZE))
+
+    image_final = pygame.Surface(size, pygame.SRCALPHA)
+    for i in range(0, SIZE[0], CASE_SIZE):
+        for j in range(0, SIZE[1], CASE_SIZE):
+            image_final.blit(
+                base_terrains[random.randint(
+                    0, len(base_terrains) - 1)], (i, j))
+    # image_final.convert_alpha()
+    return image_final
+
+
 class Terrain:
     def __init__(self) -> None:
 
-        self.base_terrains = load_animation(
-            "terrain/sol", (CASE_SIZE, CASE_SIZE))
+        self.base_terrain = create_terrain_image(SIZE, load_animation(
+            "terrain/sol", (CASE_SIZE, CASE_SIZE)))
+
         trous_images = load_animation(
             "terrain/trou", (CASE_SIZE, CASE_SIZE))
 
@@ -26,8 +41,6 @@ class Terrain:
         self.__possible_potatoes = [
             PotatoesLockheedMartin
         ]
-        self.terrain_texture_index = [random.randint(
-            0, len(self.base_terrains) - 1) for i in range(self.nbcase+100)]
 
         for x in range(3):
             self.potatoes.append(Potatoes())
@@ -40,7 +53,7 @@ class Terrain:
 
     def tick_update(self) -> None:
         if random.randint(0, CHANCE_POTATO) == 0:
-            if random.randint(0,1) <= self.super_fertility:
+            if random.randint(0, 1) <= self.super_fertility:
                 self.potatoes.append(random.choice(self.__possible_potatoes)())
             self.potatoes.append(Potatoes())
 
@@ -81,12 +94,12 @@ class Terrain:
         pass
 
     def display(self, screen: pygame.Surface) -> None:
-        a = 0
+        screen.blit(
+            self.base_terrain, (0, 0))
+
         for i in range(0, SIZE[0], CASE_SIZE):
             for j in range(0, SIZE[1], CASE_SIZE):
 
-                screen.blit(
-                    self.base_terrains[self.terrain_texture_index[a]], (i, j))
                 trou = list(
                     filter(lambda x: x["coords"] == (i, j), self.trous))
                 if len(trou) > 0:
@@ -103,8 +116,5 @@ class Terrain:
                     if (i, j) in [x.get_pos_patate() for x in self.potatoes]:
                         rect = pygame.Rect(i + 15, j + 15, 20, 20)
                         pygame.draw.rect(screen, (255, 0, 0), rect, 1)
-
-                a += 1
-
         for particle in self.particles:
             screen.blit(particle.frame, particle.coords)

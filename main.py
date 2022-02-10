@@ -168,6 +168,13 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
             new_fries = pig.get_fries()
             for fries in new_fries:
                 elements["fries"].append(fries)
+    if event.type == TICKEVENT50:
+        for fries in elements["fries"]:
+            try:
+                fries.tick_update_50()
+                
+            except AttributeError:
+                pass
 
     # 100 miliseconds
     if event.type == TICKEVENT100:
