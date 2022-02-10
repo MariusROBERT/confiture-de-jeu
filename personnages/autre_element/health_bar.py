@@ -28,6 +28,7 @@ class HealthBar:
         
         self.color = color
         self.colored_rect = None
+        self.__hide = False
         self.move_to(coords)
         self.update()
         self.__auto_hide = auto_hide
