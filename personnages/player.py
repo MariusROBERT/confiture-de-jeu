@@ -8,6 +8,7 @@ from lib.lib import *
 from lib.player import dir_to_angle
 from managers.events_const import COLLECT_POTATOE, DIG
 from managers.fx_manager import DAMAGE_EVENT
+from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
 import managers.sound_manager as sound_manager
 from managers.sound_manager import PLAYER_DEAD_EVENT
@@ -20,7 +21,8 @@ keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
 class Player(Animated):
     def __init__(self):
         super().__init__("player", (SIZE_PLAYER, SIZE_PLAYER))
-        self.inventory = []
+        self.inventory_potatoes = []
+        self.inventory_power_ups = []
 
         self._current_animation = "walk"
 
@@ -125,14 +127,15 @@ class Player(Animated):
                 return True
         return False
 
-    def dig(self, terrain):
+    def dig(self, terrain: Terrain):
         self.digging = True
         queue_event(DIG)
-        if terrain.harvrest(self.center_coords) and len(self.inventory) < 5:
-            self.inventory.append("potatoe")
+        found = terrain.harvrest(self.center_coords)
+        if found == "potato" and len(self.inventory_potatoes) < 5:
+            self.inventory_potatoes.append("potatoe")
             queue_event(COLLECT_POTATOE)
             # Heal 5hp if full inventory
-            if len(self.inventory) == 5:
+            if len(self.inventory_potatoes) == 5:
                 self.health += 5
 
     def move(self, event: pygame.event.Event, elements) -> None:
@@ -152,24 +155,16 @@ class Player(Animated):
                 # Si il est a proximitée d'un pig
                 feeded = False
                 if self.hitbox.collidelist([element.hitbox_feed for element in elements["pigs"]]) != -1:
-                    if len(self.inventory) > 0:
+                    if len(self.inventory_potatoes) > 0:
                         for pig in elements["pigs"]:
                             if pig.hitbox_feed.colliderect(self.hitbox):
                                 pig.feed()
-                                self.inventory.pop()
+                                self.inventory_potatoes.pop()
                                 feeded = True
                                 break
 
                 # si il est dans la hitbox d'une potatoe
                 if not feeded:
-                    self.digging = True
-                    queue_event(DIG)
-                    if elements["terrain"][0].harvrest(self.center_coords) and len(self.inventory) < 5:
-                        self.inventory.append("potatoe")
-                        queue_event(COLLECT_POTATOE)
-                        # Heal 5hp if full inventory
-                        if len(self.inventory) == 5:
-                            self.health += 5
                     self.dig(elements["terrain"][0])
 
         elif event.type == pygame.KEYUP:
@@ -249,7 +244,7 @@ class Player(Animated):
         if SHOW_HITBOX:
             pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
 
-        for i in range(len(self.inventory)):
+        for i in range(len(self.inventory_potatoes)):
             screen.blit(
                 self.potatoe_mini, (self.coords[0] + i * 20, self.coords[1] - 20))
 

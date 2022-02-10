@@ -1,7 +1,7 @@
 import pygame
-from constantes import OPACITY_NIGHT, SIZE_PLAYER, WIDTH, HEIGHT
+from constantes import OPACITY_NIGHT, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT
 from lib.lib import load_animation, load_image
-from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DEAD_ZOMBIE
+from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE
 from managers.sound_manager import COLLECT_POTATOE
 
 
@@ -9,6 +9,38 @@ from managers.sound_manager import COLLECT_POTATOE
 
 
 DAMAGE_DURATION = 8
+
+
+SIZE_EXPLOSION = (SIZE_PLAYER*3, SIZE_PLAYER*3)
+EXPLOSION_ANIMATION = load_animation(
+    "particle/explosion",  SIZE_EXPLOSION)
+
+SIZE_BLOOD = (SIZE_ZOMBIE, SIZE_ZOMBIE)
+BLOOD_ANIMATION = load_animation(
+    "particle/blood",  SIZE_BLOOD)
+
+
+class Particle:
+    def __init__(self, animation, coords):
+        self.animation = animation
+        self.coords = coords
+        self.on = True
+        self._frame_number = 0
+
+    @property
+    def frame_number(self):
+        return self._frame_number
+
+    @frame_number.setter
+    def frame_number(self, value):
+        if value >= len(self.animation):
+            self.on = False
+        else:
+            self._frame_number = value
+
+    @property
+    def frame(self):
+        return self.animation[self._frame_number]
 
 
 class Fx_manager:
@@ -23,30 +55,27 @@ class Fx_manager:
         self.nuit_screen_on = False
 
         # Explosion
-        self.size_explosion = (SIZE_PLAYER*3, SIZE_PLAYER*3)
-        self.explosion_screen = load_animation(
-            "particle/explosion", self.size_explosion)
-
-        self.explosion_on = False
-        self.explosion_old = 0
-        self.pos_explosion = (0, 0)
+        self.particles = []
 
     def event_manager(self, event: pygame.event.Event, elements):
         if event.type == DAMAGE_EVENT:
             self.damage_screen_on = True
         elif event.type == CHANGE_NIGHT:
             self.nuit_screen_on = not self.nuit_screen_on
-        elif event.type == DEAD_ZOMBIE:
-            self.explosion_on = True
-            self.pos_explosion = (elements["player"][0].center_coords[0] -
-                                  self.size_explosion[0]/2, elements["player"][0].center_coords[1] - self.size_explosion[1]/2)
+        elif event.type == "never":
+            pos = (elements["player"][0].center_coords[0] -
+                   SIZE_EXPLOSION[0]/2, elements["player"][0].center_coords[1] - SIZE_EXPLOSION[1]/2)
+            self.particles.append(
+                Particle(EXPLOSION_ANIMATION, pos))
+        elif event.type == DAMAGED_ZOMBIE:
+            self.particles.append(Particle(BLOOD_ANIMATION, event.coords))
 
     def tick_update_50(self, elements):
-        if self.explosion_on:
-            self.explosion_old += 1
-            if self.explosion_old >= len(self.explosion_screen)-1:
-                self.explosion_on = False
-                self.explosion_old = 0
+
+        for particle in self.particles:
+            particle.frame_number += 1
+            if not particle.on:
+                self.particles.remove(particle)
 
     def tick_update_100(self, elements):
         if self.damage_screen_on:
@@ -70,9 +99,5 @@ class Fx_manager:
 
             screen.blit(dm_screen, (0, 0))
 
-        if self.explosion_on:
-            screen.blit(
-                self.explosion_screen[self.explosion_old], self.pos_explosion)
-
-        if self.nuit_screen_on:
-            screen.blit(self.nuit_screen, (0, 0))
+        for particle in self.particles:
+            screen.blit(particle.frame, particle.coords)

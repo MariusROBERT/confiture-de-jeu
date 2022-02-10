@@ -56,9 +56,9 @@ class Terrain:
             if coords[0] - CASE_SIZE < pos_patate[0] < coords[0] + CASE_SIZE:
                 if coords[1] - CASE_SIZE < pos_patate[1] < coords[1] + CASE_SIZE:
                     self.potatoes.remove(patate)
-                    return True
+                    return "potato"
 
-        return False
+        return "rien"
 
     def update(self, elements) -> None:
         pass
