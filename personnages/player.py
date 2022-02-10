@@ -40,7 +40,7 @@ class Player(Animated):
         self.time_since_dig = 0
         self._digging = False
         self._paused_animation = ""
-
+        self._latest_movement_vector = (0,0)
         self.time_since_move = 0
         self.__old_angle = 0
         hp = PLAYER_MAX_HP
@@ -71,7 +71,12 @@ class Player(Animated):
             self.__health = hp
 
         self._health_bar.health = self.__health
-
+    
+    @property
+    def latest_movement_vector(self):
+        return self._latest_movement_vector
+    
+    
     @property
     def alive(self) -> bool:
         return self.__alive
@@ -211,7 +216,7 @@ class Player(Animated):
 
     def update(self, elements: dict) -> None:
         # Effectue les deplacement
-
+        old_coords = self.coords
         zombies_hitboxs = [
             element.hitbox_degats for element in elements["zombies"]]
 
@@ -246,7 +251,7 @@ class Player(Animated):
             self.coords = (self.coords[0], BORDER_SIZE)
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
-
+        self._latest_movement_vector = self.coords[0]-old_coords[0], self.coords[1]-old_coords[1]
     def display(self, screen, angle=None, night=False) -> None:
         if angle is None:
             angle = dir_to_angle(self.direction)
@@ -292,7 +297,7 @@ class AutoPlayer(Player):
     @ property
     def moving_vector(self):
         return self.__moving_vector
-
+    
     def update_mode(self):
 
         if self.__nearest_zombie is None or \

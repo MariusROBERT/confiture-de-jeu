@@ -144,8 +144,8 @@ class Pig(Animated):
     def update(self, elements: dict) -> None:
         self.health_bar.update()
         self.target = nearest_zombie(
-            [zombie for zombie in elements["zombies"] if not zombie.dead], self.coords)
-
+           [zombie for zombie in elements["zombies"] if not zombie.dead], self.coords)
+        #self.target = elements["player"][0]
     def display(self, screen: pygame.Surface) -> None:
         self.health_bar.display(screen)
         screen.blit(self.sprite, self.coords)
