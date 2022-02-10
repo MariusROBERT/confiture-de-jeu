@@ -20,8 +20,8 @@ BLOOD_ANIMATION = load_animation(
     "particle/blood", SIZE_BLOOD)
 
 font = pygame.font.SysFont("Arial", 20)
-DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT), True, "red") for i in range(3)]
-
+DAMAGED_ZOMBIE_POINTS = [font.render("+{}".format(POINTS_PER_ZOMBIE_HIT), True, pygame.Color(255, 75, 75, a=255-int(i * 51))) for i in range(5)]
+# TODO: Faire marcher la transparence
 
 class Particle:
     def __init__(self, animation, coords):
