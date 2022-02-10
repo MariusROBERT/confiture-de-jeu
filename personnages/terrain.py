@@ -52,7 +52,7 @@ class Terrain:
         if random.randint(0, CHANCE_POTATO) == 0:
             if random.random() <= self.super_fertility:
                 self.potatoes.append(Potatoes(POTATO_LOCKHEED_MARTIN))
-            if random.random() <= 1:
+            if random.random() <= 0.08:
                 self.potatoes.append(Potatoes(POTATO_ZONE_DAMAGE))
             self.potatoes.append(Potatoes())
 

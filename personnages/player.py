@@ -6,7 +6,7 @@ from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_H
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
-from managers.events_const import COLLECT_POTATOE, DIG, PLAYER_WALKING, USE_ZONE_DAMAGE
+from managers.events_const import COLLECT_POTATOE, DIG, INVALID_ACTION, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
 from personnages.potatoes import BASE_POTATOE, POTATO_LOCKHEED_MARTIN, POTATO_ZONE_DAMAGE
 from personnages.terrain import Terrain
@@ -146,7 +146,8 @@ class Player(Animated):
                 if len(self.inventory_potatoes) == 5:
                     self.health += 5
             elif found == POTATO_ZONE_DAMAGE:
-                self.inventory_power_ups.append(found)
+                if (len(self.inventory_power_ups) < 3):
+                    self.inventory_power_ups.append(found)
 
     def move(self, event: pygame.event.Event, elements) -> None:
         if event.type == pygame.KEYDOWN:
@@ -177,17 +178,21 @@ class Player(Animated):
                 if not feeded:
                     self.dig(elements["terrain"][0])
             if event.key == pygame.K_b:
-                queue_event(USE_ZONE_DAMAGE, {
-                            "center_coords": self.center_coords})
-                for zombie in elements["zombies"]:
-                    size_zone_damage = SIZE_PLAYER * 2
-                    zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
-                                              self.center_coords[1] -
-                                              size_zone_damage,
-                                              size_zone_damage * 2 + 1, size_zone_damage * 2 + 1)
+                if len(self.inventory_power_ups) > 0:
+                    queue_event(USE_ZONE_DAMAGE, {
+                                "center_coords": self.center_coords})
+                    for zombie in elements["zombies"]:
+                        size_zone_damage = SIZE_PLAYER * 2
+                        zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
+                                                  self.center_coords[1] -
+                                                  size_zone_damage,
+                                                  size_zone_damage * 2 + 1, size_zone_damage * 2 + 1)
 
-                    if zone_damage.colliderect(zombie.hitbox_degats):
-                        zombie.health = -1
+                        if zone_damage.colliderect(zombie.hitbox_degats):
+                            zombie.health = -1
+                    self.inventory_power_ups.pop()
+                else:
+                    queue_event(INVALID_ACTION)
 
         elif event.type == pygame.KEYUP:
             for i in range(len(directions)):
