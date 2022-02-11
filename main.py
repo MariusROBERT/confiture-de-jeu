@@ -255,6 +255,7 @@ pygame.display.flip()
 
 
 def update_bar(value):
+    global health
     health.health += value
     health.update()
     health.display(screen)
