@@ -116,9 +116,9 @@ def tutorial(screen):
                     hint = Text((WIDTH/2, 60), "Ramassez les patates et donnez les au cochons avec ESPACE", size=13,color=(255,255,255), centerd_around_coords=True)
                 if event.key == K_RETURN:
                     return None
-                
-        player.update(elements)
-        player.update(elements)
+        for i in range(3):
+            player.update(elements) 
+        
         screen.fill((70, 166, 0))
         terrain.display(screen)
         player.display(screen)
