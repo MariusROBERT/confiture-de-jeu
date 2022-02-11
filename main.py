@@ -277,6 +277,7 @@ if __name__ == "__main__":
             ev = event_loop(event, elements, night_manager, score_surface)
             if ev == "MENU":
                 res_up()
+                score = 0
                 elements, night_manager, score_surface = init_game(update_bar)
                 r_code = main_menu()
                 sound_manager.play_day_music(pygame)
