@@ -37,7 +37,7 @@ class Player(Animated):
             init_mini_potatoes_images()
 
         self.size = (SIZE_PLAYER, SIZE_PLAYER)
-        self.coords = (WIDTH / 2, HEIGHT / 2)
+        self.coords = (WIDTH / 2 - self.size[0] / 2, HEIGHT / 2 - self.size[1] / 2)
 
         self._speed = PLAYER_SPEED
         self.direction = []
