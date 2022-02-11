@@ -5,7 +5,7 @@ from constantes import ZOMBIE_SPAWN
 import pygame
 
 
-from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_DEAD_EVENT
+from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_DEAD_EVENT, RESTART
 
 pygame.init()
 
@@ -131,6 +131,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
         if not player.alive and event.key == pygame.K_RETURN:
+            queue_event(RESTART)
             return "MENU"
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
     sound_manager.sound_base(pygame, event)
@@ -225,7 +226,6 @@ def display_loop(elements):
                                                             pygame.Color(255, 255, 255))
         affichage_score = load_font("menu.ttf", 20).render("Score final : {}".format(score), True,
                                                                   pygame.Color(255, 255, 255))
-        # TODO: Use Datapack's font
         pos_game_over = (WIDTH / 2 - game_over.get_width() / 2,
                          HEIGHT / 2 - (game_over.get_height() + affichage_score.get_height() + 20) / 2)
         screen.blit(game_over, pos_game_over)

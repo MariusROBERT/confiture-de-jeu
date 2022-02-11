@@ -1,5 +1,5 @@
 import pygame
-from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, CHANGE_NIGHT
+from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, CHANGE_NIGHT, RESTART
 from managers.fx_manager import DAMAGE_EVENT
 from constantes import DATAPACK, DEBUG_MODE, SIZE
 
@@ -78,6 +78,16 @@ def sound_base(pygame, event: pygame.event.Event):
             i = 2
             if DEBUG_MODE:
                 print("night else")
+    elif event.type == RESTART:
+        try:
+            base_sound.stop()
+        except:
+            try:
+                base_sound_night.stop()
+            except Exception as e:
+                if DEBUG_MODE:
+                    print("{} : {}".format(event.type, e))
+
 
 
 def sound_menu(pygame):
