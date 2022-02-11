@@ -34,6 +34,19 @@ base_sound = get_sound("base")
 base_sound_night = get_sound("base_night")
 menu_sound = get_sound("menu")
 
+sounds = [
+    collect_sound,
+    dead_sound,
+    feed_sound,
+    out_of_food_sound,
+    dig_sound,
+    hurt_sound,
+    player_dead_sound,
+    base_sound,
+    base_sound_night,
+    menu_sound
+]
+
 i = 1
 
 
@@ -78,16 +91,6 @@ def sound_base(pygame, event: pygame.event.Event):
             i = 2
             if DEBUG_MODE:
                 print("night else")
-    elif event.type == RESTART:
-        try:
-            base_sound.stop()
-        except:
-            try:
-                base_sound_night.stop()
-            except Exception as e:
-                if DEBUG_MODE:
-                    print("{} : {}".format(event.type, e))
-
 
 
 def sound_menu(pygame):
@@ -123,3 +126,17 @@ def player_dead(pygame, event: pygame.event.Event):
     font = pygame.font.SysFont("Arial", 20)
     text = font.render("GAME OVER", True, (255, 0, 0))
     screen.blit(text, (100, 20))
+
+def reset(py : pygame):
+    for sound in sounds:
+        try:
+            sound.stop()
+        except Exception as e:
+            pass
+
+def play_day_music(py : pygame):
+    try:
+        base_sound.play(-1).set_volume(0.3)
+    except Exception as e:
+        if DEBUG_MODE:
+            print("{} : {}".format(event.type, e))

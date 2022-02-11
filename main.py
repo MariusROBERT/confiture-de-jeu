@@ -131,6 +131,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
         if not player.alive and event.key == pygame.K_RETURN:
+            sound_manager.reset(pygame)
             queue_event(RESTART)
             return "MENU"
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
@@ -278,6 +279,7 @@ if __name__ == "__main__":
                 res_up()
                 elements, night_manager, score_surface = init_game(update_bar)
                 r_code = main_menu()
+                sound_manager.play_day_music(pygame)
         logic_loop(elements)
         display_loop(elements)
 
