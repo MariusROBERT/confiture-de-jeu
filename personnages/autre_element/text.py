@@ -1,5 +1,5 @@
 import pygame
-from lib.lib import load_font
+from lib.lib import load_font, is_point_in_rect
 from lib.text import rect_size_floating
 class Text ():
     def __init__(self, coords : tuple,
@@ -10,6 +10,7 @@ class Text ():
                  centerd_around_coords : bool = False,
                  floating_effect : bool = False,
                  max_grow :float = 1.05):
+        
         self.__coords = coords
         self.__text = text
         self.__font = load_font(font_path, size)
@@ -40,7 +41,7 @@ class Text ():
         if self.__floating_effect:
             new_dimension = rect_size_floating(new_dimension, self.__max_grow, self.__curent_frame_counter, self.__nb_frame)
             surface = pygame.transform.scale(surface, new_dimension)
-        self.__curent_dimensions = new_dimension
+        self.__curent_dimensions = surface.get_rect().size
         return surface
     @property
     def font(self):
@@ -59,3 +60,12 @@ class Text ():
     def display(self, screen: pygame.Surface):
         
         screen.blit( self.sprite, self.coords)
+    
+    def in_hitbox(self, coords):
+        rect = (
+            self.coords[0],
+            self.coords[1],
+            self.coords[0] + self.__curent_dimensions[0],
+            self.coords[1] + self.__curent_dimensions[1]
+            )
+        return is_point_in_rect(coords, rect)
