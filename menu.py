@@ -113,10 +113,11 @@ def tutorial(screen):
                 if mooved == 0:
                     mooved = 1
                     elements["pigs"].append(Pig(WIDTH/2, HEIGHT -100))
-                    hint = Text((WIDTH/2, 60), "Ramassez les patates et donnez les au cochons", size=15,color=(255,255,255), centerd_around_coords=True)
-                if mooved == 3 and event.key == K_RETURN:
+                    hint = Text((WIDTH/2, 60), "Ramassez les patates et donnez les au cochons avec ESPACE", size=13,color=(255,255,255), centerd_around_coords=True)
+                if event.key == K_RETURN:
                     return None
                 
+        player.update(elements)
         player.update(elements)
         screen.fill((70, 166, 0))
         terrain.display(screen)
@@ -127,12 +128,12 @@ def tutorial(screen):
             elements["pigs"][0].display(screen)
             health = elements["pigs"][0].health
             elements["pigs"][0].update(elements)
-            print(health)
-            if health != 50:
+           
+            if health > 30:
                 mooved = 3
                 hint = Text((WIDTH/2, 60), "Appuyez sur entree pour quitter le tutoriel", size=15,color=(255,255,255), centerd_around_coords=True)
         except IndexError:
-            print()
+            pass
         pygame.display.flip()
     
 def init_menu_elements():
