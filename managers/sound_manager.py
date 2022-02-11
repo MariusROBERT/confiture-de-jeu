@@ -65,8 +65,16 @@ def sound_base(pygame, event: pygame.event.Event):
             if DEBUG_MODE:
                 print("night if")
         else:
-            base_sound_night.stop()
-            base_sound.play(-1).set_volume(0.3)
+            try:
+                base_sound_night.stop()
+            except Exception as e:
+                if DEBUG_MODE:
+                    print("{} : {}".format(event.type, e))
+            try:
+                base_sound.play(-1).set_volume(0.3)
+            except Exception as e:
+                if DEBUG_MODE:
+                    print("{} : {}".format(event.type, e))
             i = 2
             if DEBUG_MODE:
                 print("night else")
