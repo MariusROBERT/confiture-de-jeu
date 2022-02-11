@@ -199,7 +199,7 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
 
     if event.type == PLAYER_DEAD_EVENT:
         sound_manager.player_dead(pygame, event)
-
+    
          
          
 def logic_loop(elements):
@@ -261,6 +261,7 @@ def update_bar(value):
 
 def res_up():
     health.health =0
+    health.update()
     pygame.display.flip()
 
 elements, night_manager, score_surface = init_game(update_bar)
@@ -277,6 +278,7 @@ if __name__ == "__main__":
                 res_up()
                 elements, night_manager, score_surface = init_game(update_bar)
                 r_code = main_menu()
+                sound_manager.sound_base(pygame, event)
         logic_loop(elements)
         display_loop(elements)
 
