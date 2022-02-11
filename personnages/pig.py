@@ -1,14 +1,11 @@
-import pygame
-from pygame.locals import *
 from lib.animated import Animated
-from lib.lib import load_image
-from constantes import FRISSILE_BUFF_DURATION,AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, DEBUG_MODE, DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
+from constantes import FRISSILE_BUFF_DURATION, AUTO_DAMAGE_SPEED, CASE_SIZE, FRIES_SPEED, \
+    DEFAULT_HEALTH_BAR_BOTTOM_MARGIN, OVERRIDE_TEA_TIME_ALGORITHM, NO_DIRECT_SHOT, DEFAULT_PIG_HEALTH, PIG_MAX_HEALTH
 from managers.events_const import FEEDED, OUT_OF_FOOD
 from .autre_element.health_bar import HealthBar
 from lib.lib import *
 from .autre_element.fries import Fries, Frissile
 import numpy as np
-import managers.sound_manager as sound_manager
 from personnages.potatoes import PotatoesCode
 
 """
@@ -24,13 +21,14 @@ from personnages.potatoes import PotatoesCode
 
 
 class Pig(Animated):
-    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health=PIG_MAX_HEALTH, health=DEFAULT_PIG_HEALTH):
+    def __init__(self, x: int, y: int, size=(CASE_SIZE, CASE_SIZE), max_health=PIG_MAX_HEALTH,
+                 health=DEFAULT_PIG_HEALTH):
         super().__init__("pig", size)
         self.coords = (x, y)
 
         self.size = size
         oversize = 10
-        health_bar_size = (size[0] + oversize*2, 10)
+        health_bar_size = (size[0] + oversize * 2, 10)
         self.health_bar = HealthBar(
             (
                 self.coords[0] - oversize + 2,  # 2 fix due to texture offset
@@ -73,14 +71,14 @@ class Pig(Animated):
             self.current_animation = "idle"
             queue_event(OUT_OF_FOOD)
 
-        
         if self._life_buff > 0:
-                self._life_buff -= 1
-                self.__health = old_health
-                if self._life_buff == 0:
-                    self.health_bar.color = (203, 219, 11)
+            self._life_buff -= 1
+            self.__health = old_health
+            if self._life_buff == 0:
+                self.health_bar.color = (203, 219, 11)
         self.health_bar.health = value
         self.health_bar.update()
+
     @property
     def aura_frame(self) -> int:
         pass
@@ -105,15 +103,15 @@ class Pig(Animated):
         elif food == PotatoesCode.POTATO_LIFE_BUFF.value:
             self.health_bar.color = (255, 30, 255)
             self._life_buff = FRISSILE_BUFF_DURATION
-            
+
     def tick_update(self):
         self.health -= 9
 
     def tick_update_100(self, elements) -> None:
         self.current_frame += 1
-        
+
     def get_fries(self):
-        
+
         intersection_box = None
         fries_vector = None
         if self.target and self.target.alive and self.health > 0:
@@ -130,8 +128,8 @@ class Pig(Animated):
                     self.target.center_coords[1] + self.target.latest_movement_vector[1] * t)
                 size = (20, 20)
                 intersection_box = pygame.Rect(
-                    intersection_coords[0] - size[0]//2,
-                    intersection_coords[1] - size[1]//2,
+                    intersection_coords[0] - size[0] // 2,
+                    intersection_coords[1] - size[1] // 2,
                     size[0],
                     size[1])
             except TypeError:
@@ -144,21 +142,22 @@ class Pig(Animated):
                     self.target.coords[1] - self.coords[1]))
 
                 normalized_vector = vector_to_target / \
-                    np.sqrt(np.sum(vector_to_target ** 2))
+                                    np.sqrt(np.sum(vector_to_target ** 2))
                 fries_vector = normalized_vector * FRIES_SPEED
             self.health -= AUTO_DAMAGE_SPEED
             if self._lockheed_buff > 0:
                 self._lockheed_buff -= 1
                 if self._lockheed_buff == 0:
                     self.health_bar.color = (203, 219, 11)
-                return [Frissile(self.center_coords, fries_vector, intersection_box=intersection_box, target=self.target)]
+                return [
+                    Frissile(self.center_coords, fries_vector, intersection_box=intersection_box, target=self.target)]
             else:
-                return[Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
+                return [Fries(self.center_coords, fries_vector, intersection_box=intersection_box)]
         else:
             return []
 
     def tick_update(self):
-        #self.health -= AUTO_DAMAGE_SPEED
+        # self.health -= AUTO_DAMAGE_SPEED
         pass
 
     def tick_update_2(self, elements) -> None:
@@ -167,8 +166,9 @@ class Pig(Animated):
     def update(self, elements: dict) -> None:
         self.health_bar.update()
         self.target = nearest_zombie(
-           [zombie for zombie in elements["zombies"] if not zombie.dead], self.coords)
-        #self.target = elements["player"][0]
+            [zombie for zombie in elements["zombies"] if not zombie.dead], self.coords)
+        # self.target = elements["player"][0]
+
     def display(self, screen: pygame.Surface) -> None:
         self.health_bar.display(screen)
         screen.blit(self.sprite, self.coords)

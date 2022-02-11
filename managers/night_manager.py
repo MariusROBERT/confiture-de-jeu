@@ -60,10 +60,10 @@ class Night_manager:
     def size_zombie(self):
         if self.is_night:
             if random() < BABY_ZOMBIE_SPAWN_CHANCE:
-                return (BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SIZE)
-            return (SIZE_ZOMBIE, SIZE_ZOMBIE)
+                return BABY_ZOMBIE_SIZE, BABY_ZOMBIE_SIZE
+            return SIZE_ZOMBIE, SIZE_ZOMBIE
 
-        return (SIZE_ZOMBIE, SIZE_ZOMBIE)
+        return SIZE_ZOMBIE, SIZE_ZOMBIE
 
     def event_manager(self, event: pygame.event.Event):
         pass

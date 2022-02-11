@@ -1,6 +1,4 @@
-import pygame
 import random
-from random import randrange
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 from constantes import POTATO_LIFESPAN
 from lib.lib import load_image

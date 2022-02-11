@@ -1,6 +1,6 @@
 import random
 import pygame
-from lib.lib import create_transparent_animation, load_animation, load_image
+from lib.lib import create_transparent_animation, load_animation
 from managers.events_const import PLAYER_WALKING
 from managers.fx_manager import DUST_ANIMATION, Particle
 from personnages.potatoes import Potatoes, PotatoesCode

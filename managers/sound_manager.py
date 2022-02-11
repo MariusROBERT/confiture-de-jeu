@@ -1,7 +1,7 @@
 import pygame
-from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, PLAYER_DEAD_EVENT, CHANGE_NIGHT
+from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, CHANGE_NIGHT
 from managers.fx_manager import DAMAGE_EVENT
-from constantes import DATAPACK, DEBUG_MODE, NB_ELEM_X, NB_ELEM_Y, SIZE
+from constantes import DATAPACK, DEBUG_MODE, SIZE
 
 pygame.init()
 

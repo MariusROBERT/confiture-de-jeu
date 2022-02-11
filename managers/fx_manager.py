@@ -1,10 +1,8 @@
 import pygame
 from constantes import OPACITY_NIGHT, POINTS_PER_ZOMBIE_DEAD, SIZE_PLAYER, SIZE_ZOMBIE, WIDTH, HEIGHT, NIGHT_FADER_FRAME
-from constantes import POINTS_PER_ZOMBIE_HIT
-from lib.lib import circle_surf, load_animation, load_image, load_font
+from lib.lib import circle_surf, load_font
 from lib.lib import create_transparent_animation, load_animation, load_image
-from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_WALKING, USE_ZONE_DAMAGE
-from managers.sound_manager import COLLECT_POTATOE
+from managers.events_const import CHANGE_NIGHT, DAMAGE_EVENT, DAMAGED_ZOMBIE, DEAD_ZOMBIE, USE_ZONE_DAMAGE
 
 # EVENT DE 20 A 30 reservés
 

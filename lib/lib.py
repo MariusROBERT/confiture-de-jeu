@@ -219,7 +219,7 @@ def rotate_vector(vector, angle):
     rad = math.radians(angle)
     cos = math.cos(rad)
     sin = math.sin(rad)
-    return (x * cos - y * sin, x * sin + y * cos)
+    return x * cos - y * sin, x * sin + y * cos
 
 
 def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = None):
@@ -237,7 +237,7 @@ def intermediate_vector(v1: tuple, v2: tuple, max_angle: int = 90, norm: int = N
     else:
         if tilt > max_angle:
             tilt = max_angle
-    if angle > 180 and angle < 360-max_angle:
+    if 180 < angle < 360-max_angle:
         tilt = -max_angle
     if abs(init_tilt) < abs(tilt):
         tilt = init_tilt

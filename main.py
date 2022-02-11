@@ -1,16 +1,11 @@
-from threading import Thread
-from datetime import datetime, timedelta
 from random import random
-from re import M
-from constantes import PROB_ZOMBIE_SPAWN, SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT, POINTS_PER_ZOMBIE_DEAD
-from constantes import FPS, HEIGHT, SIZE, WIDTH, CASE_SIZE
+from constantes import SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT, POINTS_PER_ZOMBIE_DEAD
+from constantes import SIZE
 from constantes import ZOMBIE_SPAWN
 import pygame
 
-import sys
 
 from managers.events_const import DAMAGED_ZOMBIE, DEAD_ZOMBIE, PLAYER_DEAD_EVENT
-from multiprocessing import Process, Pool
 
 pygame.init()
 
@@ -21,10 +16,8 @@ from personnages.terrain import Terrain
 from managers.fx_manager import Fx_manager
 from managers.night_manager import Night_manager
 from personnages.pig import Pig
-from personnages.golden_pig import GoldenPig
-from personnages.player import Player, AutoPlayer
+from personnages.player import Player
 from personnages.zombie import Zombie
-from personnages.autre_element.fries import Fries
 from personnages.autre_element.text import Text
 from personnages.autre_element.health_bar import HealthBar
 
