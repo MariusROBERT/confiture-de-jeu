@@ -1,16 +1,14 @@
 import string
 import pygame
-from lib.lib import g_angle, np_to_tuple, queue_event, normalize_vector, vector_to_target
+from lib.lib import g_angle, queue_event, vector_to_target
 from lib.zombie import get_direction, get_target, randomCoords
 from managers.events_const import DEAD_ZOMBIE, DAMAGED_ZOMBIE
 from .autre_element.health_bar import HealthBar
-from constantes import DEAD_BODY_LIFESPAN, WIDTH, HEIGHT, CASE_SIZE, TOURS, DEFAULT_HEALTH_BAR_SIZE, \
+from constantes import DEAD_BODY_LIFESPAN, DEFAULT_HEALTH_BAR_SIZE, \
     DEFAULT_HEALTH_BAR_BOTTOM_MARGIN
 from lib.animated import Animated
-import numpy
-from constantes import DEBUG_MODE, WIDTH, HEIGHT, CASE_SIZE, TOURS
-from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, SIZE_ZOMBIE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
-import managers.sound_manager as sound_manager
+from constantes import DEBUG_MODE, CASE_SIZE
+from constantes import ZOMBIE_SPEED, COLLIDBOX_SIZE, ZOMBIE_DAMAGE, ZOMBIE_HEALTH
 
 
 class Zombie(Animated):

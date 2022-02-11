@@ -1,5 +1,4 @@
-import pygame
-from constantes import CASE_SIZE, FPS, TOURS, WIDTH, HEIGHT, DEBUG_MODE
+from constantes import WIDTH, HEIGHT
 from constantes import FRIES_SIZE, FRIES_DAMAGE, HITBOX_FRIES, FRIES_SPEED
 from lib.lib import *
 
@@ -104,7 +103,6 @@ class Frissile(Fries):
     def tick_update_100(self, elements):
         if self.__target is not None and self.__target.health > 0:
             pack = vector_to_target_tea_time_algorithm(self.__target.center_coords, self.__target.latest_movement_vector, self.center_coords,self.speed)
-            vector = None
             if pack is not None and False:
                 vector = pack[0]
             else:

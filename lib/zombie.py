@@ -1,7 +1,7 @@
 from math import sqrt
 from random import randrange
 
-from constantes import CASE_SIZE, HEIGHT, WIDTH, TOURS
+from constantes import CASE_SIZE, HEIGHT, WIDTH
 
 
 def randomCoords():

@@ -1,18 +1,14 @@
-from re import M
-import pygame
-import os
-from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, DEFAULT_HEALTH_BAR_SIZE, FPS, PLAYER_SPEED, \
-    DEBUG_MODE, TOURS, WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
+from constantes import BORDER_SIZE, CASE_SIZE, DAMAGE_ZOMBIE_PER_TICK, PLAYER_SPEED, \
+    WIDTH, HEIGHT, SIZE_PLAYER, PLAYER_MAX_HP
 from lib.animated import Animated
 from lib.lib import *
 from lib.player import dir_to_angle
 from managers.events_const import COLLECT_POTATOE, DIG, INVALID_ACTION, PLAYER_WALKING, USE_ZONE_DAMAGE
 from managers.fx_manager import DAMAGE_EVENT
-from personnages.potatoes import POTATO_ZONE_DAMAGE, PotatoesCode
+from personnages.potatoes import PotatoesCode
 from personnages.terrain import Terrain
 from .autre_element.health_bar import HealthBar
-import managers.sound_manager as sound_manager
-from managers.sound_manager import PLAYER_DEAD_EVENT
+from managers.events_const import PLAYER_DEAD_EVENT
 
 directions = ["up", "down", "left", "right", "up", "down", "left", "right"]
 keys = [pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d,
@@ -194,7 +190,7 @@ class Player(Animated):
             if event.key == pygame.K_b:
                 if len(self.inventory_power_ups) > 0:
                     queue_event(USE_ZONE_DAMAGE, {
-                                "center_coords": self.center_coords})
+                        "center_coords": self.center_coords})
                     for zombie in elements["zombies"]:
                         size_zone_damage = SIZE_PLAYER * 2
                         zone_damage = pygame.Rect(self.center_coords[0] - size_zone_damage,
@@ -276,7 +272,7 @@ class Player(Animated):
         if self.coords[1] > HEIGHT - BORDER_SIZE - self.size[1]:
             self.coords = (self.coords[0], HEIGHT - BORDER_SIZE - self.size[1])
         self._latest_movement_vector = self.coords[0] - \
-            old_coords[0], self.coords[1]-old_coords[1]
+                                       old_coords[0], self.coords[1] - old_coords[1]
 
     def display(self, screen, angle=None, night=False) -> None:
         if angle is None:
@@ -297,7 +293,8 @@ class Player(Animated):
 
         for i in range(len(self.inventory_power_ups)):
             screen.blit(
-                mini_potatoes_images[PotatoesCode.POTATO_ZONE_DAMAGE.value], (self.coords[0] + i * 20, self.coords[1] - (20 * 2) - 5))
+                mini_potatoes_images[PotatoesCode.POTATO_ZONE_DAMAGE.value],
+                (self.coords[0] + i * 20, self.coords[1] - (20 * 2) - 5))
 
         self._health_bar.display(screen)
 
@@ -321,11 +318,11 @@ class AutoPlayer(Player):
         self._health_bar.hide()
         self.update_moving_vector()
 
-    @ property
+    @property
     def speed(self):
         return 5
 
-    @ property
+    @property
     def moving_vector(self):
         return self.__moving_vector
 
@@ -347,10 +344,10 @@ class AutoPlayer(Player):
         old_vector = self.__moving_vector
         correction_vector = self.__moving_vector
 
-        if correction_vector[0]*50 + self.coords[0] + self.size[0] >= WIDTH \
-                or correction_vector[0]*50 + self.coords[0] <= 0 \
-                or correction_vector[1]*50 + self.coords[1] + self.size[1] >= HEIGHT \
-                or correction_vector[1]*50 + self.coords[1] <= 0:
+        if correction_vector[0] * 50 + self.coords[0] + self.size[0] >= WIDTH \
+                or correction_vector[0] * 50 + self.coords[0] <= 0 \
+                or correction_vector[1] * 50 + self.coords[1] + self.size[1] >= HEIGHT \
+                or correction_vector[1] * 50 + self.coords[1] <= 0:
             self.__mode = MODE_MIDDLE
         new_vector = None
         if self.__mode == MODE_Z_ESCAPE:
@@ -372,7 +369,7 @@ class AutoPlayer(Player):
                     target_coords, self.center_coords, self.speed)
 
         else:
-            target_coords = (WIDTH/2, HEIGHT/2)
+            target_coords = (WIDTH / 2, HEIGHT / 2)
             new_vector = vector_to_target(
                 target_coords, self.center_coords, self.speed)
 
@@ -387,8 +384,9 @@ class AutoPlayer(Player):
         terrain = elements["terrain"][0]
 
         if (self.__nearest_zombie is None or
-           distance_between(self.center_coords, self.__nearest_zombie.coords) > self.__safe_distance) and \
-                self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords, self.center_coords) < CASE_SIZE:
+            distance_between(self.center_coords, self.__nearest_zombie.coords) > self.__safe_distance) and \
+                self.__nearest_potatoe is not None and distance_between(self.__nearest_potatoe.coords,
+                                                                        self.center_coords) < CASE_SIZE:
             self.dig(terrain)
         self.__nearest_zombie = nearest_zombie(
             elements["zombies"], self.center_coords)
@@ -412,10 +410,10 @@ class AutoPlayer(Player):
                 angle = -angle
         if DEBUG_MODE:
             rect = pygame.Rect(self.center_coords[0] + self.moving_vector[0]
-                               * 50, self.center_coords[1] + self.moving_vector[1]*50, 20, 20)
+                               * 50, self.center_coords[1] + self.moving_vector[1] * 50, 20, 20)
             pygame.draw.rect(screen, (0, 0, 255), rect, 1)
             rect = pygame.Rect(self.center_coords[0] + self.__wanted_moving_vector[0]
-                               * 50, self.center_coords[1] + self.__wanted_moving_vector[1]*50, 15, 15)
+                               * 50, self.center_coords[1] + self.__wanted_moving_vector[1] * 50, 15, 15)
             pygame.draw.rect(screen, (0, 255, 255), rect, 1)
         super().display(screen, angle)
 
