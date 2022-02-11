@@ -108,7 +108,7 @@ def init_game(health_bar):
 
 
 def clear_screen(screen: pygame.Surface):
-    screen.fill((70, 166, 0))
+    screen.fill((0, 0, 0))
 
 
 def add_score(points):
@@ -137,7 +137,8 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
         sys.exit()
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
         player.move(event, elements)
-
+        if not player.alive and event.key == pygame.K_RETURN:
+            return "MENU"
     sound_manager.sound_manager(pygame, event)  # Check si il faut jouer un son
     sound_manager.sound_base(pygame, event)
     fx_manager.event_manager(event, elements)
@@ -205,7 +206,8 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     if event.type == PLAYER_DEAD_EVENT:
         sound_manager.player_dead(pygame, event)
 
-
+         
+         
 def logic_loop(elements):
     if elements["player"][0].alive:
         for key in elements.keys():
@@ -237,6 +239,7 @@ def display_loop(elements):
         screen.blit(affichage_score, (
             pos_game_over[0] + game_over.get_width() / 2 - affichage_score.get_width() / 2,
             pos_game_over[1] + game_over.get_height() + 20))
+        
 
     else:
         display_score(screen)
@@ -263,6 +266,9 @@ def update_bar(value):
     health.display(screen)
     pygame.display.flip()
 
+def res_up():
+    health.health =0
+    pygame.display.flip()
 
 elements, night_manager, score_surface = init_game(update_bar)
 # worker_main_menu.join()
@@ -273,7 +279,11 @@ if __name__ == "__main__":
     while 1:
         clear_screen(screen)
         for event in pygame.event.get():
-            event_loop(event, elements, night_manager, score_surface)
+            ev = event_loop(event, elements, night_manager, score_surface)
+            if ev == "MENU":
+                res_up()
+                elements, night_manager, score_surface = init_game(update_bar)
+                r_code = main_menu()
         logic_loop(elements)
         display_loop(elements)
 
