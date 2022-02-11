@@ -1,7 +1,7 @@
 import pygame
 from managers.events_const import COLLECT_POTATOE, DEAD_ZOMBIE, DIG, FEEDED, OUT_OF_FOOD, PLAYER_DEAD_EVENT, CHANGE_NIGHT
 from managers.fx_manager import DAMAGE_EVENT
-from constantes import DATAPACK, SHOW_HITBOX, NB_ELEM_X, NB_ELEM_Y, SIZE
+from constantes import DATAPACK, DEBUG_MODE, NB_ELEM_X, NB_ELEM_Y, SIZE
 
 pygame.init()
 
@@ -41,20 +41,35 @@ def sound_base(pygame, event: pygame.event.Event):
     global i
     menu_sound.stop()
     if i == 1:
-        base_sound.play(-1).set_volume(0.3)
+        try:
+            base_sound.play(-1).set_volume(0.3)
+        except Exception as e:
+            if DEBUG_MODE:
+                print("{} : {}".format(event.type, e))
         i = 2
-        print("jour")
+        if DEBUG_MODE:
+            print("jour")
     if event.type == CHANGE_NIGHT:
         if i == 2:
-            base_sound.stop()
-            base_sound_night.play().set_volume(0.3)
+            try:
+                base_sound.stop()
+            except Exception as e:
+                if DEBUG_MODE:
+                    print("{} : {}".format(event.type, e))
+            try:
+                base_sound_night.play().set_volume(0.3)
+            except Exception as e:
+                if DEBUG_MODE:
+                    print("{} : {}".format(event.type, e))
             i += 1
-            print("night if")
+            if DEBUG_MODE:
+                print("night if")
         else:
             base_sound_night.stop()
             base_sound.play(-1).set_volume(0.3)
             i = 2
-            print("night else")
+            if DEBUG_MODE:
+                print("night else")
 
 
 def sound_menu(pygame):
@@ -80,7 +95,7 @@ def sound_manager(pygame, event: pygame.event.Event):
          #   player_dead_sound.play().set_volume(2)
 
     except Exception as e:
-        if SHOW_HITBOX:
+        if DEBUG_MODE:
             print("{} : {}".format(event.type, e))
         pass
 
