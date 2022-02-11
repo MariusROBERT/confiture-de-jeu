@@ -30,6 +30,7 @@ night_manager = None
 score_surface = load_font("menu.ttf", 20).render("SCORE : 50", True, (255, 255, 255))
 screen.blit(score_surface, (screen.get_width() / 2 - score_surface.get_width() / 2, 10))
 r_code = ""
+game_over_text = Text((WIDTH / 2, HEIGHT - 100), "Appuyez sur ENTREE pour rejouer", color=(255, 255, 255), size=20, floating_effect=True, max_grow=1.1, centerd_around_coords=True )
 
 TICKEVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TICKEVENT, 1000)
@@ -125,7 +126,6 @@ def event_loop(event: pygame.event.Event, elements, night_manager, score_surface
     player = elements["player"][0]
     terrain = elements["terrain"][0]
     fx_manager = elements["fx_manager"][0]
-
     if event.type == pygame.QUIT:
         sys.exit()
     if event.type in (pygame.KEYDOWN, pygame.KEYUP):
@@ -232,7 +232,7 @@ def display_loop(elements):
         screen.blit(affichage_score, (
             pos_game_over[0] + game_over.get_width() / 2 - affichage_score.get_width() / 2,
             pos_game_over[1] + game_over.get_height() + 20))
-        
+        game_over_text.display(screen)
 
     else:
         display_score(screen)
@@ -278,7 +278,6 @@ if __name__ == "__main__":
                 res_up()
                 elements, night_manager, score_surface = init_game(update_bar)
                 r_code = main_menu()
-                sound_manager.sound_base(pygame, event)
         logic_loop(elements)
         display_loop(elements)
 
