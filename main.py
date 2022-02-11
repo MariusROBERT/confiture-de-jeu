@@ -1,6 +1,6 @@
 from random import random
 from constantes import SPAWN_DELAY, TOURS, POINTS_PER_ZOMBIE_HIT, POINTS_PER_ZOMBIE_DEAD
-from constantes import SIZE
+from constantes import SIZE, FPS
 from constantes import ZOMBIE_SPAWN
 import pygame
 
