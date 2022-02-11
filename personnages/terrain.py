@@ -56,7 +56,8 @@ class Terrain:
                         Potatoes(
                             PotatoesCode.POTATO_LOCKHEED_MARTIN))
                 else:
-                    self.potatoes.append(Potatoes(PotatoesCode.POTATO_LIFE_BUFF))
+                    self.potatoes.append(
+                        Potatoes(PotatoesCode.POTATO_LIFE_BUFF))
             if random.random() <= 0.08:
                 self.potatoes.append(Potatoes(PotatoesCode.POTATO_ZONE_DAMAGE))
             self.potatoes.append(Potatoes())
