@@ -46,4 +46,8 @@ class Animated:
 
     @property
     def sprite(self) -> pygame.Surface:
-        return self._animation[self.current_animation][int(self.current_frame)]
+        try:
+            return self._animation[self.current_animation][int(self.current_frame)]
+        except KeyError:
+            return self._animation["walk"][int(self.current_frame)]
+            

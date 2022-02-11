@@ -6,10 +6,10 @@ pygame.font.init() # you have to call this at the start,
 from personnages.autre_element.text import Text
 from constantes import WIDTH, HEIGHT, FPS, SIZE
 from personnages.terrain import Terrain
-from personnages.player import AutoPlayer
+from personnages.player import AutoPlayer, Player
 from personnages.zombie import Zombie
 import managers.sound_manager as sound_manager
-
+from personnages.pig import Pig
 pygame.init()
 
 screen = pygame.display.set_mode(SIZE, 0, 32)
@@ -86,6 +86,55 @@ def menu_display_loop(screen2 : pygame.display, elements):
     for key in elements.keys():
         for element in elements[key]:
             element.display(screen2)
+            
+def tutorial(screen):
+    terrain = Terrain()
+    player = Player()
+    hint = Text((WIDTH/2, 30), "Utilisez ZQSD pour vous deplacer", size=15,color=(255,255,255), centerd_around_coords=True)
+    mooved = 0
+    elements = {
+        "terrain": [terrain],
+        "pigs": [],
+        "zombies": [],
+        "player": [player],
+        "fries": [],
+        "fx_manager": []
+    }
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+    
+            if event.type in (pygame.KEYDOWN, pygame.KEYUP):
+                player.move(event, elements)
+                player.update(elements)
+                
+                if mooved == 0:
+                    mooved = 1
+                    elements["pigs"].append(Pig(WIDTH/2, HEIGHT -100))
+                    hint = Text((WIDTH/2, 60), "Ramassez les patates et donnez les au cochons", size=15,color=(255,255,255), centerd_around_coords=True)
+                if mooved == 3 and event.key == K_RETURN:
+                    return None
+                
+        player.update(elements)
+        screen.fill((70, 166, 0))
+        terrain.display(screen)
+        player.display(screen)
+        player.digging = False
+        hint.display(screen)
+        try:
+            elements["pigs"][0].display(screen)
+            health = elements["pigs"][0].health
+            elements["pigs"][0].update(elements)
+            print(health)
+            if health != 50:
+                mooved = 3
+                hint = Text((WIDTH/2, 60), "Appuyez sur entree pour quitter le tutoriel", size=15,color=(255,255,255), centerd_around_coords=True)
+        except IndexError:
+            print()
+        pygame.display.flip()
+    
 def init_menu_elements():
     menu_elements = {}
     terrain = Terrain()
@@ -123,6 +172,7 @@ def main_menu(screen2 : pygame.display = screen, clock = clock, user_events =use
     pygame.font.init()
     menu_elements = init_menu_elements()
     code = None
+    tutorial(screen)
     while code is None:
         screen2.fill((70, 166, 0))
         code = menu_event_loop(screen2, clock, menu_elements, user_events)
