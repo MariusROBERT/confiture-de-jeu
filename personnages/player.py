@@ -143,7 +143,7 @@ class Player(Animated):
     def dig(self, terrain: Terrain):
         self.digging = True
         queue_event(DIG)
-        found = terrain.harvrest(self.center_coords)
+        found = terrain.harvrest(self.hitbox)
         if found >= 0 and len(self.inventory_potatoes) < 5:
             # self.inventory_potatoes.append(found)
             queue_event(COLLECT_POTATOE)

@@ -1,4 +1,5 @@
 import random
+import pygame
 from constantes import CASE_SIZE, SIZE, NB_ELEM_Y, TOURS, NB_ELEM_X
 from constantes import POTATO_LIFESPAN
 from lib.lib import load_image
@@ -107,6 +108,10 @@ class Potatoes:
 
     def get_pos_patate(self):
         return self.__pos_patate
+
+    @property
+    def hitbox(self) -> pygame.Rect:
+        return pygame.Rect(self.pos_pousse, (CASE_SIZE, CASE_SIZE))
 
     def position(self):
         x_patate = self.x_pousse

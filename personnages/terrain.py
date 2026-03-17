@@ -77,17 +77,15 @@ class Terrain:
     def potatoes_hitbox(self) -> list:
         pos_patates = [x.get_pos_patate() for x in self.potatoes]
 
-    def harvrest(self, coords: tuple) -> int:
-        coordsbase = (coords[0] // CASE_SIZE * CASE_SIZE,
-                      coords[1] // CASE_SIZE * CASE_SIZE)
+    def harvrest(self, player_hitbox: pygame.Rect) -> int:
+        coordsbase = (player_hitbox.centerx // CASE_SIZE * CASE_SIZE,
+                      player_hitbox.centery // CASE_SIZE * CASE_SIZE)
         self.trous.append(
             {"coords": coordsbase, "old": 0, "imgIndex": random.randint(1, len(self.trous_images_t))})
         for patate in self.potatoes:
-            pos_patate = patate.get_pos_patate()
-            if coords[0] - CASE_SIZE < pos_patate[0] < coords[0] + CASE_SIZE:
-                if coords[1] - CASE_SIZE < pos_patate[1] < coords[1] + CASE_SIZE:
-                    self.potatoes.remove(patate)
-                    return patate.code
+            if player_hitbox.colliderect(patate.hitbox):
+                self.potatoes.remove(patate)
+                return patate.code
 
         return -1
 
